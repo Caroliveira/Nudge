@@ -1,10 +1,6 @@
 import React from 'react';
 import { EffortLevel } from '../types';
-
-interface CelebrationProps {
-  level: EffortLevel;
-  onBack: () => void;
-}
+import { useStore } from '../store/useStore';
 
 const LEVEL_CONTENT: Record<EffortLevel, { title: string; message: string; color: string }> = {
   [EffortLevel.LOW]: {
@@ -24,8 +20,12 @@ const LEVEL_CONTENT: Record<EffortLevel, { title: string; message: string; color
   },
 };
 
-const Celebration: React.FC<CelebrationProps> = ({ level, onBack }) => {
-  const content = LEVEL_CONTENT[level];
+const Celebration: React.FC = () => {
+  const { selectedLevel, backToSelection } = useStore();
+  
+  if (!selectedLevel) return null;
+
+  const content = LEVEL_CONTENT[selectedLevel];
 
   return (
     <div className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-8 fade-in">
@@ -42,7 +42,7 @@ const Celebration: React.FC<CelebrationProps> = ({ level, onBack }) => {
       </div>
 
       <button
-        onClick={onBack}
+        onClick={backToSelection}
         className="w-full max-w-xs py-4 px-8 bg-[#586e75] text-[#fdf6e3] rounded-full text-lg font-medium hover:bg-[#657b83] transition-colors shadow-sm active:scale-95"
       >
         Back to Start

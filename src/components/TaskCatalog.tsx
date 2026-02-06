@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
-import { Task } from '../types';
+import { useStore } from '../store/useStore';
 import AddTaskForm from './AddTaskForm';
 import CsvImport from './CsvImport';
 import TaskCatalogItem from './TaskCatalogItem';
 
-interface TaskCatalogProps {
-  tasks: Task[];
-  onAddTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
-  onToggleTask: (id: string) => void;
-  onDeleteTask: (id: string) => void;
-  onBack: () => void;
-}
-
-const TaskCatalog: React.FC<TaskCatalogProps> = ({
-  tasks,
-  onAddTask,
-  onToggleTask,
-  onDeleteTask,
-  onBack,
-}) => {
+const TaskCatalog: React.FC = () => {
+  const { tasks, addTask, toggleTask, deleteTask, backToSelection } = useStore();
   const [isAdding, setIsAdding] = useState(false);
 
   return (
@@ -27,7 +14,7 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({
         <h2 className="text-3xl serif text-[#586e75]">Task Catalog</h2>
         <button
           type="button"
-          onClick={onBack}
+          onClick={backToSelection}
           className="text-soft hover:text-accent transition-colors underline underline-offset-4"
         >
           Back to Nudge
@@ -38,7 +25,7 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({
         {isAdding ? (
           <AddTaskForm
             onSubmit={(task) => {
-              onAddTask(task);
+              addTask(task);
               setIsAdding(false);
             }}
             onCancel={() => setIsAdding(false)}
@@ -53,7 +40,7 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({
               <span className="text-2xl group-hover:scale-110 transition-transform">+</span>
               Add a personal task
             </button>
-            <CsvImport onAddTask={onAddTask} />
+            <CsvImport onAddTask={addTask} />
           </div>
         )}
 
@@ -70,8 +57,8 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({
             <TaskCatalogItem
               key={task.id}
               task={task}
-              onToggle={onToggleTask}
-              onDelete={onDeleteTask}
+              onToggle={toggleTask}
+              onDelete={deleteTask}
             />
           ))}
         </div>
