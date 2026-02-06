@@ -3,11 +3,10 @@ import React from 'react';
 
 interface TotalVictoryProps {
   onAddMore: () => void;
-  onReset: () => void;
   nextRefreshDays: number | null;
 }
 
-const TotalVictory: React.FC<TotalVictoryProps> = ({ onAddMore, onReset, nextRefreshDays }) => {
+const TotalVictory: React.FC<TotalVictoryProps> = ({ onAddMore, nextRefreshDays }) => {
   return (
     <div className="flex flex-col items-center justify-center max-w-2xl mx-auto px-6 text-center space-y-10 fade-in">
       <div className="space-y-4">
@@ -36,15 +35,9 @@ const TotalVictory: React.FC<TotalVictoryProps> = ({ onAddMore, onReset, nextRef
       <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
         <button
           onClick={onAddMore}
-          className="py-4 px-8 bg-accent text-[#fdf6e3] rounded-full text-lg font-medium hover:brightness-110 transition-all shadow-sm active:scale-95"
-        >
-          Add New Tasks
-        </button>
-        <button
-          onClick={onReset}
           className="py-4 px-8 bg-transparent border-2 border-[#eee8d5] text-soft rounded-full text-lg font-medium hover:bg-[#eee8d5] hover:text-[#586e75] transition-all active:scale-95"
         >
-          Clear Finished Tasks
+          Add New Tasks
         </button>
       </div>
       

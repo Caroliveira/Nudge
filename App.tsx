@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { AppState, EffortLevel, Task, RecurrenceUnit } from './types';
+import { AppState, EffortLevel, Task } from './types';
 import EffortSelector from './components/EffortSelector';
 import TaskDisplay from './components/TaskDisplay';
 import TaskCatalog from './components/TaskCatalog';
@@ -117,6 +117,12 @@ const App: React.FC = () => {
     }
   };
 
+  const handleBackToSelection = () => {
+        setState('selection');
+        setCurrentTask(null);
+        setSelectedLevel(null);
+  }
+
   const handleMarkDone = () => {
     if (currentTask && selectedLevel) {
       const now = Date.now();
@@ -132,14 +138,10 @@ const App: React.FC = () => {
       if (remainingInLevel === 0) {
         setState('celebration');
       } else {
-        setState('selection');
-        setCurrentTask(null);
-        setSelectedLevel(null);
+        handleBackToSelection()
       }
     } else {
-      setState('selection');
-      setCurrentTask(null);
-      setSelectedLevel(null);
+      handleBackToSelection()
     }
   };
 
@@ -166,11 +168,6 @@ const App: React.FC = () => {
       setState('selection');
       setCurrentTask(null);
     }
-  };
-
-  const clearCompleted = () => {
-    setTasks(prev => prev.filter(t => !t.isCompleted || (t.recurrenceUnit && t.recurrenceUnit !== 'none')));
-    setState('selection');
   };
 
   return (
@@ -203,6 +200,7 @@ const App: React.FC = () => {
           <TaskDisplay 
             task={currentTask} 
             onDone={handleMarkDone} 
+            onBack={handleBackToSelection}
             onRefresh={handleRefresh}
             hasAlternatives={availableCounts[selectedLevel] > 1}
           />
@@ -222,7 +220,6 @@ const App: React.FC = () => {
         {state === 'total-victory' && (
           <TotalVictory 
             onAddMore={() => setState('catalog')}
-            onReset={clearCompleted}
             nextRefreshDays={nextRefreshDays}
           />
         )}

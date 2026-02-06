@@ -5,6 +5,7 @@ import { Task } from '../types';
 interface TaskDisplayProps {
   task: Task;
   onDone: () => void;
+  onBack: () => void;
   onRefresh: () => void;
   hasAlternatives: boolean;
 }
@@ -24,8 +25,7 @@ const ENCOURAGEMENTS = [
   "Each small action builds a better tomorrow."
 ];
 
-const TaskDisplay: React.FC<TaskDisplayProps> = ({ task, onDone, onRefresh, hasAlternatives }) => {
-  // Use useMemo to pick a new random sentence only when the task ID changes
+const TaskDisplay: React.FC<TaskDisplayProps> = ({ task, onBack, onDone, onRefresh, hasAlternatives }) => {
   const encouragement = useMemo(() => {
     return ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
   }, [task.id]);
@@ -57,7 +57,7 @@ const TaskDisplay: React.FC<TaskDisplayProps> = ({ task, onDone, onRefresh, hasA
       </div>
       
       <button 
-        onClick={() => onDone()} // Simply navigate back
+        onClick={onBack}
         className="text-soft hover:text-accent transition-colors text-sm underline underline-offset-4"
       >
         Go back to selection
