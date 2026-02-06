@@ -11,7 +11,7 @@ const TotalVictory: React.FC<TotalVictoryProps> = ({ onAddMore, nextRefreshDays 
     <div className="flex flex-col items-center justify-center max-w-2xl mx-auto px-6 text-center space-y-10 fade-in">
       <div className="space-y-4">
         <div className="text-6xl mb-6">✨</div>
-        <h2 className="text-4xl md:text-5xl serif italic text-[#586e75]">You’ve completed your quest!</h2>
+        <h2 className="text-4xl md:text-5xl serif italic text-[#586e75]">You've completed your quest!</h2>
         <h3 className="text-2xl md:text-3xl text-accent serif italic">Enjoy your rest.</h3>
         
         <div className="py-6">
