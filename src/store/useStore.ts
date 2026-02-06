@@ -24,6 +24,11 @@ interface StoreState {
   backToSelection: () => void;
 }
 
+const pickRandomTask = (tasks: Task[]) => {
+  if (tasks.length === 0) return null;
+  return tasks[Math.floor(Math.random() * tasks.length)];
+};
+
 export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
@@ -49,7 +54,11 @@ export const useStore = create<StoreState>()(
       toggleTask: (id) => set((state) => ({
         tasks: state.tasks.map((t) =>
           t.id === id
-            ? { ...t, isCompleted: !t.isCompleted, lastCompletedAt: !t.isCompleted ? Date.now() : t.lastCompletedAt }
+            ? { 
+                ...t, 
+                isCompleted: !t.isCompleted, 
+                lastCompletedAt: !t.isCompleted ? Date.now() : t.lastCompletedAt 
+              }
             : t
         )
       })),
@@ -68,7 +77,7 @@ export const useStore = create<StoreState>()(
         const candidates = tasks.filter(t => t.level === level && isTaskAvailable(t));
         
         if (candidates.length > 0) {
-          const picked = candidates[Math.floor(Math.random() * candidates.length)];
+          const picked = pickRandomTask(candidates);
           set({ 
             selectedLevel: level, 
             currentTask: picked, 
@@ -80,11 +89,18 @@ export const useStore = create<StoreState>()(
       refreshTask: () => {
         const { tasks, selectedLevel, currentTask, selectLevel } = get();
         if (selectedLevel) {
-          const candidates = tasks.filter(t => t.level === selectedLevel && isTaskAvailable(t) && t.id !== currentTask?.id);
+          // Filter out the current task to ensure we get a new one if possible
+          const candidates = tasks.filter(t => 
+            t.level === selectedLevel && 
+            isTaskAvailable(t) && 
+            t.id !== currentTask?.id
+          );
+          
           if (candidates.length > 0) {
-            const picked = candidates[Math.floor(Math.random() * candidates.length)];
+            const picked = pickRandomTask(candidates);
             set({ currentTask: picked });
           } else {
+             // If no other candidates, re-select (might pick the same one if it's the only one left)
              selectLevel(selectedLevel);
           }
         }

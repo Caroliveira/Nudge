@@ -21,6 +21,7 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors shrink-0 ${
         task.isCompleted ? 'bg-accent border-accent text-[#fdf6e3]' : 'border-soft hover:border-accent bg-[#fdf6e3]'
       }`}
+      aria-label={task.isCompleted ? "Mark as incomplete" : "Mark as complete"}
     >
       {task.isCompleted && '✓'}
     </button>
