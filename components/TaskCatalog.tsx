@@ -13,7 +13,6 @@ interface TaskCatalogProps {
 const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTask, onDeleteTask, onBack }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState('');
-  const [newDesc, setNewDesc] = useState('');
   const [newLevel, setNewLevel] = useState<EffortLevel>(EffortLevel.LOW);
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
   const [recurrenceUnit, setRecurrenceUnit] = useState<RecurrenceUnit>('none');
@@ -26,7 +25,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
     if (!newTitle.trim()) return;
     onAddTask({
       title: newTitle,
-      description: newDesc,
       encouragement: "You've got this.",
       level: newLevel,
       isCustom: true,
@@ -34,7 +32,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
       recurrenceUnit
     });
     setNewTitle('');
-    setNewDesc('');
     setRecurrenceInterval(1);
     setRecurrenceUnit('none');
     setIsAdding(false);
@@ -58,7 +55,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
       for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
         
-        // Simple CSV parser handling basic commas (doesn't handle quoted commas for simplicity)
         const values = lines[i].split(',').map(v => v.trim());
         const taskData: any = {};
         
@@ -80,7 +76,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
 
           onAddTask({
             title: taskData.title || taskData.name,
-            description: taskData.description || taskData.desc || '',
             encouragement: "Imported challenge.",
             level,
             isCustom: true,
@@ -98,7 +93,7 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
   };
 
   const downloadTemplate = () => {
-    const csvContent = "data:text/csv;charset=utf-8,title,description,effort,interval,unit\nRead a book,Chapter 1,Low,1,days\nDeep Work Session,Project Alpha,High,1,weeks";
+    const csvContent = "data:text/csv;charset=utf-8,title,effort,interval,unit\nRead a book,Low,1,days\nDeep Work Session,High,1,weeks";
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -131,15 +126,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
                 value={newTitle}
                 onChange={e => setNewTitle(e.target.value)}
                 placeholder="What needs doing?"
-              />
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Description (Optional)</label>
-              <input 
-                className="w-full bg-[#fdf6e3] border-none rounded-lg p-3 text-[#586e75] focus:ring-2 focus:ring-accent outline-none"
-                value={newDesc}
-                onChange={e => setNewDesc(e.target.value)}
-                placeholder="A tiny detail..."
               />
             </div>
             

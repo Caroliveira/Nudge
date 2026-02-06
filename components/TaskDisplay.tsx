@@ -14,11 +14,6 @@ const TaskDisplay: React.FC<TaskDisplayProps> = ({ task, onDone, onRefresh, hasA
     <div className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-12 fade-in">
       <div className="space-y-6">
         <h2 className="text-4xl md:text-5xl text-accent serif italic">{task.title}</h2>
-        {task.description && (
-          <p className="text-xl md:text-2xl text-[#586e75] leading-relaxed">
-            {task.description}
-          </p>
-        )}
         <p className="text-md text-soft max-w-md mx-auto italic">
           "{task.encouragement}"
         </p>

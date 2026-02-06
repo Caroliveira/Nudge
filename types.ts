@@ -10,7 +10,6 @@ export type RecurrenceUnit = 'days' | 'weeks' | 'months' | 'years' | 'none';
 export interface Task {
   id: string;
   title: string;
-  description: string;
   encouragement: string;
   level: EffortLevel;
   isCompleted: boolean;
