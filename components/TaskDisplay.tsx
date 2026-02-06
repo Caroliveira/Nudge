@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Task } from '../types';
 
 interface TaskDisplayProps {
@@ -9,13 +9,33 @@ interface TaskDisplayProps {
   hasAlternatives: boolean;
 }
 
+const ENCOURAGEMENTS = [
+  "Take a deep breath. You've got this.",
+  "One step at a time is all it takes.",
+  "Progress is progress, no matter how small.",
+  "Focus on the now. The rest can wait.",
+  "You are capable of more than you think.",
+  "Slow and steady wins the race.",
+  "Be kind to yourself as you move forward.",
+  "Your effort today is enough.",
+  "The mountain is climbed one pebble at a time.",
+  "Start where you are. Use what you have.",
+  "Quiet your mind and focus on the task at hand.",
+  "Each small action builds a better tomorrow."
+];
+
 const TaskDisplay: React.FC<TaskDisplayProps> = ({ task, onDone, onRefresh, hasAlternatives }) => {
+  // Use useMemo to pick a new random sentence only when the task ID changes
+  const encouragement = useMemo(() => {
+    return ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+  }, [task.id]);
+
   return (
     <div className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-12 fade-in">
       <div className="space-y-6">
         <h2 className="text-4xl md:text-5xl text-accent serif italic">{task.title}</h2>
         <p className="text-md text-soft max-w-md mx-auto italic">
-          "{task.encouragement}"
+          "{encouragement}"
         </p>
       </div>
 

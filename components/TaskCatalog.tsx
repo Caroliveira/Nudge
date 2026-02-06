@@ -25,7 +25,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
     if (!newTitle.trim()) return;
     onAddTask({
       title: newTitle,
-      encouragement: "You've got this.",
       level: newLevel,
       isCustom: true,
       recurrenceInterval: recurrenceUnit !== 'none' ? recurrenceInterval : undefined,
@@ -76,7 +75,6 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
 
           onAddTask({
             title: taskData.title || taskData.name,
-            encouragement: "Imported challenge.",
             level,
             isCustom: true,
             recurrenceInterval: unit !== 'none' ? interval : undefined,
