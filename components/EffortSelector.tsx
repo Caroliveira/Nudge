@@ -22,7 +22,7 @@ const EffortSelector: React.FC<EffortSelectorProps> = ({ onSelect, availableTask
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-2xl px-4">
+      <div className="flex flex-col gap-4 w-full max-w-sm px-4">
         {Object.values(EffortLevel).map((level) => {
           const count = availableTasks[level];
           const isDisabled = count === 0;
@@ -32,7 +32,7 @@ const EffortSelector: React.FC<EffortSelectorProps> = ({ onSelect, availableTask
               key={level}
               disabled={isDisabled}
               onClick={() => onSelect(level)}
-              className={`group relative p-10 rounded-2xl transition-all duration-300 border shadow-sm active:scale-95
+              className={`group relative py-8 px-10 rounded-2xl transition-all duration-300 border shadow-sm active:scale-95 w-full
                 ${isDisabled 
                   ? 'bg-transparent border-[#eee8d5] opacity-40 cursor-not-allowed' 
                   : 'bg-[#eee8d5] hover:bg-[#93a1a1] hover:text-[#fdf6e3] text-[#657b83] border-transparent hover:border-[#839496] hover:shadow-md'
