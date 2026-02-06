@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { EffortLevel } from '../types';
 
@@ -7,31 +6,26 @@ interface CelebrationProps {
   onBack: () => void;
 }
 
-const Celebration: React.FC<CelebrationProps> = ({ level, onBack }) => {
-  const getContent = () => {
-    switch (level) {
-      case EffortLevel.LOW:
-        return {
-          title: "Level Cleared",
-          message: "A steady ripple leads to a calm sea. You're finding your rhythm.",
-          color: "text-[#b58900]"
-        };
-      case EffortLevel.MEDIUM:
-        return {
-          title: "Incredible Progress",
-          message: "You tackled the core of your day with grace. You're truly in the flow now.",
-          color: "text-[#859900]"
-        };
-      case EffortLevel.HIGH:
-        return {
-          title: "Absolute Powerhouse",
-          message: "You've conquered the heavy lifting. The mountain is behind you. Time for a well-deserved rest.",
-          color: "text-[#268bd2]"
-        };
-    }
-  };
+const LEVEL_CONTENT: Record<EffortLevel, { title: string; message: string; color: string }> = {
+  [EffortLevel.LOW]: {
+    title: "Level Cleared",
+    message: "A steady ripple leads to a calm sea. You're finding your rhythm.",
+    color: "text-[#b58900]"
+  },
+  [EffortLevel.MEDIUM]: {
+    title: "Incredible Progress",
+    message: "You tackled the core of your day with grace. You're truly in the flow now.",
+    color: "text-[#859900]"
+  },
+  [EffortLevel.HIGH]: {
+    title: "Absolute Powerhouse",
+    message: "You've conquered the heavy lifting. The mountain is behind you. Time for a well-deserved rest.",
+    color: "text-[#268bd2]"
+  },
+};
 
-  const content = getContent();
+const Celebration: React.FC<CelebrationProps> = ({ level, onBack }) => {
+  const content = LEVEL_CONTENT[level];
 
   return (
     <div className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-8 fade-in">

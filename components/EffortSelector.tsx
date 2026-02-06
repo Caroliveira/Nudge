@@ -32,6 +32,7 @@ const EffortSelector: React.FC<EffortSelectorProps> = ({ onSelect, availableTask
               key={level}
               disabled={isDisabled}
               onClick={() => onSelect(level)}
+              aria-label={isDisabled ? `${level}, no tasks available` : `${level}, ${count} task${count === 1 ? '' : 's'} available`}
               className={`group relative py-8 px-10 rounded-2xl transition-all duration-300 border shadow-sm active:scale-95 w-full
                 ${isDisabled 
                   ? 'bg-transparent border-[#eee8d5] opacity-40 cursor-not-allowed' 

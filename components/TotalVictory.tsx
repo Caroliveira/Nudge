@@ -40,10 +40,6 @@ const TotalVictory: React.FC<TotalVictoryProps> = ({ onAddMore, nextRefreshDays 
           Add New Tasks
         </button>
       </div>
-      
-      <p className="text-sm text-soft opacity-60">
-        You've found complete stillness for now. You earned it.
-      </p>
     </div>
   );
 };

@@ -12,12 +12,12 @@ const App: React.FC = () => {
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<EffortLevel | null>(null);
   const [tasks, setTasks] = useState<Task[]>(() => {
-    const saved = localStorage.getItem('nudge_tasks');
-    return saved ? JSON.parse(saved) : [];
+      const saved = localStorage.getItem('nudge_tasks');
+      return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem('nudge_tasks', JSON.stringify(tasks));
+      localStorage.setItem('nudge_tasks', JSON.stringify(tasks));
   }, [tasks]);
 
   // Helper to determine if a task is currently available for completion
@@ -28,23 +28,15 @@ const App: React.FC = () => {
     const last = new Date(task.lastCompletedAt);
     const interval = task.recurrenceInterval || 1;
 
-    switch (task.recurrenceUnit) {
-      case 'days':
-        last.setDate(last.getDate() + interval);
-        break;
-      case 'weeks':
-        last.setDate(last.getDate() + interval * 7);
-        break;
-      case 'months':
-        last.setMonth(last.getMonth() + interval);
-        break;
-      case 'years':
-        last.setFullYear(last.getFullYear() + interval);
-        break;
-      default:
-        return false;
-    }
-    return Date.now() >= last.getTime();
+    const getNextAvailable = {
+      days: () => new Date(last.getTime() + interval * 24 * 60 * 60 * 1000),
+      weeks: () => new Date(last.getTime() + interval * 7 * 24 * 60 * 60 * 1000),
+      months: () => new Date(last.getFullYear(), last.getMonth() + interval, last.getDate()),
+      years: () => new Date(last.getFullYear() + interval, last.getMonth(), last.getDate()),
+    };
+    const nextAvailable = getNextAvailable[task.recurrenceUnit]?.() ?? last;
+
+    return Date.now() >= nextAvailable.getTime();
   }, []);
 
   // Available (incomplete or recurring) tasks in each level
@@ -67,16 +59,18 @@ const App: React.FC = () => {
     const recurringTasks = tasks.filter(t => t.isCompleted && t.recurrenceUnit && t.recurrenceUnit !== 'none' && t.lastCompletedAt);
     if (recurringTasks.length === 0) return null;
 
+    const getNextDate: Record<string, (last: Date, interval: number) => Date> = {
+      days: (last, interval) => new Date(last.getTime() + interval * 24 * 60 * 60 * 1000),
+      weeks: (last, interval) => new Date(last.getTime() + interval * 7 * 24 * 60 * 60 * 1000),
+      months: (last, interval) => new Date(last.getFullYear(), last.getMonth() + interval, last.getDate()),
+      years: (last, interval) => new Date(last.getFullYear() + interval, last.getMonth(), last.getDate()),
+    };
+
     const nextTimes = recurringTasks.map(task => {
-      const date = new Date(task.lastCompletedAt!);
+      const last = new Date(task.lastCompletedAt!);
       const interval = task.recurrenceInterval || 1;
-      switch (task.recurrenceUnit) {
-        case 'days': date.setDate(date.getDate() + interval); break;
-        case 'weeks': date.setDate(date.getDate() + interval * 7); break;
-        case 'months': date.setMonth(date.getMonth() + interval); break;
-        case 'years': date.setFullYear(date.getFullYear() + interval); break;
-      }
-      return date.getTime();
+      const next = getNextDate[task.recurrenceUnit!]?.(last, interval) ?? last;
+      return next.getTime();
     });
 
     const soonest = Math.min(...nextTimes);
@@ -235,10 +229,10 @@ const App: React.FC = () => {
         )}
       </div>
 
-      {state !== 'catalog' && state !== 'celebration' && state !== 'total-victory' && (
+      {state !== 'catalog' && state !== 'celebration' && (
         <footer className="fixed bottom-8 text-center w-full z-10">
           <p className="text-xs text-soft opacity-50 uppercase tracking-widest font-medium">
-            Be intentional with your energy.
+           {state === 'total-victory' ? "You've found complete stillness for now. You earned it." : 'Be intentional with your energy.'}
           </p>
         </footer>
       )}

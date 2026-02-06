@@ -2,6 +2,17 @@
 import React, { useState, useRef } from 'react';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
 
+interface CsvTaskRow {
+  title?: string;
+  name?: string;
+  effort?: string;
+  level?: string;
+  interval?: string;
+  recurrenceinterval?: string;
+  unit?: string;
+  recurrenceunit?: string;
+}
+
 interface TaskCatalogProps {
   tasks: Task[];
   onAddTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
@@ -42,49 +53,54 @@ const TaskCatalog: React.FC<TaskCatalogProps> = ({ tasks, onAddTask, onToggleTas
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const text = event.target?.result as string;
-      if (!text) return;
+      try {
+        const text = event.target?.result as string;
+        if (!text) return;
 
-      const lines = text.split(/\r?\n/);
-      if (lines.length < 2) return;
+        const lines = text.split(/\r?\n/);
+        if (lines.length < 2) return;
 
-      const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
-      let count = 0;
+        const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+        let count = 0;
 
-      for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        
-        const values = lines[i].split(',').map(v => v.trim());
-        const taskData: any = {};
-        
-        headers.forEach((header, index) => {
-          taskData[header] = values[index];
-        });
+        for (let i = 1; i < lines.length; i++) {
+          if (!lines[i].trim()) continue;
 
-        if (taskData.title || taskData.name) {
-          // Map Effort
-          let level = EffortLevel.LOW;
-          const effortStr = (taskData.effort || taskData.level || '').toLowerCase();
-          if (effortStr.includes('medium')) level = EffortLevel.MEDIUM;
-          if (effortStr.includes('high')) level = EffortLevel.HIGH;
+          const values = lines[i].split(',').map(v => v.trim());
+          const taskData: CsvTaskRow = {};
 
-          // Map Recurrence
-          const interval = parseInt(taskData.interval || taskData.recurrenceinterval) || 1;
-          const unitRaw = (taskData.unit || taskData.recurrenceunit || 'none').toLowerCase() as RecurrenceUnit;
-          const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw) ? unitRaw : 'none';
-
-          onAddTask({
-            title: taskData.title || taskData.name,
-            level,
-            isCustom: true,
-            recurrenceInterval: unit !== 'none' ? interval : undefined,
-            recurrenceUnit: unit
+          headers.forEach((header, index) => {
+            (taskData as Record<string, string | undefined>)[header] = values[index];
           });
-          count++;
+
+          if (taskData.title || taskData.name) {
+            // Map Effort
+            let level = EffortLevel.LOW;
+            const effortStr = (taskData.effort || taskData.level || '').toLowerCase();
+            if (effortStr.includes('medium')) level = EffortLevel.MEDIUM;
+            if (effortStr.includes('high')) level = EffortLevel.HIGH;
+
+            // Map Recurrence
+            const interval = parseInt(taskData.interval || taskData.recurrenceinterval) || 1;
+            const unitRaw = (taskData.unit || taskData.recurrenceunit || 'none').toLowerCase() as RecurrenceUnit;
+            const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw) ? unitRaw : 'none';
+
+            onAddTask({
+              title: taskData.title || taskData.name,
+              level,
+              isCustom: true,
+              recurrenceInterval: unit !== 'none' ? interval : undefined,
+              recurrenceUnit: unit
+            });
+            count++;
+          }
         }
+        setImportStatus(`Successfully imported ${count} tasks.`);
+        setTimeout(() => setImportStatus(null), 3000);
+      } catch {
+        setImportStatus('Import failed. Check the CSV format and try again.');
+        setTimeout(() => setImportStatus(null), 5000);
       }
-      setImportStatus(`Successfully imported ${count} tasks.`);
-      setTimeout(() => setImportStatus(null), 3000);
     };
     reader.readAsText(file);
     if (fileInputRef.current) fileInputRef.current.value = '';
