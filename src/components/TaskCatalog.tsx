@@ -3,10 +3,12 @@ import { useStore } from '../store/useStore';
 import AddTaskForm from './AddTaskForm';
 import CsvImport from './CsvImport';
 import TaskCatalogItem from './TaskCatalogItem';
+import { Task } from '../types';
 
 const TaskCatalog: React.FC = () => {
-  const { tasks, addTask, toggleTask, deleteTask, backToSelection } = useStore();
+  const { tasks, addTask, updateTask, toggleTask, deleteTask, backToSelection } = useStore();
   const [isAdding, setIsAdding] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[80vh]">
@@ -30,6 +32,15 @@ const TaskCatalog: React.FC = () => {
             }}
             onCancel={() => setIsAdding(false)}
           />
+        ) : editingTask ? (
+          <AddTaskForm
+            initialValues={editingTask}
+            onSubmit={(updates) => {
+              updateTask(editingTask.id, updates);
+              setEditingTask(null);
+            }}
+            onCancel={() => setEditingTask(null)}
+          />
         ) : (
           <div className="space-y-4">
             <button
@@ -45,7 +56,7 @@ const TaskCatalog: React.FC = () => {
         )}
 
         <div className="space-y-3 pb-8">
-          {tasks.length === 0 && !isAdding && (
+          {tasks.length === 0 && !isAdding && !editingTask && (
             <div className="text-center py-12 px-6">
               <p className="text-soft italic text-lg mb-2">Your catalog is quiet.</p>
               <p className="text-soft text-sm opacity-60">
@@ -53,12 +64,13 @@ const TaskCatalog: React.FC = () => {
               </p>
             </div>
           )}
-          {tasks.map((task) => (
+          {!editingTask && tasks.map((task) => (
             <TaskCatalogItem
               key={task.id}
               task={task}
               onToggle={toggleTask}
               onDelete={deleteTask}
+              onEdit={() => setEditingTask(task)}
             />
           ))}
         </div>

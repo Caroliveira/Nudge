@@ -14,6 +14,7 @@ interface StoreState {
   setAppState: (state: AppState) => void;
   setTasks: (tasks: Task[]) => void;
   addTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
   
@@ -51,17 +52,33 @@ export const useStore = create<StoreState>()(
         ]
       })),
 
-      toggleTask: (id) => set((state) => ({
-        tasks: state.tasks.map((t) =>
-          t.id === id
-            ? { 
-                ...t, 
-                isCompleted: !t.isCompleted, 
-                lastCompletedAt: !t.isCompleted ? Date.now() : t.lastCompletedAt 
-              }
-            : t
+      updateTask: (id, updates) => set((state) => ({
+        tasks: state.tasks.map((t) => 
+          t.id === id ? { ...t, ...updates } : t
         )
       })),
+
+      toggleTask: (id) => set((state) => {
+        const task = state.tasks.find(t => t.id === id);
+        if (!task) return {};
+
+        const isOneTime = !task.recurrenceUnit || task.recurrenceUnit === 'none';
+        const willBeCompleted = !task.isCompleted;
+
+        if (willBeCompleted && isOneTime) return {tasks: state.tasks.filter(t => t.id !== id)};
+
+        return {
+          tasks: state.tasks.map((t) =>
+            t.id === id
+              ? { 
+                  ...t, 
+                  isCompleted: !t.isCompleted, 
+                  lastCompletedAt: !t.isCompleted ? Date.now() : t.lastCompletedAt 
+                }
+              : t
+          )
+        };
+      }),
 
       deleteTask: (id) => set((state) => {
         const newTasks = state.tasks.filter((t) => t.id !== id);
@@ -118,11 +135,19 @@ export const useStore = create<StoreState>()(
         const { tasks, currentTask, selectedLevel, backToSelection } = get();
         if (currentTask && selectedLevel) {
           const now = Date.now();
-          const updatedTasks = tasks.map(t => 
-            t.id === currentTask.id 
-              ? { ...t, isCompleted: true, lastCompletedAt: now } 
-              : t
-          );
+          const isOneTime = !currentTask.recurrenceUnit || currentTask.recurrenceUnit === 'none';
+          
+          let updatedTasks;
+          
+          if (isOneTime) {
+            updatedTasks = tasks.filter(t => t.id !== currentTask.id);
+          } else {
+            updatedTasks = tasks.map(t => 
+              t.id === currentTask.id 
+                ? { ...t, isCompleted: true, lastCompletedAt: now } 
+                : t
+            );
+          }
           
           set({ tasks: updatedTasks });
 

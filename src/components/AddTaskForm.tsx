@@ -4,13 +4,14 @@ import { Task, EffortLevel, RecurrenceUnit } from '../types';
 interface AddTaskFormProps {
   onSubmit: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
   onCancel: () => void;
+  initialValues?: Partial<Task>;
 }
 
-const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel }) => {
-  const [newTitle, setNewTitle] = useState('');
-  const [newLevel, setNewLevel] = useState<EffortLevel>(EffortLevel.LOW);
-  const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
-  const [recurrenceUnit, setRecurrenceUnit] = useState<RecurrenceUnit>('none');
+const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialValues }) => {
+  const [newTitle, setNewTitle] = useState(initialValues?.title || '');
+  const [newLevel, setNewLevel] = useState<EffortLevel>(initialValues?.level || EffortLevel.LOW);
+  const [recurrenceInterval, setRecurrenceInterval] = useState<number>(initialValues?.recurrenceInterval || 1);
+  const [recurrenceUnit, setRecurrenceUnit] = useState<RecurrenceUnit>(initialValues?.recurrenceUnit || 'none');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +91,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel }) => {
           type="submit"
           className="flex-[2] bg-[#859900] text-[#fdf6e3] py-4 rounded-xl hover:bg-[#718a00] transition-all font-bold text-lg shadow-md active:scale-95"
         >
-          Save Task
+          {initialValues ? 'Update Task' : 'Save Task'}
         </button>
         <button
           type="button"
