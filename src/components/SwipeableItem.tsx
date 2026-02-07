@@ -33,8 +33,6 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
     startX.current = e.clientX;
     isDragging.current = false;
     
-    // Capture pointer to track drag even if mouse leaves the element
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -43,7 +41,12 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
     const diff = e.clientX - startX.current;
     
     // If we moved more than 5px, consider it a drag
-    if (Math.abs(diff) > 5) isDragging.current = true;
+    if (!isDragging.current && Math.abs(diff) > 5) {
+      isDragging.current = true;
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    }
+
+    if (!isDragging.current) return;
 
     // Allow sliding left (negative) for delete, right (positive) for edit
     // Limit to -300px and +300px

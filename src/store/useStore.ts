@@ -57,11 +57,6 @@ export const useStore = create<StoreState>()(
         const task = state.tasks.find(t => t.id === id);
         if (!task) return {};
 
-        const isOneTime = isOneTimeTask(task);
-        const willBeCompleted = !task.isCompleted;
-
-        if (willBeCompleted && isOneTime) return {tasks: state.tasks.filter(t => t.id !== id)};
-
         return {
           tasks: state.tasks.map((t) =>
             t.id === id
@@ -127,19 +122,12 @@ export const useStore = create<StoreState>()(
         const { tasks, currentTask, selectedLevel, backToSelection } = get();
         if (currentTask && selectedLevel) {
           const now = Date.now();
-          const isOneTime = isOneTimeTask(currentTask);
           
-          let updatedTasks;
-          
-          if (isOneTime) {
-            updatedTasks = tasks.filter(t => t.id !== currentTask.id);
-          } else {
-            updatedTasks = tasks.map(t => 
-              t.id === currentTask.id 
-                ? { ...t, isCompleted: true, lastCompletedAt: now } 
-                : t
-            );
-          }
+          const updatedTasks = tasks.map(t => 
+            t.id === currentTask.id 
+              ? { ...t, isCompleted: true, lastCompletedAt: now } 
+              : t
+          );
           
           set({ tasks: updatedTasks });
 
