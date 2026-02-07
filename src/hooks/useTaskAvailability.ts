@@ -1,11 +1,12 @@
 import { useMemo, useCallback } from 'react';
 import { Task, EffortLevel } from '../types';
+import { addDays, addWeeks, addMonths, addYears, isBefore, differenceInCalendarDays } from 'date-fns';
 
 const recurrenceMap: Record<string, (last: Date, interval: number) => Date> = {
-  days: (last, interval) => new Date(last.getTime() + interval * 24 * 60 * 60 * 1000),
-  weeks: (last, interval) => new Date(last.getTime() + interval * 7 * 24 * 60 * 60 * 1000),
-  months: (last, interval) => new Date(last.getFullYear(), last.getMonth() + interval, last.getDate()),
-  years: (last, interval) => new Date(last.getFullYear() + interval, last.getMonth(), last.getDate()),
+  days: (last, interval) => addDays(last, interval),
+  weeks: (last, interval) => addWeeks(last, interval),
+  months: (last, interval) => addMonths(last, interval),
+  years: (last, interval) => addYears(last, interval),
 };
 
 function getNextAvailableDate(task: Task): Date | null {
@@ -20,7 +21,8 @@ function getNextAvailableDate(task: Task): Date | null {
 export function isTaskAvailable(task: Task): boolean {
   if (!task.isCompleted) return true;
   const next = getNextAvailableDate(task);
-  return next !== null && Date.now() >= next.getTime();
+  if (!next) return false;
+  return !isBefore(new Date(), next);
 }
 
 export function useTaskAvailability(tasks: Task[]) {
@@ -44,24 +46,24 @@ export function useTaskAvailability(tasks: Task[]) {
   }, [tasks]);
 
   const nextRefreshDays = useMemo(() => {
-    let minDiffMs = Infinity;
+    let minDays = Infinity;
     let hasRecurring = false;
+    const now = new Date();
 
     for (const task of tasks) {
         if (task.isCompleted && task.recurrenceUnit && task.recurrenceUnit !== 'none' && task.lastCompletedAt) {
             const next = getNextAvailableDate(task);
             if (next) {
                 hasRecurring = true;
-                const diff = next.getTime() - Date.now();
-                if (diff < minDiffMs) minDiffMs = diff;
+                const diff = differenceInCalendarDays(next, now);
+                if (diff < minDays) minDays = diff;
             }
         }
     }
 
     if (!hasRecurring) return null;
     
-    const diffDays = Math.ceil(minDiffMs / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 1;
+    return minDays > 0 ? minDays : 1;
   }, [tasks]);
 
   return { isTaskAvailable: isAvailable, availableCounts, totalIncomplete, nextRefreshDays };
