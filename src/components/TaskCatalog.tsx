@@ -13,7 +13,7 @@ const TaskCatalog: React.FC = () => {
   return (
     <div className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[80vh]">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl serif text-[#586e75]">Task Catalog</h2>
+        <h2 className="text-3xl serif text-text">Task Catalog</h2>
         <button
           type="button"
           onClick={backToSelection}
@@ -46,7 +46,7 @@ const TaskCatalog: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsAdding(true)}
-              className="w-full py-4 border-2 border-dashed border-[#eee8d5] rounded-2xl text-soft hover:border-accent hover:text-accent transition-all flex items-center justify-center gap-2 group"
+              className="w-full py-4 border-2 border-dashed border-surface rounded-2xl text-soft hover:border-accent hover:text-accent transition-all flex items-center justify-center gap-2 group"
             >
               <span className="text-2xl group-hover:scale-110 transition-transform">+</span>
               Add a personal task

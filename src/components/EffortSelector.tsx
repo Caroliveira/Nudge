@@ -13,7 +13,7 @@ const EffortSelector: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center space-y-8 fade-in">
       <div className="text-center space-y-2">
-        <h1 className="text-4xl md:text-5xl text-[#586e75] font-light">
+        <h1 className="text-4xl md:text-5xl text-text font-light">
           {!hasAnyTasks ? 'Welcome to Nudge' : 'What can you handle?'}
         </h1>
         <p className="text-lg text-soft italic">

@@ -30,13 +30,13 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#eee8d5] p-6 rounded-2xl space-y-6 fade-in border border-[#839496]/20 shadow-sm"
+      className="bg-surface p-6 rounded-2xl space-y-6 fade-in border border-soft/20 shadow-sm"
     >
       <div>
         <label className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Title</label>
         <input
           autoFocus
-          className="w-full bg-[#fdf6e3] border-none rounded-lg p-3 text-[#586e75] focus:ring-2 focus:ring-accent outline-none text-lg"
+          className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none text-lg"
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           placeholder="What needs doing?"
@@ -47,7 +47,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
         <div>
           <label className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Effort Level</label>
           <select
-            className="w-full bg-[#fdf6e3] border-none rounded-lg p-3 text-[#586e75] focus:ring-2 focus:ring-accent outline-none appearance-none"
+            className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
             value={newLevel}
             onChange={(e) => setNewLevel(e.target.value as EffortLevel)}
           >
@@ -65,13 +65,13 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
               <input
                 type="number"
                 min={1}
-                className="w-20 bg-[#fdf6e3] border-none rounded-lg p-3 text-[#586e75] focus:ring-2 focus:ring-accent outline-none"
+                className="w-20 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none"
                 value={recurrenceInterval}
                 onChange={(e) => setRecurrenceInterval(parseInt(e.target.value, 10) || 1)}
               />
             )}
             <select
-              className="flex-1 bg-[#fdf6e3] border-none rounded-lg p-3 text-[#586e75] focus:ring-2 focus:ring-accent outline-none appearance-none"
+              className="flex-1 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
               value={recurrenceUnit}
               onChange={(e) => setRecurrenceUnit(e.target.value as RecurrenceUnit)}
             >
@@ -88,14 +88,14 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
       <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <button
           type="submit"
-          className="flex-[2] bg-[#859900] text-[#fdf6e3] py-4 rounded-xl hover:bg-[#718a00] transition-all font-bold text-lg shadow-md active:scale-95"
+          className="flex-[2] bg-success text-warm py-4 rounded-xl hover:bg-success-dark transition-all font-bold text-lg shadow-md active:scale-95"
         >
           {initialValues ? 'Update Task' : 'Save Task'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-[#839496]/10 text-soft py-4 rounded-xl hover:bg-[#839496]/20 transition-all font-medium active:scale-95"
+          className="flex-1 bg-soft/10 text-soft py-4 rounded-xl hover:bg-soft/20 transition-all font-medium active:scale-95"
         >
           Cancel
         </button>

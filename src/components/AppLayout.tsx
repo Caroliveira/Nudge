@@ -21,8 +21,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ state, children }) => {
   return (
     <main className="min-h-screen w-full flex flex-col items-center justify-center bg-warm p-4 select-none">
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-30">
-        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-[#eee8d5] rounded-full blur-3xl" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-[#eee8d5] rounded-full blur-3xl" />
+        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-surface rounded-full blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-surface rounded-full blur-3xl" />
       </div>
 
       <div className="z-10 w-full max-w-4xl flex items-center justify-center">

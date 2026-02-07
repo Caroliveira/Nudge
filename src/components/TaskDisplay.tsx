@@ -42,14 +42,14 @@ const TaskDisplay: React.FC = () => {
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
         <button
           onClick={markTaskDone}
-          className="w-full py-4 px-8 bg-[#859900] text-[#fdf6e3] rounded-full text-lg font-medium hover:bg-[#718a00] transition-colors shadow-sm active:scale-95"
+          className="w-full py-4 px-8 bg-success text-warm rounded-full text-lg font-medium hover:bg-success-dark transition-colors shadow-sm active:scale-95"
         >
           Mark as complete
         </button>
         {hasAlternatives && (
           <button
             onClick={refreshTask}
-            className="w-full py-4 px-8 bg-transparent border-2 border-[#eee8d5] text-soft rounded-full text-lg font-medium hover:bg-[#eee8d5] hover:text-[#586e75] transition-all active:scale-95"
+            className="w-full py-4 px-8 bg-transparent border-2 border-surface text-soft rounded-full text-lg font-medium hover:bg-surface hover:text-text transition-all active:scale-95"
           >
             Something else
           </button>

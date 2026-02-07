@@ -23,8 +23,8 @@ const EffortLevelButton: React.FC<EffortLevelButtonProps> = ({ level, availableC
       className={`group relative py-8 px-10 rounded-2xl transition-all duration-300 border shadow-sm active:scale-95 w-full
         ${
           isDisabled
-            ? 'bg-transparent border-[#eee8d5] opacity-40 cursor-not-allowed'
-            : 'bg-[#eee8d5] hover:bg-[#93a1a1] hover:text-[#fdf6e3] text-[#657b83] border-transparent hover:border-[#839496] hover:shadow-md'
+            ? 'bg-transparent border-surface opacity-40 cursor-not-allowed'
+            : 'bg-surface hover:bg-subtle hover:text-warm text-muted border-transparent hover:border-soft hover:shadow-md'
         }`}
     >
       <span className="text-xl font-medium block">{level}</span>

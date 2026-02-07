@@ -1,5 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -10,6 +11,7 @@ export default defineConfig(() => {
         host: '0.0.0.0',
       },
       plugins: [
+        tailwindcss(),
         react(),
         VitePWA({
           registerType: 'autoUpdate',

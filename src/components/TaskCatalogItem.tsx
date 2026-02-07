@@ -62,15 +62,15 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
       <div
         className={`flex items-center gap-4 p-4 rounded-xl transition-transform duration-200 ease-out border ${
           task.isCompleted
-            ? 'bg-[#FDF6E3] border-[#eee8d5]'
-            : 'bg-[#eee8d5] border-transparent shadow-sm'
+            ? 'bg-warm border-surface'
+            : 'bg-surface border-transparent shadow-sm'
         }`}
       >
         <button
           type="button"
           onClick={() => onToggle(task.id)}
           className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors shrink-0 ${
-            task.isCompleted ? 'bg-accent border-accent text-[#fdf6e3] opacity-50' : 'border-soft hover:border-accent bg-[#fdf6e3]'
+            task.isCompleted ? 'bg-accent border-accent text-warm opacity-50' : 'border-soft hover:border-accent bg-warm'
           }`}
           aria-label={task.isCompleted ? "Mark as incomplete" : "Mark as complete"}
         >
@@ -78,16 +78,16 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
         </button>
         
         <div className={`flex-1 min-w-0 pointer-events-none ${task.isCompleted ? 'opacity-50' : ''}`}>
-          <h4 className={`font-medium truncate ${task.isCompleted ? 'line-through text-soft' : 'text-[#586e75]'}`}>
+          <h4 className={`font-medium truncate ${task.isCompleted ? 'line-through text-soft' : 'text-text'}`}>
             {task.title}
           </h4>
           <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-tighter text-soft mt-1">
             <span className="font-bold">{task.level}</span>
             {task.isCustom && (
-              <span className="px-1.5 py-0.5 bg-[#fdf6e3] rounded">Personal</span>
+              <span className="px-1.5 py-0.5 bg-warm rounded">Personal</span>
             )}
             {task.recurrenceUnit && task.recurrenceUnit !== 'none' && (
-              <span className="px-1.5 py-0.5 bg-[#fdf6e3] rounded italic">
+              <span className="px-1.5 py-0.5 bg-warm rounded italic">
                 Every {task.recurrenceInterval} {task.recurrenceUnit}
               </span>
             )}

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply bg-warm text-text font-sans;
+  }
+  h1, h2, .serif {
+    @apply font-serif;
+  }
+}
