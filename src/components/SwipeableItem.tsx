@@ -1,16 +1,12 @@
 import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useMotionValueEvent, PanInfo } from 'framer-motion';
 
 interface SwipeableItemProps {
   children: React.ReactNode;
-  
-  // Right swipe (reveals left background) - e.g. Edit
   onSwipeRight?: () => void;
   renderLeftBackground?: (offset: number) => React.ReactNode;
-  
-  // Left swipe (reveals right background) - e.g. Delete
   onSwipeLeft?: () => void;
   renderRightBackground?: (offset: number) => React.ReactNode;
-  
   className?: string;
 }
 
@@ -20,104 +16,107 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   renderLeftBackground,
   onSwipeLeft,
   renderRightBackground,
-  className = ''
+  className = '',
 }) => {
   const [offsetX, setOffsetX] = useState(0);
-  const startX = useRef<number | null>(null);
+  const x = useMotionValue(0);
   const isDragging = useRef(false);
 
-  const handlePointerDown = (e: React.PointerEvent) => {
-    // Only handle primary button
-    if (e.button !== 0) return;
-    
-    startX.current = e.clientX;
-    isDragging.current = false;
-    
+  useMotionValueEvent(x, "change", (latest) => {
+    setOffsetX(latest);
+  });
+
+  const handleDragStart = () => {
+    isDragging.current = true;
   };
 
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (startX.current === null) return;
+  const handleDragEnd = (_: any, info: PanInfo) => {
+    // Small timeout to prevent click immediately after drag release
+    setTimeout(() => {
+        isDragging.current = false;
+    }, 50);
 
-    const diff = e.clientX - startX.current;
-    
-    // If we moved more than 5px, consider it a drag
-    if (!isDragging.current && Math.abs(diff) > 5) {
-      isDragging.current = true;
-      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    }
+    const currentX = info.offset.x;
+    const threshold = 150;
 
-    if (!isDragging.current) return;
-
-    // Allow sliding left (negative) for delete, right (positive) for edit
-    // Limit to -300px and +300px
-    const newOffset = Math.max(-300, Math.min(300, diff));
-    
-    // Only allow sliding right if onSwipeRight is provided
-    if (newOffset > 0 && !onSwipeRight) return setOffsetX(0);
-    
-    // Only allow sliding left if onSwipeLeft is provided
-    if (newOffset < 0 && !onSwipeLeft) return setOffsetX(0);
-
-    setOffsetX(newOffset);
+    if (currentX < -threshold && onSwipeLeft) onSwipeLeft();
+    else if (currentX > threshold && onSwipeRight) onSwipeRight();
   };
 
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (startX.current === null) return;
-    
-    (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-    startX.current = null;
-
-    // Threshold logic
-    if (offsetX < -150 && onSwipeLeft) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === 'Delete' || e.key === 'Backspace') && onSwipeLeft) {
       onSwipeLeft();
-    } else if (offsetX > 150 && onSwipeRight) {
+      e.preventDefault();
+    } 
+    else if (e.key === 'Enter' && onSwipeRight) {
       onSwipeRight();
-      setOffsetX(0);
-    } else {
-      setOffsetX(0);
+      e.preventDefault();
     }
   };
+
+  const descriptionId = React.useId();
 
   return (
-    <div className={`relative overflow-hidden rounded-xl touch-pan-y select-none ${className}`}>
-      {/* Right Background (Revealed by swiping left) */}
+    <div 
+      className={`relative overflow-hidden rounded-xl touch-pan-y select-none focus:outline-none focus:ring-2 focus:ring-accent ${className}`}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      role="listitem"
+      aria-describedby={descriptionId}
+    >
+      <span id={descriptionId} className="sr-only">
+        {onSwipeLeft ? 'Press Delete or Backspace to remove. ' : ''}
+        {onSwipeRight ? 'Press Enter to edit. ' : ''}
+      </span>
+
+
       {renderRightBackground && (
         <div 
           className="absolute inset-y-0 right-0 w-full"
-          style={{ opacity: offsetX < 0 ? 1 : 0 }}
+          style={{ 
+            opacity: offsetX < 0 ? 1 : 0,
+            visibility: offsetX < 0 ? 'visible' : 'hidden'
+          }}
+          aria-hidden={offsetX >= 0}
         >
           {renderRightBackground(offsetX)}
         </div>
       )}
 
-      {/* Left Background (Revealed by swiping right) */}
       {renderLeftBackground && (
         <div 
             className="absolute inset-y-0 left-0 w-full"
-            style={{ opacity: offsetX > 0 ? 1 : 0 }}
+            style={{ 
+                opacity: offsetX > 0 ? 1 : 0,
+                visibility: offsetX > 0 ? 'visible' : 'hidden'
+            }}
+            aria-hidden={offsetX <= 0}
         >
             {renderLeftBackground(offsetX)}
         </div>
       )}
 
-      {/* Foreground Content */}
-      <div
+      <motion.div
         className="relative z-10"
-        style={{ transform: `translateX(${offsetX}px)` }}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-      >
-        <div onClickCapture={(e) => {
+        style={{ x }}
+        drag="x"
+        dragConstraints={{ 
+            left: onSwipeLeft ? -300 : 0, 
+            right: onSwipeRight ? 300 : 0 
+        }}
+        dragElastic={0}
+        dragSnapToOrigin
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onClickCapture={(e) => {
             if (isDragging.current) {
                 e.preventDefault();
                 e.stopPropagation();
             }
-        }}>
-            {children}
-        </div>
-      </div>
+        }}
+      >
+        {children}
+      </motion.div>
     </div>
   );
 };
