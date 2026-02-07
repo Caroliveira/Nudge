@@ -19,7 +19,6 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
     onSubmit({
       title: newTitle,
       level: newLevel,
-      isCustom: true,
       recurrenceInterval: recurrenceUnit !== 'none' ? recurrenceInterval : undefined,
       recurrenceUnit,
     });

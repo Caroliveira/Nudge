@@ -51,7 +51,7 @@ const TaskCatalog: React.FC = () => {
               <span className="text-2xl group-hover:scale-110 transition-transform">+</span>
               Add a personal task
             </button>
-            <CsvImport onAddTask={addTask} />
+            <CsvImport />
           </div>
         )}
 

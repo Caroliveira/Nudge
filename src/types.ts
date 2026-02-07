@@ -12,7 +12,6 @@ export interface Task {
   title: string;
   level: EffortLevel;
   isCompleted: boolean;
-  isCustom?: boolean;
   recurrenceInterval?: number;
   recurrenceUnit?: RecurrenceUnit;
   lastCompletedAt?: number;

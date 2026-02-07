@@ -1,22 +1,17 @@
 import React, { useRef, useState } from 'react';
+import Papa from 'papaparse';
 import { EffortLevel, RecurrenceUnit } from '../types';
+import { useStore } from '../store/useStore';
 
 interface CsvTaskRow {
-  title?: string;
-  name?: string;
-  effort?: string;
-  level?: string;
-  interval?: string;
-  recurrenceinterval?: string;
-  unit?: string;
-  recurrenceunit?: string;
+  title: string;
+  effort: string;
+  interval: string;
+  unit: string;
 }
 
-interface CsvImportProps {
-  onAddTask: (task: { title: string; level: EffortLevel; isCustom: true; recurrenceInterval?: number; recurrenceUnit: RecurrenceUnit }) => void;
-}
-
-const CsvImport: React.FC<CsvImportProps> = ({ onAddTask }) => {
+const CsvImport: React.FC = () => {
+  const { tasks, addTask } = useStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
@@ -24,56 +19,81 @@ const CsvImport: React.FC<CsvImportProps> = ({ onAddTask }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const text = event.target?.result as string;
-        if (!text) return;
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (h) => h.trim().toLowerCase(),
+      complete: (results) => {
+        try {
+          const { data, meta } = results;
+          
+          // Validate headers
+          const requiredHeaders = ['title', 'effort', 'interval', 'unit'];
+          const headers = meta.fields || [];
+          const hasAllHeaders = requiredHeaders.every(h => headers.includes(h));
 
-        const lines = text.split(/\r?\n/);
-        if (lines.length < 2) return;
+          if (!hasAllHeaders) {
+            setImportStatus(`Invalid CSV format. Required headers: ${requiredHeaders.join(', ')}`);
+            setTimeout(() => setImportStatus(null), 5000);
+            return;
+          }
 
-        const headers = lines[0].toLowerCase().split(',').map((h) => h.trim());
-        let count = 0;
+          let count = 0;
+          let skippedCount = 0;
 
-        for (let i = 1; i < lines.length; i++) {
-          if (!lines[i].trim()) continue;
+          data.forEach((taskData: any) => {
+            // Strict check for all required fields
+            if (
+              taskData.title && 
+              taskData.effort && 
+              taskData.interval && 
+              taskData.unit
+            ) {
+              const title = taskData.title.trim();
+              const isDuplicate = tasks.some((t) => t.title.toLowerCase() === title.toLowerCase());
 
-          const values = lines[i].split(',').map((v) => v.trim());
-          const taskData: CsvTaskRow = {};
-          headers.forEach((header, index) => {
-            (taskData as Record<string, string | undefined>)[header] = values[index];
+              if (isDuplicate) {
+                skippedCount++;
+                return;
+              }
+
+              let level = EffortLevel.LOW;
+              const effortStr = taskData.effort.toLowerCase();
+              if (effortStr.includes('medium')) level = EffortLevel.MEDIUM;
+              if (effortStr.includes('high')) level = EffortLevel.HIGH;
+
+              const interval = parseInt(taskData.interval, 10);
+              const unitRaw = taskData.unit.toLowerCase();
+              const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw) ? (unitRaw as RecurrenceUnit) : 'none';
+
+              if (unit !== 'none' && (isNaN(interval) || interval <= 0)) return;
+
+              addTask({
+                title,
+                level,
+                recurrenceInterval: unit !== 'none' ? interval : undefined,
+                recurrenceUnit: unit,
+              });
+              count++;
+            }
           });
 
-          if (taskData.title || taskData.name) {
-            let level = EffortLevel.LOW;
-            const effortStr = (taskData.effort || taskData.level || '').toLowerCase();
-            if (effortStr.includes('medium')) level = EffortLevel.MEDIUM;
-            if (effortStr.includes('high')) level = EffortLevel.HIGH;
-
-            const interval = parseInt(taskData.interval || taskData.recurrenceinterval || '1', 10) || 1;
-            const unitRaw = (taskData.unit || taskData.recurrenceunit || 'none').toLowerCase();
-            const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw) ? (unitRaw as RecurrenceUnit) : 'none';
-
-            onAddTask({
-              title: taskData.title || taskData.name || '',
-              level,
-              isCustom: true,
-              recurrenceInterval: unit !== 'none' ? interval : undefined,
-              recurrenceUnit: unit,
-            });
-            count++;
-          }
+          const skippedMsg = skippedCount > 0 ? ` (${skippedCount} duplicates skipped)` : '';
+          setImportStatus(`Successfully imported ${count} tasks${skippedMsg}.`);
+          setTimeout(() => setImportStatus(null), 3000);
+        } catch (err) {
+          console.error('Import processing error:', err);
+          setImportStatus('Import failed. Check the CSV format and try again.');
+          setTimeout(() => setImportStatus(null), 5000);
         }
-
-        setImportStatus(`Successfully imported ${count} tasks.`);
-        setTimeout(() => setImportStatus(null), 3000);
-      } catch {
+      },
+      error: (error) => {
+        console.error('CSV Parse Error:', error);
         setImportStatus('Import failed. Check the CSV format and try again.');
         setTimeout(() => setImportStatus(null), 5000);
       }
-    };
-    reader.readAsText(file);
+    });
+
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
