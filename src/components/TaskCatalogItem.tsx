@@ -83,9 +83,6 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
           </h4>
           <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-tighter text-soft mt-1">
             <span className="font-bold">{task.level}</span>
-            {task.isCustom && (
-              <span className="px-1.5 py-0.5 bg-warm rounded">Personal</span>
-            )}
             {task.recurrenceUnit && task.recurrenceUnit !== 'none' && (
               <span className="px-1.5 py-0.5 bg-warm rounded italic">
                 Every {task.recurrenceInterval} {task.recurrenceUnit}

@@ -19,7 +19,13 @@ const CsvImport: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    Papa.parse(file, {
+    if (file.size > 1024 * 1024) { // 1MB limit
+        setImportStatus('File too large. Maximum size is 1MB.');
+        setTimeout(() => setImportStatus(null), 5000);
+        return;
+    }
+
+    Papa.parse<CsvTaskRow>(file, {
       header: true,
       skipEmptyLines: true,
       transformHeader: (h) => h.trim().toLowerCase(),
@@ -41,7 +47,7 @@ const CsvImport: React.FC = () => {
           let count = 0;
           let skippedCount = 0;
 
-          data.forEach((taskData: CsvTaskRow) => {
+          data.forEach((taskData) => {
             // Strict check for all required fields
             if (
               taskData.title && 

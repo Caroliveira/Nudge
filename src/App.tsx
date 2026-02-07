@@ -32,9 +32,9 @@ const App: React.FC = () => {
               onClick={() => setAppState('catalog')}
               className="mt-12 text-soft hover:text-accent transition-colors flex items-center gap-2 group"
             >
-              <span className="w-8 h-[1px] bg-soft group-hover:bg-accent transition-colors" />
+              <span className="w-8 h-px bg-soft group-hover:bg-accent transition-colors" />
               Task Catalog & Personal Planning
-              <span className="w-8 h-[1px] bg-soft group-hover:bg-accent transition-colors" />
+              <span className="w-8 h-px bg-soft group-hover:bg-accent transition-colors" />
             </button>
           </div>
         )}
