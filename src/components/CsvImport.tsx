@@ -41,7 +41,7 @@ const CsvImport: React.FC = () => {
           let count = 0;
           let skippedCount = 0;
 
-          data.forEach((taskData: any) => {
+          data.forEach((taskData: CsvTaskRow) => {
             // Strict check for all required fields
             if (
               taskData.title && 

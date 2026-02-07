@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AppState, EffortLevel, Task } from '../types';
-import { isTaskAvailable } from '../hooks/useTaskAvailability';
+import { isTaskAvailable, pickRandomTask, isOneTimeTask, getTasksForLevel } from '../utils/taskUtils';
 
 interface StoreState {
   // State
@@ -24,11 +24,6 @@ interface StoreState {
   markTaskDone: () => void;
   backToSelection: () => void;
 }
-
-const pickRandomTask = (tasks: Task[]) => {
-  if (tasks.length === 0) return null;
-  return tasks[Math.floor(Math.random() * tasks.length)];
-};
 
 export const useStore = create<StoreState>()(
   persist(
@@ -62,7 +57,7 @@ export const useStore = create<StoreState>()(
         const task = state.tasks.find(t => t.id === id);
         if (!task) return {};
 
-        const isOneTime = !task.recurrenceUnit || task.recurrenceUnit === 'none';
+        const isOneTime = isOneTimeTask(task);
         const willBeCompleted = !task.isCompleted;
 
         if (willBeCompleted && isOneTime) return {tasks: state.tasks.filter(t => t.id !== id)};
@@ -91,7 +86,7 @@ export const useStore = create<StoreState>()(
 
       selectLevel: (level) => {
         const { tasks } = get();
-        const candidates = tasks.filter(t => t.level === level && isTaskAvailable(t));
+        const candidates = getTasksForLevel(tasks, level);
         
         if (candidates.length > 0) {
           const picked = pickRandomTask(candidates);
@@ -107,11 +102,8 @@ export const useStore = create<StoreState>()(
         const { tasks, selectedLevel, currentTask, selectLevel } = get();
         if (selectedLevel) {
           // Filter out the current task to ensure we get a new one if possible
-          const candidates = tasks.filter(t => 
-            t.level === selectedLevel && 
-            isTaskAvailable(t) && 
-            t.id !== currentTask?.id
-          );
+          const candidates = getTasksForLevel(tasks, selectedLevel)
+            .filter(t => t.id !== currentTask?.id);
           
           if (candidates.length > 0) {
             const picked = pickRandomTask(candidates);
@@ -135,7 +127,7 @@ export const useStore = create<StoreState>()(
         const { tasks, currentTask, selectedLevel, backToSelection } = get();
         if (currentTask && selectedLevel) {
           const now = Date.now();
-          const isOneTime = !currentTask.recurrenceUnit || currentTask.recurrenceUnit === 'none';
+          const isOneTime = isOneTimeTask(currentTask);
           
           let updatedTasks;
           

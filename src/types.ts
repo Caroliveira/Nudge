@@ -6,6 +6,7 @@ export enum EffortLevel {
 }
 
 export type RecurrenceUnit = 'days' | 'weeks' | 'months' | 'years' | 'none';
+export type RecurringUnit = Exclude<RecurrenceUnit, 'none'>;
 
 export interface Task {
   id: string;
