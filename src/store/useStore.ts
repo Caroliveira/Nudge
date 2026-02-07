@@ -63,7 +63,7 @@ export const useStore = create<StoreState>()(
               ? { 
                   ...t, 
                   isCompleted: !t.isCompleted, 
-                  lastCompletedAt: !t.isCompleted ? Date.now() : t.lastCompletedAt 
+                  lastCompletedAt: !t.isCompleted ? Date.now() : undefined 
                 }
               : t
           )

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
+import { EFFORT_LABELS } from '../utils/taskUtils';
 
 interface AddTaskFormProps {
   onSubmit: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
@@ -53,7 +54,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
           >
             {Object.values(EffortLevel).map((l) => (
               <option key={l} value={l}>
-                {l}
+                {EFFORT_LABELS[l]}
               </option>
             ))}
           </select>

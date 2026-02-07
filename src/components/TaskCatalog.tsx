@@ -57,7 +57,7 @@ const TaskCatalog: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 space-y-6">
+      <div className="flex-1 overflow-y-auto pr-2 space-y-6 px-1">
         {isAdding ? (
           <AddTaskForm
             onSubmit={(task) => {

@@ -1,9 +1,5 @@
 
-export enum EffortLevel {
-  LOW = 'Low Effort',
-  MEDIUM = 'Medium Effort',
-  HIGH = 'High Effort'
-}
+export enum EffortLevel { LOW, MEDIUM, HIGH}
 
 export type RecurrenceUnit = 'days' | 'weeks' | 'months' | 'years' | 'none';
 export type RecurringUnit = Exclude<RecurrenceUnit, 'none'>;

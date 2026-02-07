@@ -7,6 +7,8 @@ interface EffortLevelButtonProps {
   onSelect: (level: EffortLevel) => void;
 }
 
+import { EFFORT_LABELS } from '../utils/taskUtils';
+
 const EffortLevelButton: React.FC<EffortLevelButtonProps> = ({ level, availableCount, onSelect }) => {
   const isDisabled = availableCount === 0;
 
@@ -17,8 +19,8 @@ const EffortLevelButton: React.FC<EffortLevelButtonProps> = ({ level, availableC
       onClick={() => onSelect(level)}
       aria-label={
         isDisabled
-          ? `${level}, no tasks available`
-          : `${level}, ${availableCount} task${availableCount === 1 ? '' : 's'} available`
+          ? `${EFFORT_LABELS[level]}, no tasks available`
+          : `${EFFORT_LABELS[level]}, ${availableCount} task${availableCount === 1 ? '' : 's'} available`
       }
       className={`group relative py-8 px-10 rounded-2xl transition-all duration-300 border shadow-sm active:scale-95 w-full
         ${
@@ -27,7 +29,7 @@ const EffortLevelButton: React.FC<EffortLevelButtonProps> = ({ level, availableC
             : 'bg-surface hover:bg-subtle hover:text-warm text-muted border-transparent hover:border-soft hover:shadow-md'
         }`}
     >
-      <span className="text-xl font-medium block">{level}</span>
+      <span className="text-xl font-medium block">{EFFORT_LABELS[level]}</span>
       {!isDisabled && (
         <div className="absolute bottom-4 left-0 w-full flex justify-center opacity-0 group-hover:opacity-40 transition-opacity">
           <div className="w-1.5 h-1.5 rounded-full bg-current" />
