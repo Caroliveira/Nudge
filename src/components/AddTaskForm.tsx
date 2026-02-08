@@ -89,7 +89,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
       <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <button
           type="submit"
-          className="flex-[2] bg-success text-warm py-4 rounded-xl hover:bg-success-dark transition-all font-bold text-lg shadow-md active:scale-95"
+          className="flex-2 bg-success text-warm py-4 rounded-xl hover:bg-success-dark transition-all font-bold text-lg shadow-md active:scale-95"
         >
           {initialValues ? 'Update Task' : 'Save Task'}
         </button>

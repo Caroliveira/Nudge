@@ -8,8 +8,8 @@ import TaskCatalogItem from '../components/TaskCatalogItem';
 import { Task } from '../types';
 
 const CatalogPage: React.FC = () => {
-  const { tasks, addTask, updateTask, toggleTask, deleteTask } = useStore();
-  const { backToSelection } = useTaskActions();
+  const { tasks, addTask, updateTask, deleteTask } = useStore();
+  const { backToSelection, toggleTask } = useTaskActions();
   const [isAdding, setIsAdding] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [view, setView] = useState<'tasks' | 'archive'>('tasks');

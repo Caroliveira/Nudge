@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EffortLevel, Task } from '../types';
-import { calculateTaskCompletion, getNextAvailableDate } from '../utils/taskUtils';
+import { getNextAvailableDate } from '../utils/taskUtils';
 
 interface StoreState {
   // State
@@ -16,8 +16,6 @@ interface StoreState {
   
   addTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
-  toggleTask: (id: string) => void;
-  completeTask: (id: string) => void;
   deleteTask: (id: string) => void;
 }
 
@@ -46,36 +44,9 @@ export const useStore = create<StoreState>()(
       updateTask: (id, updates) => set((state) => ({
         tasks: state.tasks.map((t) => {
           if (t.id !== id) return t;
-          
-          const updatedTask = { ...t, ...updates };
-          
-          if ('isCompleted' in updates) return calculateTaskCompletion(updatedTask, !!updates.isCompleted);
-          
-          return updatedTask;
+          return { ...t, ...updates };
         })
       })),
-
-      toggleTask: (id) => set((state) => {
-        const task = state.tasks.find(t => t.id === id);
-        if (!task) return {};
-
-        return {
-          tasks: state.tasks.map((t) =>
-            t.id === id ? calculateTaskCompletion(t, !t.isCompleted) : t
-          )
-        };
-      }),
-
-      completeTask: (id) => set((state) => {
-        const task = state.tasks.find(t => t.id === id);
-        if (!task) return {};
-
-        return {
-          tasks: state.tasks.map((t) =>
-            t.id === id ? calculateTaskCompletion(t, true) : t
-          )
-        };
-      }),
 
       deleteTask: (id) => set((state) => {
         const newTasks = state.tasks.filter((t) => t.id !== id);

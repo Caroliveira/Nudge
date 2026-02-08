@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { EffortLevel } from '../types';
-import { getTasksForLevel, pickRandomTask, isTaskAvailable } from '../utils/taskUtils';
+import { getTasksForLevel, pickRandomTask, isTaskAvailable, calculateTaskCompletion } from '../utils/taskUtils';
 import { APP_ROUTES } from '../constants';
 
 export function useTaskActions() {
@@ -12,7 +12,7 @@ export function useTaskActions() {
     currentTask, 
     setSelectedLevel, 
     setCurrentTask, 
-    completeTask
+    updateTask
   } = useStore();
 
   const selectLevel = (level: EffortLevel) => {
@@ -52,12 +52,24 @@ export function useTaskActions() {
       navigate(APP_ROUTES.HOME);
   };
 
+  const toggleTask = (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+      const updated = calculateTaskCompletion(task, !task.isCompleted);
+      updateTask(id, updated);
+    }
+  };
+
   const markTaskDone = () => {
     if (currentTask && selectedLevel) {
-      completeTask(currentTask.id);
+      const updated = calculateTaskCompletion(currentTask, true);
+      
+      updateTask(currentTask.id, updated);
      
+      const freshTasks = useStore.getState().tasks;
       const now = new Date();
-      const remainingInLevel = tasks.filter(t => 
+      
+      const remainingInLevel = freshTasks.filter(t => 
         t.id !== currentTask.id &&
         t.level === selectedLevel && 
         isTaskAvailable(t, now)
@@ -72,6 +84,7 @@ export function useTaskActions() {
     selectLevel,
     refreshTask,
     markTaskDone,
-    backToSelection
+    backToSelection,
+    toggleTask
   };
 }
