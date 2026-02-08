@@ -22,3 +22,23 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Security
+*.keystore
+*.jks
+
+# Android / Bubblewrap generated files
+.gradle/
+app/
+build/
+gradle/
+build.gradle
+gradle.properties
+gradlew
+gradlew.bat
+settings.gradle
+store_icon.png
+manifest-checksum.txt
+*.apk
+*.aab
+*.idsig

@@ -1,0 +1,51 @@
+{
+  "packageId": "com.lina_oliveira.nudge.twa",
+  "host": "nudge.lina-oliveira.com",
+  "name": "Nudge",
+  "launcherName": "Nudge",
+  "display": "standalone",
+  "themeColor": "#FDF6E3",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FDF6E3",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://nudge.lina-oliveira.com/pwa-512x512.png",
+  "maskableIconUrl": "https://nudge.lina-oliveira.com/pwa-512x512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/Users/lina/Documents/projects/Nudge/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://nudge.lina-oliveira.com/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://nudge.lina-oliveira.com/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [
+    {
+      "value": "6E:CC:F7:A7:CC:32:DC:A1:44:12:84:B3:88:6D:A1:88:7F:4D:5C:BC:CC:92:D8:24:50:21:F1:FF:E2:61:B3:8B"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
+}
