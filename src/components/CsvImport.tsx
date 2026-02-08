@@ -36,6 +36,11 @@ const CsvImport: React.FC = () => {
         try {
           const { data, meta } = results;
           
+          if (results.errors && results.errors.length > 0) {
+             setImportStatus(`CSV Parse Error: ${results.errors[0].message}`);
+             return;
+          }
+
           const headers = meta.fields || [];
           if (!validateHeaders(headers)) {
             setImportStatus(`Invalid CSV format. Required headers: title, effort, interval, unit`);
@@ -49,11 +54,11 @@ const CsvImport: React.FC = () => {
           const skippedMsg = skippedCount > 0 ? ` (${skippedCount} duplicates skipped)` : '';
           setImportStatus(`Successfully imported ${count} tasks${skippedMsg}.`);
         } catch {
-          setImportStatus('Import failed. Check the CSV format and try again.');
+          setImportStatus('Import failed. An unexpected error occurred while processing.');
         }
       },
-      error: () => {
-        setImportStatus('Import failed. Check the CSV format and try again.');
+      error: (error) => {
+        setImportStatus(`Import failed: ${error.message}`);
       }
     });
 

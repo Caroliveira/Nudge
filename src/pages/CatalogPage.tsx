@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
-import { isOneTimeTask } from '../utils/taskUtils';
+import { useCatalogFilter } from '../hooks/useCatalogFilter';
 import AddTaskForm from '../components/AddTaskForm';
 import CsvImport from '../components/CsvImport';
 import TaskCatalogItem from '../components/TaskCatalogItem';
@@ -10,16 +10,10 @@ import { Task } from '../types';
 const CatalogPage: React.FC = () => {
   const { tasks, addTask, updateTask, deleteTask } = useStore();
   const { backToSelection, toggleTask } = useTaskActions();
+  const { view, setView, filteredTasks } = useCatalogFilter(tasks);
+  
   const [isAdding, setIsAdding] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [view, setView] = useState<'tasks' | 'archive'>('tasks');
-
-  const filteredTasks = tasks.filter(t => {
-    const oneTime = isOneTimeTask(t);
-    if (view === 'tasks') return !oneTime || !t.isCompleted;
-    if (view === 'archive') return oneTime && t.isCompleted;
-    return false;
-  });
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[80vh]">
@@ -34,9 +28,12 @@ const CatalogPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex gap-4 mb-6 border-b border-surface pb-1">
+      <div className="flex gap-4 mb-6 border-b border-surface pb-1" role="tablist" aria-label="Catalog views">
         <button
           onClick={() => setView('tasks')}
+          role="tab"
+          aria-selected={view === 'tasks'}
+          aria-controls="catalog-panel"
           className={`pb-2 px-1 text-lg font-medium transition-colors relative ${
             view === 'tasks' ? 'text-text' : 'text-soft hover:text-text'
           }`}
@@ -48,6 +45,9 @@ const CatalogPage: React.FC = () => {
         </button>
         <button
           onClick={() => setView('archive')}
+          role="tab"
+          aria-selected={view === 'archive'}
+          aria-controls="catalog-panel"
           className={`pb-2 px-1 text-lg font-medium transition-colors relative ${
             view === 'archive' ? 'text-text' : 'text-soft hover:text-text'
           }`}
@@ -59,7 +59,11 @@ const CatalogPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 space-y-6 px-1">
+      <div 
+        id="catalog-panel"
+        role="tabpanel"
+        className="flex-1 overflow-y-auto pr-2 space-y-6 px-1"
+      >
         {isAdding ? (
           <AddTaskForm
             onSubmit={(task) => {
