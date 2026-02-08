@@ -42,6 +42,21 @@ export const useStore = create<StoreState>()(
         }
         return { tasks: newTasks };
       }),
+
+      refreshRecurringTasks: () => set((state) => {
+        const now = Date.now();
+        const tasks = state.tasks.map((t) => {
+          if (t.isCompleted && t.nextAvailableAt && now >= t.nextAvailableAt) {
+            return {
+              ...t,
+              isCompleted: false,
+              nextAvailableAt: undefined
+            };
+          }
+          return t;
+        });
+        return { tasks };
+      }),
     }),
     {
       name: STORAGE_KEY,

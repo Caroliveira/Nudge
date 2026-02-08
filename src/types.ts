@@ -33,6 +33,7 @@ export interface StoreState {
   addTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   deleteTask: (id: string) => void;
+  refreshRecurringTasks: () => void;
 }
 
 export interface CsvTaskRow {
