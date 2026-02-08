@@ -1,24 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EffortLevel, Task } from '../types';
+import { EffortLevel, Task, StoreState } from '../types';
 import { getNextAvailableDate } from '../utils/taskUtils';
 import { STORAGE_KEY } from '../constants';
 
-interface StoreState {
-  // State
-  tasks: Task[];
-  currentTask: Task | null;
-  selectedLevel: EffortLevel | null;
-
-  // Actions
-  setTasks: (tasks: Task[]) => void;
-  setCurrentTask: (task: Task | null) => void;
-  setSelectedLevel: (level: EffortLevel | null) => void;
-  
-  addTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
-  updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
-  deleteTask: (id: string) => void;
-}
 
 export const useStore = create<StoreState>()(
   persist(

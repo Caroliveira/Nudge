@@ -1,14 +1,8 @@
 import React, { useRef, useState } from 'react';
 import Papa from 'papaparse';
-import { EffortLevel, RecurrenceUnit } from '../types';
+import { EffortLevel, RecurrenceUnit, CsvTaskRow } from '../types';
 import { useStore } from '../store/useStore';
 
-interface CsvTaskRow {
-  title: string;
-  effort: string;
-  interval: string;
-  unit: string;
-}
 
 const CsvImport: React.FC = () => {
   const { tasks, addTask } = useStore();
