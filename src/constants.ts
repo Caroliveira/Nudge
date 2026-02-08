@@ -39,3 +39,22 @@ export const EFFORT_LABELS: Record<EffortLevel, string> = {
   [EffortLevel.MEDIUM]: 'Medium Effort',
   [EffortLevel.HIGH]: 'High Effort',
 };
+
+export const SWIPE_ACTIONS = {
+  DELETE: {
+    threshold: -150,
+    baseText: "Delete",
+    activeText: "Release to Delete",
+    baseColor: "rgb(239, 68, 68)", // red-500
+    activeColor: "rgb(220, 38, 38)", // red-600
+    alignment: "end" as const,
+  },
+  EDIT: {
+    threshold: 150,
+    baseText: "Edit",
+    activeText: "Release to Edit",
+    baseColor: "rgb(59, 130, 246)", // blue-500
+    activeColor: "rgb(37, 99, 235)", // blue-600
+    alignment: "start" as const,
+  },
+} as const;

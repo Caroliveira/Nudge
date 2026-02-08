@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useMotionValue, useMotionValueEvent, PanInfo } from 'framer-motion';
+import { motion, useMotionValue, useMotionValueEvent, useTransform, PanInfo, MotionValue } from 'framer-motion';
 import { SWIPE_CONFIG } from '../constants';
 
 interface SwipeableItemProps {
   children: React.ReactNode;
   onSwipeRight?: () => void;
-  renderLeftBackground?: (offset: number) => React.ReactNode;
+  renderLeftBackground?: (x: MotionValue<number>) => React.ReactNode;
   onSwipeLeft?: () => void;
-  renderRightBackground?: (offset: number) => React.ReactNode;
+  renderRightBackground?: (x: MotionValue<number>) => React.ReactNode;
   className?: string;
 }
 
@@ -19,14 +19,12 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   renderRightBackground,
   className = '',
 }) => {
-  const [offsetX, setOffsetX] = useState(0);
   const x = useMotionValue(0);
   const isDragging = useRef(false);
   const dragTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useMotionValueEvent(x, "change", (latest) => {
-    setOffsetX(latest);
-  });
+  const rightOpacity = useTransform(x, (val) => (val < 0 ? 1 : 0));
+  const leftOpacity = useTransform(x, (val) => (val > 0 ? 1 : 0));
 
   useEffect(() => {
     return () => {
@@ -79,29 +77,25 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
 
 
       {renderRightBackground && (
-        <div 
+        <motion.div 
           className="absolute inset-y-0 right-0 w-full"
           style={{ 
-            opacity: offsetX < 0 ? 1 : 0,
-            visibility: offsetX < 0 ? 'visible' : 'hidden'
+            opacity: rightOpacity,
           }}
-          aria-hidden={offsetX >= 0}
         >
-          {renderRightBackground(offsetX)}
-        </div>
+          {renderRightBackground(x)}
+        </motion.div>
       )}
 
       {renderLeftBackground && (
-        <div 
+        <motion.div 
             className="absolute inset-y-0 left-0 w-full"
             style={{ 
-                opacity: offsetX > 0 ? 1 : 0,
-                visibility: offsetX > 0 ? 'visible' : 'hidden'
+                opacity: leftOpacity,
             }}
-            aria-hidden={offsetX <= 0}
         >
-            {renderLeftBackground(offsetX)}
-        </div>
+            {renderLeftBackground(x)}
+        </motion.div>
       )}
 
       <motion.div

@@ -1,7 +1,9 @@
 import React from 'react';
+import { MotionValue } from 'framer-motion';
 import { Task } from '../types';
-import { EFFORT_LABELS } from '../constants';
+import { EFFORT_LABELS, SWIPE_ACTIONS } from '../constants';
 import SwipeableItem from './SwipeableItem';
+import { SwipeAction } from './TaskCatalogActions';
 
 interface TaskCatalogItemProps {
   task: Task;
@@ -12,44 +14,12 @@ interface TaskCatalogItemProps {
 
 const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDelete, onEdit }) => {
   
-  const renderDeleteAction = (offsetX: number) => (
-    <div 
-      className={`h-full w-full flex items-center justify-end pr-6 rounded-xl transition-colors ${
-        offsetX < -150 ? 'bg-red-600' : 'bg-red-500'
-      }`}
-    >
-      <button 
-        onClick={(e) => {
-            e.stopPropagation();
-            onDelete(task.id);
-        }}
-        className="text-white font-bold p-2 transition-transform"
-        style={{ transform: offsetX < -150 ? 'scale(1.1)' : 'scale(1)' }}
-        aria-label="Delete task"
-      >
-        {offsetX < -150 ? 'Release to Delete' : 'Delete'}
-      </button>
-    </div>
+  const renderDeleteAction = (x: MotionValue<number>) => (
+    <SwipeAction x={x} onClick={() => onDelete(task.id)} {...SWIPE_ACTIONS.DELETE} />
   );
 
-  const renderEditAction = (offsetX: number) => (
-    <div 
-        className={`h-full w-full flex items-center justify-start pl-6 rounded-xl transition-colors ${
-        offsetX > 150 ? 'bg-blue-600' : 'bg-blue-500'
-        }`}
-    >
-        <button 
-        onClick={(e) => {
-            e.stopPropagation();
-            onEdit?.();
-        }}
-        className="text-white font-bold p-2 transition-transform"
-        style={{ transform: offsetX > 150 ? 'scale(1.1)' : 'scale(1)' }}
-        aria-label="Edit task"
-        >
-        {offsetX > 150 ? 'Release to Edit' : 'Edit'}
-        </button>
-    </div>
+  const renderEditAction = (x: MotionValue<number>) => (
+      <SwipeAction x={x} onClick={onEdit!} {...SWIPE_ACTIONS.EDIT} />
   );
 
   return (
