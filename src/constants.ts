@@ -8,6 +8,17 @@ export const APP_ROUTES = {
 
 export const STORAGE_KEY = 'nudge_tasks';
 
+export const IMPORT_CONFIG = {
+  MAX_FILE_SIZE_BYTES: 1024 * 1024, // 1MB
+  STATUS_MESSAGE_DURATION_MS: 5000,
+} as const;
+
+export const SWIPE_CONFIG = {
+  THRESHOLD_PX: 150,
+  DRAG_CONSTRAINT_PX: 300,
+  DRAG_END_TIMEOUT_MS: 50,
+} as const;
+
 export const ENCOURAGEMENTS = [
   "Take a deep breath. You've got this.",
   "One step at a time is all it takes.",

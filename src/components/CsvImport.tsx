@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { EffortLevel, RecurrenceUnit, CsvTaskRow } from '../types';
 import { useStore } from '../store/useStore';
+import { IMPORT_CONFIG } from '../constants';
 
 
 const CsvImport: React.FC = () => {
@@ -9,13 +10,20 @@ const CsvImport: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!importStatus) return;
+    const timer = setTimeout(() => {
+      setImportStatus(null);
+    }, IMPORT_CONFIG.STATUS_MESSAGE_DURATION_MS);
+    return () => clearTimeout(timer);
+  }, [importStatus]);
+
   const handleImportCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 1024 * 1024) { // 1MB limit
+    if (file.size > IMPORT_CONFIG.MAX_FILE_SIZE_BYTES) {
         setImportStatus('File too large. Maximum size is 1MB.');
-        setTimeout(() => setImportStatus(null), 5000);
         return;
     }
 
@@ -34,7 +42,6 @@ const CsvImport: React.FC = () => {
 
           if (!hasAllHeaders) {
             setImportStatus(`Invalid CSV format. Required headers: ${requiredHeaders.join(', ')}`);
-            setTimeout(() => setImportStatus(null), 5000);
             return;
           }
 
@@ -80,17 +87,12 @@ const CsvImport: React.FC = () => {
 
           const skippedMsg = skippedCount > 0 ? ` (${skippedCount} duplicates skipped)` : '';
           setImportStatus(`Successfully imported ${count} tasks${skippedMsg}.`);
-          setTimeout(() => setImportStatus(null), 3000);
-        } catch (err) {
-          console.error('Import processing error:', err);
+        } catch {
           setImportStatus('Import failed. Check the CSV format and try again.');
-          setTimeout(() => setImportStatus(null), 5000);
         }
       },
-      error: (error) => {
-        console.error('CSV Parse Error:', error);
+      error: () => {
         setImportStatus('Import failed. Check the CSV format and try again.');
-        setTimeout(() => setImportStatus(null), 5000);
       }
     });
 

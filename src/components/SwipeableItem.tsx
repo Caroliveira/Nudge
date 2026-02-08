@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useMotionValueEvent, PanInfo } from 'framer-motion';
+import { SWIPE_CONFIG } from '../constants';
 
 interface SwipeableItemProps {
   children: React.ReactNode;
@@ -21,10 +22,17 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   const [offsetX, setOffsetX] = useState(0);
   const x = useMotionValue(0);
   const isDragging = useRef(false);
+  const dragTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useMotionValueEvent(x, "change", (latest) => {
     setOffsetX(latest);
   });
+
+  useEffect(() => {
+    return () => {
+      if (dragTimeoutRef.current) clearTimeout(dragTimeoutRef.current);
+    };
+  }, []);
 
   const handleDragStart = () => {
     isDragging.current = true;
@@ -32,12 +40,12 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     // Small timeout to prevent click immediately after drag release
-    setTimeout(() => {
+    dragTimeoutRef.current = setTimeout(() => {
         isDragging.current = false;
-    }, 50);
+    }, SWIPE_CONFIG.DRAG_END_TIMEOUT_MS);
 
     const currentX = info.offset.x;
-    const threshold = 150;
+    const threshold = SWIPE_CONFIG.THRESHOLD_PX;
 
     if (currentX < -threshold && onSwipeLeft) onSwipeLeft();
     else if (currentX > threshold && onSwipeRight) onSwipeRight();
@@ -101,8 +109,8 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
         style={{ x }}
         drag="x"
         dragConstraints={{ 
-            left: onSwipeLeft ? -300 : 0, 
-            right: onSwipeRight ? 300 : 0 
+            left: onSwipeLeft ? -SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0, 
+            right: onSwipeRight ? SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0 
         }}
         dragElastic={0}
         dragSnapToOrigin
