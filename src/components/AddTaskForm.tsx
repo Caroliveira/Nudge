@@ -32,10 +32,12 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
     <form
       onSubmit={handleSubmit}
       className="bg-surface p-6 rounded-2xl space-y-6 fade-in border border-soft/20 shadow-sm"
+      aria-label={initialValues ? 'Edit task' : 'Add new task'}
     >
       <div>
-        <label className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Title</label>
+        <label htmlFor="task-title" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Title</label>
         <input
+          id="task-title"
           autoFocus
           className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none text-lg"
           value={newTitle}
@@ -46,8 +48,9 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Effort Level</label>
+          <label htmlFor="task-effort" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Effort Level</label>
           <select
+            id="task-effort"
             className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
             value={newLevel}
             onChange={(e) => setNewLevel(e.target.value as EffortLevel)}
@@ -60,18 +63,21 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
           </select>
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Recurrence</label>
+          <label htmlFor="task-recurrence-unit" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Recurrence</label>
           <div className="flex gap-2">
             {recurrenceUnit !== 'none' && (
               <input
+                id="task-recurrence-interval"
                 type="number"
                 min={1}
                 className="w-20 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none"
                 value={recurrenceInterval}
                 onChange={(e) => setRecurrenceInterval(parseInt(e.target.value, 10) || 1)}
+                aria-label="Recurrence interval"
               />
             )}
             <select
+              id="task-recurrence-unit"
               className="flex-1 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
               value={recurrenceUnit}
               onChange={(e) => setRecurrenceUnit(e.target.value as RecurrenceUnit)}

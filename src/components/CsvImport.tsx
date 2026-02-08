@@ -30,7 +30,6 @@ const CsvImport: React.FC = () => {
     Papa.parse<CsvTaskRow>(file, {
       header: true,
       skipEmptyLines: true,
-      worker: true,
       transformHeader: (h) => h.trim().toLowerCase(),
       complete: (results) => {
         try {

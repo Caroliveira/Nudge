@@ -19,7 +19,7 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
   );
 
   const renderEditAction = (x: MotionValue<number>) => (
-      <SwipeAction x={x} onClick={onEdit!} {...SWIPE_ACTIONS.EDIT} />
+      <SwipeAction x={x} onClick={() => onEdit?.()} {...SWIPE_ACTIONS.EDIT} />
   );
 
   return (
