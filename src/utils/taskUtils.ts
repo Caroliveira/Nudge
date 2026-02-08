@@ -1,4 +1,4 @@
-import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
+import { addDays, addWeeks, addMonths, addYears, startOfDay } from 'date-fns';
 import { Task, EffortLevel, RecurringUnit } from '../types';
 
 export const EFFORT_LABELS: Record<EffortLevel, string> = {
@@ -21,7 +21,8 @@ export function getNextAvailableDate(task: Task): Date | null {
   const interval = task.recurrenceInterval ?? 1;
   
   const calculator = recurrenceMap[task.recurrenceUnit as RecurringUnit];
-  return calculator?.(last, interval) ?? last;
+  const nextDate = calculator?.(last, interval) ?? last;
+  return startOfDay(nextDate);
 }
 
 export function isTaskAvailable(task: Task, now: Date = new Date()): boolean {

@@ -19,4 +19,4 @@ export interface Task {
   nextAvailableAt?: number;
 }
 
-export type AppState = 'selection' | 'task' | 'catalog' | 'celebration' | 'total-victory';
+export type AppState = 'selection' | 'task' | 'catalog';

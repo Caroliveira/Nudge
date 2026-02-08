@@ -5,8 +5,6 @@ const FOOTER_MESSAGE: Record<AppState, string | null> = {
   selection: 'Be intentional with your energy.',
   task: 'Be intentional with your energy.',
   catalog: null,
-  celebration: null,
-  'total-victory': "You've found complete stillness for now. You earned it.",
 };
 
 interface AppLayoutProps {
@@ -15,7 +13,7 @@ interface AppLayoutProps {
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({ state, children }) => {
-  const showFooter = state !== 'catalog' && state !== 'celebration';
+  const showFooter = state !== 'catalog';
   const footerMessage = showFooter ? FOOTER_MESSAGE[state] : null;
 
   return (

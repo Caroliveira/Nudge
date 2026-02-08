@@ -1,6 +1,7 @@
 import React from 'react';
 import { EffortLevel } from '../types';
 import { useStore } from '../store/useStore';
+import { useTaskActions } from '../hooks/useTaskActions';
 
 const LEVEL_CONTENT: Record<EffortLevel, { title: string; message: string; color: string }> = {
   [EffortLevel.LOW]: {
@@ -21,7 +22,8 @@ const LEVEL_CONTENT: Record<EffortLevel, { title: string; message: string; color
 };
 
 const Celebration: React.FC = () => {
-  const { selectedLevel, backToSelection } = useStore();
+  const { selectedLevel } = useStore();
+  const { backToSelection } = useTaskActions();
   
   if (!selectedLevel) return null;
 

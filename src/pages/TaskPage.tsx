@@ -1,7 +1,8 @@
-
-import { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useStore } from '../store/useStore';
+import { useTaskActions } from '../hooks/useTaskActions';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
+import Celebration from '../components/Celebration';
 
 const ENCOURAGEMENTS = [
   "Take a deep breath. You've got this.",
@@ -18,15 +19,25 @@ const ENCOURAGEMENTS = [
   "Each small action builds a better tomorrow."
 ];
 
-const TaskDisplay: React.FC = () => {
-  const { currentTask, selectedLevel, markTaskDone, backToSelection, refreshTask, tasks } = useStore();
+const TaskPage: React.FC = () => {
+  const { currentTask, selectedLevel, tasks } = useStore();
+  const { markTaskDone, backToSelection, refreshTask } = useTaskActions();
   const { availableCounts } = useTaskAvailability(tasks);
+  const [showCelebration, setShowCelebration] = useState(false);
   
   const hasAlternatives = selectedLevel ? availableCounts[selectedLevel] > 1 : false;
 
   const encouragement = useMemo(() => {
     return ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
   }, [currentTask?.id]);
+
+  const handleMarkDone = () => {
+    const result = markTaskDone();
+    if (result.levelCleared) setShowCelebration(true);
+    else backToSelection();
+  };
+
+  if (showCelebration) return <Celebration />;
 
   if (!currentTask) return null;
 
@@ -41,7 +52,7 @@ const TaskDisplay: React.FC = () => {
 
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
         <button
-          onClick={markTaskDone}
+          onClick={handleMarkDone}
           className="w-full py-4 px-8 bg-success text-warm rounded-full text-lg font-medium hover:bg-success-dark transition-colors shadow-sm active:scale-95"
         >
           Mark as complete
@@ -66,4 +77,4 @@ const TaskDisplay: React.FC = () => {
   );
 };
 
-export default TaskDisplay;
+export default TaskPage;

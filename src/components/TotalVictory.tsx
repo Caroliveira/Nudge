@@ -1,12 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
 
 const TotalVictory: React.FC = () => {
-  const { setAppState, tasks } = useStore();
+  const { tasks } = useStore();
   const { nextRefreshDays } = useTaskAvailability(tasks);
+  const navigate = useNavigate();
   
-  const handleAddMore = () => setAppState('catalog');
+  const handleAddMore = () => navigate('/catalog');
 
   return (
     <div className="flex flex-col items-center justify-center max-w-2xl mx-auto px-6 text-center space-y-10 fade-in">

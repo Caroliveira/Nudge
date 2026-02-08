@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { isTaskAvailable, isOneTimeTask } from '../utils/taskUtils';
-import AddTaskForm from './AddTaskForm';
-import CsvImport from './CsvImport';
-import TaskCatalogItem from './TaskCatalogItem';
+import { useTaskActions } from '../hooks/useTaskActions';
+import { isOneTimeTask } from '../utils/taskUtils';
+import AddTaskForm from '../components/AddTaskForm';
+import CsvImport from '../components/CsvImport';
+import TaskCatalogItem from '../components/TaskCatalogItem';
 import { Task } from '../types';
 
-const TaskCatalog: React.FC = () => {
-  const { tasks, addTask, updateTask, toggleTask, deleteTask, backToSelection } = useStore();
+const CatalogPage: React.FC = () => {
+  const { tasks, addTask, updateTask, toggleTask, deleteTask } = useStore();
+  const { backToSelection } = useTaskActions();
   const [isAdding, setIsAdding] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [view, setView] = useState<'tasks' | 'archive'>('tasks');
@@ -93,7 +95,7 @@ const TaskCatalog: React.FC = () => {
           </div>
         )}
 
-        <div className="space-y-3 pb-8">
+        <ul className="space-y-3 pb-8">
           {filteredTasks.length === 0 && !isAdding && !editingTask && (
             <div className="text-center py-12 px-6">
               <p className="text-soft italic text-lg mb-2">
@@ -117,10 +119,10 @@ const TaskCatalog: React.FC = () => {
               onEdit={() => setEditingTask(task)}
             />
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );
 };
 
-export default TaskCatalog;
+export default CatalogPage;
