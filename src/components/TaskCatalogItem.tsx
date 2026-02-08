@@ -1,6 +1,6 @@
 import React from 'react';
 import { Task } from '../types';
-import { EFFORT_LABELS } from '../utils/taskUtils';
+import { EFFORT_LABELS } from '../constants';
 import SwipeableItem from './SwipeableItem';
 
 interface TaskCatalogItemProps {

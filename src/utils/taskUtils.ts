@@ -1,11 +1,6 @@
 import { addDays, addWeeks, addMonths, addYears, startOfDay } from 'date-fns';
 import { Task, EffortLevel, RecurringUnit } from '../types';
 
-export const EFFORT_LABELS: Record<EffortLevel, string> = {
-  [EffortLevel.LOW]: 'Low Effort',
-  [EffortLevel.MEDIUM]: 'Medium Effort',
-  [EffortLevel.HIGH]: 'High Effort',
-};
 
 
 const recurrenceMap: Record<RecurringUnit, (last: Date, interval: number) => Date> = {

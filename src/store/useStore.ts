@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EffortLevel, Task } from '../types';
 import { getNextAvailableDate } from '../utils/taskUtils';
+import { STORAGE_KEY } from '../constants';
 
 interface StoreState {
   // State
@@ -58,7 +59,7 @@ export const useStore = create<StoreState>()(
       }),
     }),
     {
-      name: 'nudge_tasks',
+      name: STORAGE_KEY,
       partialize: (state) => ({ tasks: state.tasks }),
       version: 1,
       migrate: (persistedState: unknown, version: number) => {

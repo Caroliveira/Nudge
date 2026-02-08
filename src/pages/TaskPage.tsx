@@ -3,21 +3,8 @@ import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
 import Celebration from '../components/Celebration';
+import { ENCOURAGEMENTS } from '../constants';
 
-const ENCOURAGEMENTS = [
-  "Take a deep breath. You've got this.",
-  "One step at a time is all it takes.",
-  "Progress is progress, no matter how small.",
-  "Focus on the now. The rest can wait.",
-  "You are capable of more than you think.",
-  "Slow and steady wins the race.",
-  "Be kind to yourself as you move forward.",
-  "Your effort today is enough.",
-  "The mountain is climbed one pebble at a time.",
-  "Start where you are. Use what you have.",
-  "Quiet your mind and focus on the task at hand.",
-  "Each small action builds a better tomorrow."
-];
 
 const TaskPage: React.FC = () => {
   const { currentTask, selectedLevel, tasks } = useStore();

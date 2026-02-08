@@ -7,7 +7,7 @@ interface EffortLevelButtonProps {
   onSelect: (level: EffortLevel) => void;
 }
 
-import { EFFORT_LABELS } from '../utils/taskUtils';
+import { EFFORT_LABELS } from '../constants';
 
 const EffortLevelButton: React.FC<EffortLevelButtonProps> = ({ level, availableCount, onSelect }) => {
   const isDisabled = availableCount === 0;
