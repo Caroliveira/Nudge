@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { EffortLevel, Task } from '../types';
-import { getTasksForLevel, pickRandomTask, getNextAvailableDate, isTaskAvailable } from '../utils/taskUtils';
+import { EffortLevel } from '../types';
+import { getTasksForLevel, pickRandomTask, isTaskAvailable } from '../utils/taskUtils';
+import { APP_ROUTES } from '../constants';
 
 export function useTaskActions() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export function useTaskActions() {
     currentTask, 
     setSelectedLevel, 
     setCurrentTask, 
-    setTasks 
+    completeTask
   } = useStore();
 
   const selectLevel = (level: EffortLevel) => {
@@ -21,7 +22,7 @@ export function useTaskActions() {
       const picked = pickRandomTask(candidates);
       setSelectedLevel(level);
       setCurrentTask(picked);
-      navigate('/task');
+      navigate(APP_ROUTES.TASK);
     }
   };
 
@@ -48,28 +49,19 @@ export function useTaskActions() {
   const backToSelection = () => {
       setSelectedLevel(null);
       setCurrentTask(null);
-      navigate('/');
+      navigate(APP_ROUTES.HOME);
   };
 
   const markTaskDone = () => {
     if (currentTask && selectedLevel) {
-      const now = Date.now();
-      
-      const updatedTasks = tasks.map(t => {
-        if (t.id === currentTask.id) {
-          const updatedTask = { ...t, isCompleted: true, lastCompletedAt: now };
-          const nextDate = getNextAvailableDate(updatedTask);
-          return {
-            ...updatedTask,
-            nextAvailableAt: nextDate ? nextDate.getTime() : undefined
-          };
-        }
-        return t;
-      });
-      
-      setTasks(updatedTasks);
-
-      const remainingInLevel = updatedTasks.filter(t => t.level === selectedLevel && isTaskAvailable(t, new Date(now))).length;
+      completeTask(currentTask.id);
+     
+      const now = new Date();
+      const remainingInLevel = tasks.filter(t => 
+        t.id !== currentTask.id &&
+        t.level === selectedLevel && 
+        isTaskAvailable(t, now)
+      ).length;
       
       return { levelCleared: remainingInLevel === 0 };
     } 

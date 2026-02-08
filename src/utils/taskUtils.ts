@@ -25,6 +25,20 @@ export function getNextAvailableDate(task: Task): Date | null {
   return startOfDay(nextDate);
 }
 
+export function calculateTaskCompletion(task: Task, isCompleted: boolean): Task {
+  const lastCompletedAt = isCompleted ? Date.now() : undefined;
+  
+  const tempTask = { ...task, isCompleted, lastCompletedAt };
+  const nextDate = isCompleted ? getNextAvailableDate(tempTask) : null;
+
+  return {
+    ...task,
+    isCompleted,
+    lastCompletedAt,
+    nextAvailableAt: nextDate ? nextDate.getTime() : undefined
+  };
+}
+
 export function isTaskAvailable(task: Task, now: Date = new Date()): boolean {
   if (!task.isCompleted) return true;
   if (task.nextAvailableAt !== undefined) return now.getTime() >= task.nextAvailableAt;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { EffortLevel, Task } from '../types';
-import { getNextAvailableDate } from '../utils/taskUtils';
+import { calculateTaskCompletion, getNextAvailableDate } from '../utils/taskUtils';
 
 interface StoreState {
   // State
@@ -17,6 +17,7 @@ interface StoreState {
   addTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   toggleTask: (id: string) => void;
+  completeTask: (id: string) => void;
   deleteTask: (id: string) => void;
 }
 
@@ -48,10 +49,7 @@ export const useStore = create<StoreState>()(
           
           const updatedTask = { ...t, ...updates };
           
-          if (updatedTask.isCompleted) {
-             const nextDate = getNextAvailableDate(updatedTask);
-             updatedTask.nextAvailableAt = nextDate ? nextDate.getTime() : undefined;
-          } else updatedTask.nextAvailableAt = undefined;
+          if ('isCompleted' in updates) return calculateTaskCompletion(updatedTask, !!updates.isCompleted);
           
           return updatedTask;
         })
@@ -61,23 +59,20 @@ export const useStore = create<StoreState>()(
         const task = state.tasks.find(t => t.id === id);
         if (!task) return {};
 
-        const isNowCompleted = !task.isCompleted;
-        const lastCompletedAt = isNowCompleted ? Date.now() : undefined;
-        
-        const nextDate = isNowCompleted 
-          ? getNextAvailableDate({ ...task, isCompleted: true, lastCompletedAt } as Task) 
-          : null;
+        return {
+          tasks: state.tasks.map((t) =>
+            t.id === id ? calculateTaskCompletion(t, !t.isCompleted) : t
+          )
+        };
+      }),
+
+      completeTask: (id) => set((state) => {
+        const task = state.tasks.find(t => t.id === id);
+        if (!task) return {};
 
         return {
           tasks: state.tasks.map((t) =>
-            t.id === id
-              ? { 
-                  ...t, 
-                  isCompleted: isNowCompleted, 
-                  lastCompletedAt,
-                  nextAvailableAt: nextDate ? nextDate.getTime() : undefined
-                }
-              : t
+            t.id === id ? calculateTaskCompletion(t, true) : t
           )
         };
       }),

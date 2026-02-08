@@ -1,21 +1,10 @@
 import React from 'react';
-import { AppState } from '../types';
-
-const FOOTER_MESSAGE: Record<AppState, string | null> = {
-  selection: 'Be intentional with your energy.',
-  task: 'Be intentional with your energy.',
-  catalog: null,
-};
 
 interface AppLayoutProps {
-  state: AppState;
   children: React.ReactNode;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ state, children }) => {
-  const showFooter = state !== 'catalog';
-  const footerMessage = showFooter ? FOOTER_MESSAGE[state] : null;
-
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <main className="min-h-screen w-full flex flex-col items-center justify-center bg-warm p-4 select-none">
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-30">
@@ -26,14 +15,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ state, children }) => {
       <div className="z-10 w-full max-w-4xl flex items-center justify-center">
         {children}
       </div>
-
-      {footerMessage && (
-        <footer className="fixed bottom-8 text-center w-full z-10">
-          <p className="text-xs text-soft opacity-50 uppercase tracking-widest font-medium">
-            {footerMessage}
-          </p>
-        </footer>
-      )}
     </main>
   );
 };
