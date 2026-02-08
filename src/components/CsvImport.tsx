@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { EffortLevel, RecurrenceUnit, CsvTaskRow } from '../types';
+import { CsvTaskRow } from '../types';
 import { useStore } from '../store/useStore';
 import { IMPORT_CONFIG } from '../constants';
+import { validateHeaders, processImportedTasks } from '../utils/csvUtils';
 
 
 const CsvImport: React.FC = () => {
@@ -35,55 +36,15 @@ const CsvImport: React.FC = () => {
         try {
           const { data, meta } = results;
           
-          // Validate headers
-          const requiredHeaders = ['title', 'effort', 'interval', 'unit'];
           const headers = meta.fields || [];
-          const hasAllHeaders = requiredHeaders.every(h => headers.includes(h));
-
-          if (!hasAllHeaders) {
-            setImportStatus(`Invalid CSV format. Required headers: ${requiredHeaders.join(', ')}`);
+          if (!validateHeaders(headers)) {
+            setImportStatus(`Invalid CSV format. Required headers: title, effort, interval, unit`);
             return;
           }
 
-          let count = 0;
-          let skippedCount = 0;
+          const { tasksToAdd, skippedCount, count } = processImportedTasks(data, tasks);
 
-          data.forEach((taskData) => {
-            // Strict check for all required fields
-            if (
-              taskData.title && 
-              taskData.effort && 
-              taskData.interval && 
-              taskData.unit
-            ) {
-              const title = taskData.title.trim();
-              const isDuplicate = tasks.some((t) => t.title.toLowerCase() === title.toLowerCase());
-
-              if (isDuplicate) {
-                skippedCount++;
-                return;
-              }
-
-              let level = EffortLevel.LOW;
-              const effortStr = taskData.effort.toLowerCase();
-              if (effortStr.includes('medium')) level = EffortLevel.MEDIUM;
-              if (effortStr.includes('high')) level = EffortLevel.HIGH;
-
-              const interval = parseInt(taskData.interval, 10);
-              const unitRaw = taskData.unit.toLowerCase();
-              const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw) ? (unitRaw as RecurrenceUnit) : 'none';
-
-              if (unit !== 'none' && (isNaN(interval) || interval <= 0)) return;
-
-              addTask({
-                title,
-                level,
-                recurrenceInterval: unit !== 'none' ? interval : undefined,
-                recurrenceUnit: unit,
-              });
-              count++;
-            }
-          });
+          tasksToAdd.forEach(task => addTask(task));
 
           const skippedMsg = skippedCount > 0 ? ` (${skippedCount} duplicates skipped)` : '';
           setImportStatus(`Successfully imported ${count} tasks${skippedMsg}.`);
@@ -137,6 +98,7 @@ const CsvImport: React.FC = () => {
           onChange={handleImportCSV}
           accept=".csv"
           className="hidden"
+          aria-label="Import CSV file"
         />
       </div>
       {importStatus && (

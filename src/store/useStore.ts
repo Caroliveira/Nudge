@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { EffortLevel, Task, StoreState } from '../types';
-import { getNextAvailableDate } from '../utils/taskUtils';
+import { StoreState } from '../types';
 import { STORAGE_KEY } from '../constants';
 
 
@@ -61,24 +60,6 @@ export const useStore = create<StoreState>()(
     {
       name: STORAGE_KEY,
       partialize: (state) => ({ tasks: state.tasks }),
-      version: 1,
-      migrate: (persistedState: unknown, version: number) => {
-        if (version === 0) {
-          const state = persistedState as { tasks?: Task[] };
-          const tasks = state.tasks || [];
-          const migratedTasks = tasks.map((t: Task) => {
-            if (t.isCompleted && t.lastCompletedAt && !t.nextAvailableAt) {
-              const next = getNextAvailableDate(t);
-              if (next) {
-                return { ...t, nextAvailableAt: next.getTime() };
-              }
-            }
-            return t;
-          });
-          return { ...(persistedState as Record<string, unknown>), tasks: migratedTasks };
-        }
-        return persistedState;
-      },
     }
   )
 );
