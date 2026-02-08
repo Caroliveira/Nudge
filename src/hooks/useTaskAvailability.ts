@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Task, EffortLevel } from '../types';
 import { differenceInCalendarDays } from 'date-fns';
-import { isTaskAvailable, getNextAvailableDate } from '../utils/taskUtils';
+import { isTaskAvailable } from '../utils/taskUtils';
 
 export { isTaskAvailable };
 
@@ -25,13 +25,10 @@ export function useTaskAvailability(tasks: Task[]) {
       }
 
       // Calculate next refresh days
-      if (task.isCompleted && task.recurrenceUnit && task.recurrenceUnit !== 'none' && task.lastCompletedAt) {
-        const next = getNextAvailableDate(task);
-        if (next) {
-          hasRecurring = true;
-          const diff = differenceInCalendarDays(next, now);
-          if (diff < minDays) minDays = diff;
-        }
+      if (task.isCompleted && task.nextAvailableAt) {
+        hasRecurring = true;
+        const diff = differenceInCalendarDays(task.nextAvailableAt, now);
+        if (diff < minDays) minDays = diff;
       }
     }
 

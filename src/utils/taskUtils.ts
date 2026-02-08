@@ -1,4 +1,4 @@
-import { addDays, addWeeks, addMonths, addYears, isBefore } from 'date-fns';
+import { addDays, addWeeks, addMonths, addYears } from 'date-fns';
 import { Task, EffortLevel, RecurringUnit } from '../types';
 
 export const EFFORT_LABELS: Record<EffortLevel, string> = {
@@ -26,9 +26,8 @@ export function getNextAvailableDate(task: Task): Date | null {
 
 export function isTaskAvailable(task: Task, now: Date = new Date()): boolean {
   if (!task.isCompleted) return true;
-  const next = getNextAvailableDate(task);
-  if (!next) return false;
-  return !isBefore(now, next);
+  if (task.nextAvailableAt !== undefined) return now.getTime() >= task.nextAvailableAt;
+  return false;
 }
 
 export const pickRandomTask = (tasks: Task[]): Task | null => {

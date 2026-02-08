@@ -30,7 +30,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
     isDragging.current = true;
   };
 
-  const handleDragEnd = (_: any, info: PanInfo) => {
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
     // Small timeout to prevent click immediately after drag release
     setTimeout(() => {
         isDragging.current = false;
