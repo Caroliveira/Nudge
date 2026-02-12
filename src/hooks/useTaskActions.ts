@@ -12,7 +12,7 @@ export function useTaskActions() {
     currentTask, 
     setSelectedLevel, 
     setCurrentTask, 
-    updateTask
+    updateTask,
   } = useStore();
 
   const selectLevel = (level: EffortLevel) => {
@@ -20,28 +20,10 @@ export function useTaskActions() {
     
     if (candidates.length > 0) {
       const picked = pickRandomTask(candidates);
-      setSelectedLevel(level);
-      setCurrentTask(picked);
-      navigate(APP_ROUTES.TASK);
-    }
-  };
-
-  const refreshTask = () => {
-    if (selectedLevel) {
-      // Filter out the current task to ensure we get a new one if possible
-      const candidates = getTasksForLevel(tasks, selectedLevel)
-        .filter(t => t.id !== currentTask?.id);
-      
-      if (candidates.length > 0) {
-        const picked = pickRandomTask(candidates);
+      if (picked) {
+        setSelectedLevel(level);
         setCurrentTask(picked);
-      } else {
-         // If no other candidates, re-select (might pick the same one if it's the only one left)
-         const allCandidates = getTasksForLevel(tasks, selectedLevel);
-         if (allCandidates.length > 0) {
-            const picked = pickRandomTask(allCandidates);
-            setCurrentTask(picked);
-         }
+        navigate(APP_ROUTES.TASK);
       }
     }
   };
@@ -82,7 +64,6 @@ export function useTaskActions() {
 
   return {
     selectLevel,
-    refreshTask,
     markTaskDone,
     backToSelection,
     toggleTask

@@ -1,21 +1,26 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
+import { useTaskSession } from '../hooks/useTaskSession';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
 import Celebration from '../components/Celebration';
 import CompletionFeedback from '../components/CompletionFeedback';
-import { ENCOURAGEMENTS } from '../constants';
+import TaskExhausted from '../components/TaskExhausted';
+import { ENCOURAGEMENTS, APP_ROUTES } from '../constants';
 
 
 const TaskPage: React.FC = () => {
+  const navigate = useNavigate();
   const { currentTask, selectedLevel, tasks } = useStore();
-  const { markTaskDone, backToSelection, refreshTask } = useTaskActions();
+  const { markTaskDone, backToSelection } = useTaskActions();
+  const { isExhausted, refreshTask, resetLevel } = useTaskSession();
   const { availableCounts } = useTaskAvailability(tasks);
   const [showCelebration, setShowCelebration] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [completionResult, setCompletionResult] = useState<{ levelCleared: boolean } | null>(null);
-  
+
   const hasAlternatives = selectedLevel ? availableCounts[selectedLevel] > 1 : false;
 
   const encouragement = useMemo(() => {
@@ -35,7 +40,17 @@ const TaskPage: React.FC = () => {
     } else backToSelection();
   };
 
+  useEffect(() => {
+    if (!currentTask && !isExhausted) {
+      navigate(APP_ROUTES.HOME);
+    }
+  }, [currentTask, isExhausted, navigate]);
+
   if (showCelebration) return <Celebration />;
+
+  if (!currentTask && !isExhausted) return null;
+
+  if (isExhausted) return <TaskExhausted onReset={resetLevel} onBack={backToSelection} />;
 
   if (!currentTask) return null;
 
@@ -46,7 +61,7 @@ const TaskPage: React.FC = () => {
           <CompletionFeedback onComplete={handleFeedbackComplete} />
         )}
       </AnimatePresence>
-      
+
       <div className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-12 fade-in">
         <div className="space-y-6">
           <h2 className="text-4xl md:text-5xl text-accent serif italic">{currentTask.title}</h2>
@@ -71,8 +86,8 @@ const TaskPage: React.FC = () => {
             </button>
           )}
         </div>
-        
-        <button 
+
+        <button
           onClick={backToSelection}
           className="text-soft hover:text-accent transition-colors text-sm underline underline-offset-4"
         >

@@ -35,10 +35,7 @@ export const useStore = create<StoreState>()(
 
       deleteTask: (id) => set((state) => {
         const newTasks = state.tasks.filter((t) => t.id !== id);
-        // If deleting current task, clear it
-        if (state.currentTask?.id === id) {
-             return { tasks: newTasks, currentTask: null };
-        }
+        if (state.currentTask?.id === id) return { tasks: newTasks, currentTask: null };
         return { tasks: newTasks };
       }),
 
@@ -59,7 +56,11 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: STORAGE_KEY,
-      partialize: (state) => ({ tasks: state.tasks }),
-    }
+      partialize: (state) => ({ 
+        tasks: state.tasks,
+        currentTask: state.currentTask,
+        selectedLevel: state.selectedLevel,
+      }), 
+    }   
   )
 );
