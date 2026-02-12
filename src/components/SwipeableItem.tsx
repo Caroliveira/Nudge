@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useMotionValue, useMotionValueEvent, useTransform, PanInfo, MotionValue } from 'framer-motion';
+import { motion, useMotionValue, useMotionValueEvent, useTransform, PanInfo, MotionValue, animate } from 'framer-motion';
 import { SWIPE_CONFIG } from '../constants';
 
 interface SwipeableItemProps {
   children: React.ReactNode;
   onSwipeRight?: () => void;
-  renderLeftBackground?: (x: MotionValue<number>) => React.ReactNode;
+  renderLeftBackground?: (x: MotionValue<number>, isConfirmed: boolean) => React.ReactNode;
   onSwipeLeft?: () => void;
-  renderRightBackground?: (x: MotionValue<number>) => React.ReactNode;
+  renderRightBackground?: (x: MotionValue<number>, isConfirmed: boolean) => React.ReactNode;
   className?: string;
 }
 
@@ -22,9 +22,11 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   const x = useMotionValue(0);
   const isDragging = useRef(false);
   const dragTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isLeftConfirmed, setIsLeftConfirmed] = useState(false);
+  const [isRightConfirmed, setIsRightConfirmed] = useState(false);
 
-  const rightOpacity = useTransform(x, (val) => (val < 0 ? 1 : 0));
-  const leftOpacity = useTransform(x, (val) => (val > 0 ? 1 : 0));
+  const rightOpacity = useTransform(x, (val) => (val < -5 ? 1 : 0));
+  const leftOpacity = useTransform(x, (val) => (val > 5 ? 1 : 0));
 
   useEffect(() => {
     return () => {
@@ -36,7 +38,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
     isDragging.current = true;
   };
 
-  const handleDragEnd = (_: unknown, info: PanInfo) => {
+  const handleDragEnd = async (_: unknown, info: PanInfo) => {
     // Small timeout to prevent click immediately after drag release
     dragTimeoutRef.current = setTimeout(() => {
         isDragging.current = false;
@@ -45,8 +47,18 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
     const currentX = info.offset.x;
     const threshold = SWIPE_CONFIG.THRESHOLD_PX;
 
-    if (currentX < -threshold && onSwipeLeft) onSwipeLeft();
-    else if (currentX > threshold && onSwipeRight) onSwipeRight();
+    if (currentX < -threshold && onSwipeLeft) {
+      setIsLeftConfirmed(true);
+      await animate(x, -window.innerWidth, { type: "spring", stiffness: 500, damping: 50, mass: 1 });
+      onSwipeLeft();
+    } else if (currentX > threshold && onSwipeRight) {
+      setIsRightConfirmed(true);
+      onSwipeRight();
+      await animate(x, 0, { type: "spring", stiffness: 500, damping: 50 });
+      setIsRightConfirmed(false);
+    } else {
+      animate(x, 0, { type: "spring", stiffness: 500, damping: 50 });
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -83,7 +95,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
             opacity: rightOpacity,
           }}
         >
-          {renderRightBackground(x)}
+          {renderRightBackground(x, isLeftConfirmed)}
         </motion.div>
       )}
 
@@ -94,7 +106,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
                 opacity: leftOpacity,
             }}
         >
-            {renderLeftBackground(x)}
+            {renderLeftBackground(x, isRightConfirmed)}
         </motion.div>
       )}
 
@@ -107,7 +119,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
             right: onSwipeRight ? SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0 
         }}
         dragElastic={0}
-        dragSnapToOrigin
+        dragSnapToOrigin={false}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onClickCapture={(e) => {

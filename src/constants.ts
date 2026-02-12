@@ -47,12 +47,14 @@ export const SWIPE_ACTIONS = {
     activeText: "Release to Delete",
     baseColor: "rgb(239, 68, 68)", // red-500
     activeColor: "rgb(220, 38, 38)", // red-600
+    successText: "Deleted!",
     alignment: "end" as const,
   },
   EDIT: {
     threshold: 150,
     baseText: "Edit",
     activeText: "Release to Edit",
+    successText: "Editing...",
     baseColor: "rgb(59, 130, 246)", // blue-500
     activeColor: "rgb(37, 99, 235)", // blue-600
     alignment: "start" as const,

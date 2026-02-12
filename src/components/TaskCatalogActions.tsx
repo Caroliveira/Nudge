@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useTransform, useMotionValueEvent, MotionValue } from 'framer-motion';
 
 interface SwipeActionProps {
   threshold: number;
   baseText: string;
   activeText: string;
+  successText?: string;
   baseColor: string;
   activeColor: string;
   alignment: 'start' | 'end';
   x: MotionValue<number>;
   onClick: () => void;
+  isConfirmed?: boolean;
 }
 
 export const SwipeAction: React.FC<SwipeActionProps> = ({
@@ -18,9 +20,11 @@ export const SwipeAction: React.FC<SwipeActionProps> = ({
   threshold,
   baseText,
   activeText,
+  successText,
   baseColor,
   activeColor,
   alignment,
+  isConfirmed = false,
 }) => {
   const [text, setText] = useState(baseText);
   
@@ -36,9 +40,17 @@ export const SwipeAction: React.FC<SwipeActionProps> = ({
   );
 
   useMotionValueEvent(x, "change", (latest) => {
+    if (isConfirmed && successText) {
+        if (text !== successText) setText(successText);
+        return;
+    }
     if (isTriggered(latest) && text !== activeText) setText(activeText);
     if (!isTriggered(latest) && text !== baseText) setText(baseText);
   });
+
+  useEffect(() => {
+    if (isConfirmed && successText) setText(successText);
+  }, [isConfirmed, successText]);
 
   const alignmentClass = alignment === 'end' ? 'justify-end pr-6' : 'justify-start pl-6';
 

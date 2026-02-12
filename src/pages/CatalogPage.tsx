@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useCatalogFilter } from '../hooks/useCatalogFilter';
@@ -99,7 +100,7 @@ const CatalogPage: React.FC = () => {
           </div>
         )}
 
-        <ul className="space-y-3 pb-8">
+        <ul className="space-y-3 pb-8 relative">
           {filteredTasks.length === 0 && !isAdding && !editingTask && (
             <div className="text-center py-12 px-6">
               <p className="text-soft italic text-lg mb-2">
@@ -114,15 +115,25 @@ const CatalogPage: React.FC = () => {
               )}
             </div>
           )}
-          {!editingTask && filteredTasks.map((task) => (
-            <TaskCatalogItem
-              key={task.id}
-              task={task}
-              onToggle={toggleTask}
-              onDelete={deleteTask}
-              onEdit={() => setEditingTask(task)}
-            />
-          ))}
+          <AnimatePresence initial={false} mode='popLayout'>
+            {!editingTask && filteredTasks.map((task) => (
+              <motion.li
+                key={task.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9, height: 0, transition: { duration: 0.2 } }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              >
+                <TaskCatalogItem
+                  task={task}
+                  onToggle={toggleTask}
+                  onDelete={deleteTask}
+                  onEdit={() => setEditingTask(task)}
+                />
+              </motion.li>
+            ))}
+          </AnimatePresence>
         </ul>
       </div>
     </div>

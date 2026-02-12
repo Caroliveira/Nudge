@@ -14,12 +14,22 @@ interface TaskCatalogItemProps {
 
 const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDelete, onEdit }) => {
   
-  const renderDeleteAction = (x: MotionValue<number>) => (
-    <SwipeAction x={x} onClick={() => onDelete(task.id)} {...SWIPE_ACTIONS.DELETE} />
+  const renderDeleteAction = (x: MotionValue<number>, isConfirmed: boolean) => (
+    <SwipeAction 
+      x={x} 
+      onClick={() => onDelete(task.id)} 
+      {...SWIPE_ACTIONS.DELETE} 
+      isConfirmed={isConfirmed}
+    />
   );
 
-  const renderEditAction = (x: MotionValue<number>) => (
-      <SwipeAction x={x} onClick={() => onEdit?.()} {...SWIPE_ACTIONS.EDIT} />
+  const renderEditAction = (x: MotionValue<number>, isConfirmed: boolean) => (
+      <SwipeAction 
+        x={x} 
+        onClick={() => onEdit?.()} 
+        {...SWIPE_ACTIONS.EDIT} 
+        isConfirmed={isConfirmed}
+      />
   );
 
   return (
