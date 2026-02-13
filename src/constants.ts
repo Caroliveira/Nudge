@@ -1,4 +1,4 @@
-import { EffortLevel } from './types';
+import { EffortLevel, RecurrenceUnit } from './types';
 
 export const APP_ROUTES = {
   HOME: '/',
@@ -60,3 +60,23 @@ export const SWIPE_ACTIONS = {
     alignment: "start" as const,
   },
 } as const;
+
+export const EFFORT_COLORS = {
+  [EffortLevel.LOW]: 'text-green-600 bg-green-100',
+  [EffortLevel.MEDIUM]: 'text-amber-600 bg-amber-100',
+  [EffortLevel.HIGH]: 'text-red-600 bg-red-100',
+};
+
+export const EFFORT_BAR_COLORS = {
+  [EffortLevel.LOW]: 'bg-green-500',
+  [EffortLevel.MEDIUM]: 'bg-amber-500',
+  [EffortLevel.HIGH]: 'bg-red-500',
+};
+
+export const RECURRENCE_LABELS: Record<RecurrenceUnit, string> = {
+  'days': 'Daily',
+  'weeks': 'Weekly',
+  'months': 'Monthly',
+  'years': 'Yearly',
+  'none': 'One-off'
+};
