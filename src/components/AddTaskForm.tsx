@@ -3,7 +3,7 @@ import { Task, EffortLevel, RecurrenceUnit } from '../types';
 import { EFFORT_LABELS } from '../constants';
 
 interface AddTaskFormProps {
-  onSubmit: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
+  onSubmit: (task: Omit<Task, 'id'>) => void;
   onCancel: () => void;
   initialValues?: Partial<Task>;
 }

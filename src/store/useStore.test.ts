@@ -5,10 +5,6 @@ import { STORAGE_KEY } from '../constants';
 
 describe('useStore', () => {
   beforeEach(() => {
-    vi.stubGlobal('crypto', {
-      randomUUID: () => 'test-uuid'
-    });
-    
     useStore.setState({
       tasks: [],
       currentTask: null,
@@ -23,26 +19,24 @@ describe('useStore', () => {
 
   it('adds a task correctly', () => {
     const taskData = {
+      id: 'test-uuid',
       title: 'New Task',
       level: EffortLevel.MEDIUM,
       recurrenceUnit: 'none' as const,
       recurrenceInterval: 1,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     useStore.getState().addTask(taskData);
 
     const { tasks } = useStore.getState();
     expect(tasks).toHaveLength(1);
-    expect(tasks[0]).toMatchObject({
-      ...taskData,
-      id: 'test-uuid',
-      isCompleted: false
-    });
+    expect(tasks[0]).toMatchObject(taskData);
   });
 
   it('updates a task correctly', () => {
     const taskData = {
+      id: 'test-uuid',
       title: 'Task',
       level: EffortLevel.LOW,
       recurrenceUnit: 'none' as const,
@@ -59,6 +53,7 @@ describe('useStore', () => {
 
   it('deletes a task correctly', () => {
     const taskData = {
+      id: 'test-uuid',
       title: 'Task',
       level: EffortLevel.LOW,
       recurrenceUnit: 'none' as const,
@@ -75,6 +70,7 @@ describe('useStore', () => {
 
   it('clears currentTask if the deleted task was selected', () => {
     const taskData = {
+      id: 'test-uuid',
       title: 'Task',
       level: EffortLevel.LOW,
       recurrenceUnit: 'none' as const,

@@ -14,16 +14,9 @@ export const useStore = create<StoreState>()(
       setTasks: (tasks) => set({ tasks }),
       setCurrentTask: (currentTask) => set({ currentTask }),
       setSelectedLevel: (selectedLevel) => set({ selectedLevel }),
-      
-      addTask: (taskData) => set((state) => ({
-        tasks: [
-          {
-            ...taskData,
-            id: crypto.randomUUID(),
-            isCompleted: false
-          },
-          ...state.tasks
-        ]
+
+      addTask: (task) => set((state) => ({
+        tasks: [task, ...state.tasks]
       })),
 
       updateTask: (id, updates) => set((state) => ({
@@ -43,11 +36,7 @@ export const useStore = create<StoreState>()(
         const now = Date.now();
         const tasks = state.tasks.map((t) => {
           if (t.isCompleted && t.nextAvailableAt && now >= t.nextAvailableAt) {
-            return {
-              ...t,
-              isCompleted: false,
-              nextAvailableAt: undefined
-            };
+            return { ...t, isCompleted: false, nextAvailableAt: undefined };
           }
           return t;
         });
@@ -56,11 +45,11 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: STORAGE_KEY,
-      partialize: (state) => ({ 
+      partialize: (state) => ({
         tasks: state.tasks,
         currentTask: state.currentTask,
         selectedLevel: state.selectedLevel,
-      }), 
-    }   
+      }),
+    }
   )
 );

@@ -24,8 +24,8 @@ const CsvImport: React.FC = () => {
     if (!file) return;
 
     if (file.size > IMPORT_CONFIG.MAX_FILE_SIZE_BYTES) {
-        setImportStatus('File too large. Maximum size is 1MB.');
-        return;
+      setImportStatus('File too large. Maximum size is 1MB.');
+      return;
     }
 
     Papa.parse<CsvTaskRow>(file, {
@@ -35,10 +35,10 @@ const CsvImport: React.FC = () => {
       complete: (results) => {
         try {
           const { data, meta } = results;
-          
+
           if (results.errors && results.errors.length > 0) {
-             setImportStatus(`CSV Parse Error: ${results.errors[0].message}`);
-             return;
+            setImportStatus(`CSV Parse Error: ${results.errors[0].message}`);
+            return;
           }
 
           const headers = meta.fields || [];
@@ -49,7 +49,7 @@ const CsvImport: React.FC = () => {
 
           const { tasksToAdd, skippedCount, count } = processImportedTasks(data, tasks);
 
-          tasksToAdd.forEach(task => addTask(task));
+          tasksToAdd.forEach(task => addTask({ ...task, id: crypto.randomUUID() }));
 
           const skippedMsg = skippedCount > 0 ? ` (${skippedCount} duplicates skipped)` : '';
           setImportStatus(`Successfully imported ${count} tasks${skippedMsg}.`);

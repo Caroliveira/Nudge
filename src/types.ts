@@ -12,7 +12,7 @@ export interface Task {
   id: string;
   title: string;
   level: EffortLevel;
-  isCompleted: boolean;
+  isCompleted?: boolean;
   recurrenceInterval?: number;
   recurrenceUnit?: RecurrenceUnit;
   lastCompletedAt?: number;
@@ -30,7 +30,7 @@ export interface StoreState {
   setCurrentTask: (task: Task | null) => void;
   setSelectedLevel: (level: EffortLevel | null) => void;
   
-  addTask: (task: Omit<Task, 'id' | 'isCompleted'>) => void;
+  addTask: (task: Task) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   deleteTask: (id: string) => void;
   refreshRecurringTasks: () => void;

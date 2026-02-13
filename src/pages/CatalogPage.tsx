@@ -12,7 +12,7 @@ const CatalogPage: React.FC = () => {
   const { tasks, addTask, updateTask, deleteTask } = useStore();
   const { backToSelection, toggleTask } = useTaskActions();
   const { view, setView, filteredTasks } = useCatalogFilter(tasks);
-  
+
   const [isAdding, setIsAdding] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
@@ -35,9 +35,8 @@ const CatalogPage: React.FC = () => {
           role="tab"
           aria-selected={view === 'tasks'}
           aria-controls="catalog-panel"
-          className={`pb-2 px-1 text-lg font-medium transition-colors relative ${
-            view === 'tasks' ? 'text-text' : 'text-soft hover:text-text'
-          }`}
+          className={`pb-2 px-1 text-lg font-medium transition-colors relative ${view === 'tasks' ? 'text-text' : 'text-soft hover:text-text'
+            }`}
         >
           Tasks
           {view === 'tasks' && (
@@ -49,9 +48,8 @@ const CatalogPage: React.FC = () => {
           role="tab"
           aria-selected={view === 'archive'}
           aria-controls="catalog-panel"
-          className={`pb-2 px-1 text-lg font-medium transition-colors relative ${
-            view === 'archive' ? 'text-text' : 'text-soft hover:text-text'
-          }`}
+          className={`pb-2 px-1 text-lg font-medium transition-colors relative ${view === 'archive' ? 'text-text' : 'text-soft hover:text-text'
+            }`}
         >
           Archive
           {view === 'archive' && (
@@ -60,15 +58,15 @@ const CatalogPage: React.FC = () => {
         </button>
       </div>
 
-      <div 
+      <div
         id="catalog-panel"
         role="tabpanel"
         className="flex-1 overflow-y-auto pr-2 space-y-6 px-1"
       >
         {isAdding ? (
           <AddTaskForm
-            onSubmit={(task) => {
-              addTask(task);
+            onSubmit={(taskData) => {
+              addTask({ ...taskData, id: crypto.randomUUID() });
               setIsAdding(false);
             }}
             onCancel={() => setIsAdding(false)}
@@ -104,8 +102,8 @@ const CatalogPage: React.FC = () => {
           {filteredTasks.length === 0 && !isAdding && !editingTask && (
             <div className="text-center py-12 px-6">
               <p className="text-soft italic text-lg mb-2">
-                {view === 'tasks' 
-                  ? "Your catalog is quiet." 
+                {view === 'tasks'
+                  ? "Your catalog is quiet."
                   : "No archived tasks."}
               </p>
               {view === 'tasks' && (

@@ -15,7 +15,6 @@ describe('taskUtils', () => {
     id: '1',
     title: 'Test Task',
     level: EffortLevel.LOW,
-    isCompleted: false,
     recurrenceUnit: 'days',
     recurrenceInterval: 1,
   };
