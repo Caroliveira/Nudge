@@ -13,10 +13,10 @@ import { ENCOURAGEMENTS, APP_ROUTES } from '../constants';
 
 const TaskPage: React.FC = () => {
   const navigate = useNavigate();
-  const { currentTask, selectedLevel, tasks } = useStore();
+  const { currentTask, selectedLevel } = useStore();
   const { markTaskDone, backToSelection } = useTaskActions();
   const { isExhausted, refreshTask, resetLevel } = useTaskSession();
-  const { availableCounts } = useTaskAvailability(tasks);
+  const { availableCounts } = useTaskAvailability();
   const [showCelebration, setShowCelebration] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [completionResult, setCompletionResult] = useState<{ levelCleared: boolean } | null>(null);

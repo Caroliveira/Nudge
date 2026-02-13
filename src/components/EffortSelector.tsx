@@ -8,7 +8,7 @@ import { useTaskAvailability } from '../hooks/useTaskAvailability';
 const EffortSelector: React.FC = () => {
   const tasks = useStore((state) => state.tasks);
   const { selectLevel } = useTaskActions();
-  const { availableCounts } = useTaskAvailability(tasks);
+  const { availableCounts } = useTaskAvailability();
   const hasAnyTasks = tasks.length > 0;
 
   return (

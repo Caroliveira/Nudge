@@ -1,11 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../store/useStore';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
 
 const TotalVictory: React.FC = () => {
-  const { tasks } = useStore();
-  const { nextRefreshDays } = useTaskAvailability(tasks);
+  const { nextRefreshDays } = useTaskAvailability();
   const navigate = useNavigate();
   
   const handleAddMore = () => navigate('/catalog');

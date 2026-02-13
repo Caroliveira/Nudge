@@ -3,6 +3,9 @@ import { renderHook } from '@testing-library/react';
 import { useTaskAvailability } from './useTaskAvailability';
 import { EffortLevel, Task } from '../types';
 import { addDays } from 'date-fns';
+import { useStore } from '../store/useStore';
+
+vi.mock('../store/useStore');
 
 describe('useTaskAvailability', () => {
   const mockTasks: Task[] = [
@@ -30,22 +33,24 @@ describe('useTaskAvailability', () => {
     }
   ];
 
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-01'));
+    (useStore as any).mockImplementation((selector: any) => selector({ tasks: mockTasks }));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.clearAllMocks();
+  });
+
   it('calculates available counts correctly', () => {
-    const { result } = renderHook(() => useTaskAvailability(mockTasks));
+    const { result } = renderHook(() => useTaskAvailability());
 
     expect(result.current.availableCounts[EffortLevel.LOW]).toBe(1);
     expect(result.current.availableCounts[EffortLevel.MEDIUM]).toBe(1);
     expect(result.current.availableCounts[EffortLevel.HIGH]).toBe(0);
     expect(result.current.totalIncomplete).toBe(2);
-  });
-
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2024-01-01'));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('calculates next refresh days correctly', () => {
@@ -55,14 +60,18 @@ describe('useTaskAvailability', () => {
       nextAvailableAt: futureDate
     };
     
-    const { result } = renderHook(() => useTaskAvailability([...mockTasks.slice(0, 2), recurringTask]));
+    (useStore as any).mockImplementation((selector: any) => selector({ tasks: [...mockTasks.slice(0, 2), recurringTask] }));
+    
+    const { result } = renderHook(() => useTaskAvailability());
 
     expect(result.current.nextRefreshDays).toBe(2);
   });
 
   it('returns null for nextRefreshDays if no recurring tasks', () => {
     const noRecurringTasks = mockTasks.map(t => ({ ...t, recurrenceUnit: 'none' as const }));
-    const { result } = renderHook(() => useTaskAvailability(noRecurringTasks));
+    (useStore as any).mockImplementation((selector: any) => selector({ tasks: noRecurringTasks }));
+    
+    const { result } = renderHook(() => useTaskAvailability());
 
     expect(result.current.nextRefreshDays).toBeNull();
   });

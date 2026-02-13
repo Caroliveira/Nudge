@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
-import { Task, EffortLevel } from '../types';
+import { EffortLevel } from '../types';
 import { differenceInCalendarDays } from 'date-fns';
 import { isTaskAvailable } from '../utils/taskUtils';
+import { useStore } from '../store/useStore';
 
 export { isTaskAvailable };
 
-export function useTaskAvailability(tasks: Task[]) {
+export function useTaskAvailability() {
+  const tasks = useStore((state) => state.tasks);
   const { availableCounts, totalIncomplete, nextRefreshDays } = useMemo(() => {
     const counts = {
       [EffortLevel.LOW]: 0,

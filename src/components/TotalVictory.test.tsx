@@ -2,11 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TotalVictory from './TotalVictory';
-import { useStore } from '../store/useStore';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
 import { useNavigate } from 'react-router-dom';
 
-vi.mock('../store/useStore');
 vi.mock('../hooks/useTaskAvailability');
 vi.mock('react-router-dom', () => ({
   useNavigate: vi.fn(),
@@ -18,7 +16,6 @@ describe('TotalVictory', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useNavigate as any).mockReturnValue(mockNavigate);
-    (useStore as any).mockReturnValue({ tasks: [] });
   });
 
   it('renders victory message', () => {

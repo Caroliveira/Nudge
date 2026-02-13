@@ -8,7 +8,7 @@ import { APP_ROUTES } from '../constants';
 
 const HomePage: React.FC = () => {
   const { tasks } = useStore();
-  const { totalIncomplete } = useTaskAvailability(tasks);
+  const { totalIncomplete } = useTaskAvailability();
   
   if (totalIncomplete === 0 && tasks.length > 0) return <TotalVictory />;
   
