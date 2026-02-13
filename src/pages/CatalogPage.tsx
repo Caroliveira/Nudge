@@ -95,7 +95,7 @@ const CatalogPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex gap-6 mb-6 border-b border-surface pb-1" role="tablist" aria-label="Catalog views">
+      <div className="flex justify-between sm:justify-start gap-6 mb-6 border-b border-surface pb-1" role="tablist" aria-label="Catalog views">
         <button
           onClick={() => handleTabChange('tasks')}
           role="tab"
