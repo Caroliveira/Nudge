@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Task } from '../types';
 import { isOneTimeTask } from '../utils/taskUtils';
 
-export type CatalogView = 'tasks' | 'archive';
+export type CatalogView = 'tasks' | 'archive' | 'report';
 
 export function useCatalogFilter(tasks: Task[]) {
   const [view, setView] = useState<CatalogView>('tasks');

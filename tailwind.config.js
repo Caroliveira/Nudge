@@ -15,8 +15,13 @@ export default {
         base00: '#657b83',
         base01: '#586e75',
         yellow: '#b58900',
-        green: '#859900',
+        orange: '#cb4b16',
+        red: '#dc322f',
+        magenta: '#d33682',
+        violet: '#6c71c4',
         blue: '#268bd2',
+        cyan: '#2aa198',
+        green: '#859900',
         
         // Semantic aliases
         warm: '#FDF6E3',
