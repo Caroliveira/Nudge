@@ -37,7 +37,7 @@ const TodaysActivity: React.FC<TodaysActivityProps> = ({ stats }) => {
             {viewMode === 'effort' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-white shadow-sm rounded-md"
+                className="absolute inset-0 bg-white/70 shadow-sm rounded-md"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 style={{ zIndex: -1 }}
               />
@@ -57,7 +57,7 @@ const TodaysActivity: React.FC<TodaysActivityProps> = ({ stats }) => {
             {viewMode === 'recurrence' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-white shadow-sm rounded-md"
+                className="absolute inset-0 bg-white/70 shadow-sm rounded-md"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 style={{ zIndex: -1 }}
               />

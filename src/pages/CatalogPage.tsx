@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useCatalogFilter, CatalogView } from '../hooks/useCatalogFilter';
+import { isOneTimeTask } from '../utils/taskUtils';
 import AddTaskForm from '../components/AddTaskForm';
 import CsvImport from '../components/CsvImport';
 import CatalogReport from '../components/CatalogReport';
@@ -12,6 +14,8 @@ const CatalogPage: React.FC = () => {
   const { tasks, addTask, updateTask, deleteTask } = useStore();
   const { backToSelection, toggleTask } = useTaskActions();
   const { view, setView, filteredTasks } = useCatalogFilter(tasks);
+
+  const hasArchivedTasks = tasks.some(t => isOneTimeTask(t) && t.isCompleted);
 
   const [isAdding, setIsAdding] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -95,48 +99,70 @@ const CatalogPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex justify-between sm:justify-start gap-6 mb-6 border-b border-surface pb-1" role="tablist" aria-label="Catalog views">
+      <div className="bg-surface/30 p-1.5 rounded-2xl flex items-center mb-8 relative" role="tablist" aria-label="Catalog views">
         <button
           onClick={() => handleTabChange('tasks')}
           role="tab"
           aria-selected={view === 'tasks'}
           aria-controls="catalog-panel"
           id="tab-tasks"
-          className={`pb-3 px-2 text-lg font-medium transition-colors relative ${view === 'tasks' ? 'text-text' : 'text-soft hover:text-text'
-            }`}
+          className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${
+            view === 'tasks' ? 'text-text' : 'text-soft hover:text-text/80'
+          }`}
         >
-          Tasks
           {view === 'tasks' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-accent rounded-full" />
+            <motion.div
+              layoutId="activeCatalogTab"
+              className="absolute inset-0 bg-white/70 shadow-sm rounded-xl"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              style={{ zIndex: -1 }}
+            />
           )}
+          Tasks
         </button>
-        <button
-          onClick={() => handleTabChange('archive')}
-          role="tab"
-          aria-selected={view === 'archive'}
-          aria-controls="catalog-panel"
-          id="tab-archive"
-          className={`pb-3 px-2 text-lg font-medium transition-colors relative ${view === 'archive' ? 'text-text' : 'text-soft hover:text-text'
+
+        {hasArchivedTasks && (
+          <button
+            onClick={() => handleTabChange('archive')}
+            role="tab"
+            aria-selected={view === 'archive'}
+            aria-controls="catalog-panel"
+            id="tab-archive"
+            className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${
+              view === 'archive' ? 'text-text' : 'text-soft hover:text-text/80'
             }`}
-        >
-          Archive
-          {view === 'archive' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-accent rounded-full" />
-          )}
-        </button>
+          >
+            {view === 'archive' && (
+              <motion.div
+                layoutId="activeCatalogTab"
+                className="absolute inset-0 bg-white/70 shadow-sm rounded-xl"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                style={{ zIndex: -1 }}
+              />
+            )}
+            Archive
+          </button>
+        )}
+
         <button
           onClick={() => handleTabChange('report')}
           role="tab"
           aria-selected={view === 'report'}
           aria-controls="catalog-panel"
           id="tab-report"
-          className={`pb-3 px-2 text-lg font-medium transition-colors relative ${view === 'report' ? 'text-text' : 'text-soft hover:text-text'
-            }`}
+          className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${
+            view === 'report' ? 'text-text' : 'text-soft hover:text-text/80'
+          }`}
         >
-          Report
           {view === 'report' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-accent rounded-full" />
+            <motion.div
+              layoutId="activeCatalogTab"
+              className="absolute inset-0 bg-white/70 shadow-sm rounded-xl"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              style={{ zIndex: -1 }}
+            />
           )}
+          Report
         </button>
       </div>
 
