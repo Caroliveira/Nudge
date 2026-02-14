@@ -1,32 +1,52 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
 import { EFFORT_LABELS } from '../constants';
+import { useTaskForm } from '../hooks/useTaskForm';
 
-interface AddTaskFormProps {
+interface TaskFormProps {
   onSubmit: (task: Omit<Task, 'id'>) => void;
   onCancel: () => void;
   initialValues?: Partial<Task>;
 }
 
-const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialValues }) => {
-  const [newTitle, setNewTitle] = useState(initialValues?.title || '');
-  const [newLevel, setNewLevel] = useState<EffortLevel>(initialValues?.level || EffortLevel.LOW);
-  const [recurrenceInterval, setRecurrenceInterval] = useState<number>(initialValues?.recurrenceInterval || 1);
-  const [recurrenceUnit, setRecurrenceUnit] = useState<RecurrenceUnit>(initialValues?.recurrenceUnit || 'none');
+const shakeAnimation = {
+  x: [0, -4, 4, -4, 4, 0],
+  transition: { duration: 0.4 },
+};
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle.trim()) return;
-    onSubmit({
-      title: newTitle,
-      level: newLevel,
-      recurrenceInterval: recurrenceUnit !== 'none' ? recurrenceInterval : undefined,
-      recurrenceUnit,
-    });
-    setNewTitle('');
-    setRecurrenceInterval(1);
-    setRecurrenceUnit('none');
-  };
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }) => {
+  const {
+    title,
+    updateTitle,
+    level,
+    updateLevel,
+    recurrenceInterval,
+    updateRecurrenceInterval,
+    recurrenceUnit,
+    updateRecurrenceUnit,
+    errors,
+    isSuccess,
+    handleSubmit,
+  } = useTaskForm({ onSubmit, initialValues });
+
+  if (isSuccess) {
+    return (
+      <div className="bg-surface p-6 rounded-2xl flex flex-col items-center justify-center min-h-[300px] fade-in border border-soft/20 shadow-sm">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", bounce: 0.5 }}
+          className="text-success text-6xl mb-4"
+        >
+          ✓
+        </motion.div>
+        <h3 className="text-2xl font-bold text-text">
+          {initialValues ? 'Task Updated!' : 'Task Saved!'}
+        </h3>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -36,13 +56,17 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
     >
       <div>
         <label htmlFor="task-title" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Title</label>
-        <input
+        <motion.input
           id="task-title"
           autoFocus
-          className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none text-lg"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
+          animate={errors.title ? shakeAnimation : {}}
+          className={`w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 outline-none text-lg ${
+            errors.title ? 'ring-2 ring-red-700' : 'focus:ring-accent'
+          }`}
+          value={title}
+          onChange={(e) => updateTitle(e.target.value)}
           placeholder="What needs doing?"
+          aria-invalid={!!errors.title}
         />
       </div>
 
@@ -52,8 +76,8 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
           <select
             id="task-effort"
             className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
-            value={newLevel}
-            onChange={(e) => setNewLevel(e.target.value as EffortLevel)}
+            value={level}
+            onChange={(e) => updateLevel(e.target.value as EffortLevel)}
           >
             {Object.values(EffortLevel).map((l) => (
               <option key={l} value={l}>
@@ -66,21 +90,35 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
           <label htmlFor="task-recurrence-unit" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Recurrence</label>
           <div className="flex gap-2">
             {recurrenceUnit !== 'none' && (
-              <input
+              <motion.input
                 id="task-recurrence-interval"
                 type="number"
                 min={1}
-                className="w-20 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none"
+                animate={errors.recurrenceInterval ? shakeAnimation : {}}
+                className={`w-20 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 outline-none ${
+                  errors.recurrenceInterval ? 'ring-2 ring-red-700' : 'focus:ring-accent'
+                }`}
                 value={recurrenceInterval}
-                onChange={(e) => setRecurrenceInterval(parseInt(e.target.value, 10) || 1)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') {
+                    updateRecurrenceInterval('');
+                  } else {
+                    const parsed = parseInt(val, 10);
+                    if (!isNaN(parsed)) {
+                      updateRecurrenceInterval(parsed);
+                    }
+                  }
+                }}
                 aria-label="Recurrence interval"
+                aria-invalid={!!errors.recurrenceInterval}
               />
             )}
             <select
               id="task-recurrence-unit"
               className="flex-1 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
               value={recurrenceUnit}
-              onChange={(e) => setRecurrenceUnit(e.target.value as RecurrenceUnit)}
+              onChange={(e) => updateRecurrenceUnit(e.target.value as RecurrenceUnit)}
             >
               <option value="none">One-time</option>
               <option value="days">Days</option>
@@ -111,4 +149,4 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onSubmit, onCancel, initialVa
   );
 };
 
-export default AddTaskForm;
+export default TaskForm;

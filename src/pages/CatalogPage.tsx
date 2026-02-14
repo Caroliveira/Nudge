@@ -4,7 +4,7 @@ import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useCatalogFilter, CatalogView } from '../hooks/useCatalogFilter';
 import { isOneTimeTask } from '../utils/taskUtils';
-import AddTaskForm from '../components/AddTaskForm';
+import TaskForm from '../components/TaskForm';
 import CsvImport from '../components/CsvImport';
 import CatalogReport from '../components/CatalogReport';
 import CatalogList from '../components/CatalogList';
@@ -29,7 +29,7 @@ const CatalogPage: React.FC = () => {
   const renderContent = () => {
     if (isAdding) {
       return (
-        <AddTaskForm
+        <TaskForm
           onSubmit={(taskData) => {
             addTask({ ...taskData, id: crypto.randomUUID() });
             setIsAdding(false);
@@ -41,7 +41,7 @@ const CatalogPage: React.FC = () => {
 
     if (editingTask) {
       return (
-        <AddTaskForm
+        <TaskForm
           initialValues={editingTask}
           onSubmit={(updates) => {
             updateTask(editingTask.id, updates);

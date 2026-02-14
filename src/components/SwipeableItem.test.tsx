@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SwipeableItem from './SwipeableItem';
 import { motion, PanInfo, HTMLMotionProps } from 'framer-motion';
@@ -32,6 +32,7 @@ vi.mock('framer-motion', () => ({
     attach: vi.fn()
   })),
   useMotionValueEvent: vi.fn(),
+  animate: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe('SwipeableItem', () => {
@@ -47,7 +48,7 @@ describe('SwipeableItem', () => {
   });
 
   describe('Drag Interactions', () => {
-    it('triggers onSwipeLeft when dragged past negative threshold', () => {
+    it('triggers onSwipeLeft when dragged past negative threshold', async () => {
       render(
         <SwipeableItem {...defaultProps}>
           <div>Content</div>
@@ -61,13 +62,15 @@ describe('SwipeableItem', () => {
       if (!onDragEnd) throw new Error('onDragEnd not defined');
 
       // Simulate drag end past threshold
-      onDragEnd({} as any, { offset: { x: -(SWIPE_CONFIG.THRESHOLD_PX + 10), y: 0 } } as PanInfo);
+      await act(async () => {
+        await onDragEnd({} as any, { offset: { x: -(SWIPE_CONFIG.THRESHOLD_PX + 10), y: 0 } } as PanInfo);
+      });
 
       expect(mockOnSwipeLeft).toHaveBeenCalled();
       expect(mockOnSwipeRight).not.toHaveBeenCalled();
     });
 
-    it('triggers onSwipeRight when dragged past positive threshold', () => {
+    it('triggers onSwipeRight when dragged past positive threshold', async () => {
       render(
         <SwipeableItem {...defaultProps}>
           <div>Content</div>
@@ -80,13 +83,15 @@ describe('SwipeableItem', () => {
 
       if (!onDragEnd) throw new Error('onDragEnd not defined');
 
-      onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX + 10, y: 0 } } as PanInfo);
+      await act(async () => {
+        await onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX + 10, y: 0 } } as PanInfo);
+      });
 
       expect(mockOnSwipeRight).toHaveBeenCalled();
       expect(mockOnSwipeLeft).not.toHaveBeenCalled();
     });
 
-    it('does not trigger actions when drag is within threshold', () => {
+    it('does not trigger actions when drag is within threshold', async () => {
       render(
         <SwipeableItem {...defaultProps}>
           <div>Content</div>
@@ -100,13 +105,15 @@ describe('SwipeableItem', () => {
       if (!onDragEnd) throw new Error('onDragEnd not defined');
 
       // Simulate small drag
-      onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX - 10, y: 0 } } as PanInfo);
+      await act(async () => {
+        await onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX - 10, y: 0 } } as PanInfo);
+      });
 
       expect(mockOnSwipeRight).not.toHaveBeenCalled();
       expect(mockOnSwipeLeft).not.toHaveBeenCalled();
     });
 
-    it('respects missing handlers', () => {
+    it('respects missing handlers', async () => {
       // Render without right handler
       render(
         <SwipeableItem onSwipeLeft={mockOnSwipeLeft}>
@@ -121,11 +128,15 @@ describe('SwipeableItem', () => {
       if (!onDragEnd) throw new Error('onDragEnd not defined');
 
       // Drag right (should do nothing as no handler)
-      onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX + 10, y: 0 } } as PanInfo);
+      await act(async () => {
+        await onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX + 10, y: 0 } } as PanInfo);
+      });
       expect(mockOnSwipeRight).not.toHaveBeenCalled();
 
       // Drag left (should work)
-      onDragEnd({} as any, { offset: { x: -(SWIPE_CONFIG.THRESHOLD_PX + 10), y: 0 } } as PanInfo);
+      await act(async () => {
+        await onDragEnd({} as any, { offset: { x: -(SWIPE_CONFIG.THRESHOLD_PX + 10), y: 0 } } as PanInfo);
+      });
       expect(mockOnSwipeLeft).toHaveBeenCalled();
     });
   });
