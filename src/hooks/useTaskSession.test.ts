@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTaskSession } from './useTaskSession';
 import { useStore } from '../store/useStore';
@@ -12,9 +12,27 @@ vi.mock('../utils/taskUtils');
 describe('useTaskSession', () => {
   const mockSetCurrentTask = vi.fn();
   const mockTasks: Task[] = [
-    { id: '1', title: 'Task 1', level: EffortLevel.LOW, isCompleted: false, recurrenceUnit: 'none' },
-    { id: '2', title: 'Task 2', level: EffortLevel.LOW, isCompleted: false, recurrenceUnit: 'none' },
-    { id: '3', title: 'Task 3', level: EffortLevel.LOW, isCompleted: false, recurrenceUnit: 'none' },
+    {
+      id: '1',
+      title: 'Task 1',
+      level: EffortLevel.LOW,
+      isCompleted: false,
+      recurrenceUnit: 'none',
+    },
+    {
+      id: '2',
+      title: 'Task 2',
+      level: EffortLevel.LOW,
+      isCompleted: false,
+      recurrenceUnit: 'none',
+    },
+    {
+      id: '3',
+      title: 'Task 3',
+      level: EffortLevel.LOW,
+      isCompleted: false,
+      recurrenceUnit: 'none',
+    },
   ];
 
   beforeEach(() => {
@@ -41,15 +59,6 @@ describe('useTaskSession', () => {
       currentTask: mockTasks[0],
       setCurrentTask: mockSetCurrentTask,
     });
-
-    const { result } = renderHook(() => useTaskSession());
-    // We can't access state directly, but we can verify behavior via refreshTask
-    // If Task 1 is seen, refreshTask should pick something else if we mock pickRandomTask to avoid seen ones
-    
-    // However, let's just verify the effect ran by checking if we can exhaust the list faster
-    // Or we can rely on implementation details if we exported seenTaskIds (we don't)
-    
-    // Let's test refreshTask logic which depends on seenTaskIds
   });
 
   it('refreshTask picks a new task and adds to seen', () => {

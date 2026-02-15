@@ -12,7 +12,7 @@ export function useTaskSession() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSeenTaskIds([currentTask.id]);
     }
-  }, [currentTask]);
+  }, [currentTask, seenTaskIds.length]);
 
   const refreshTask = useCallback(() => {
     if (!selectedLevel) return;

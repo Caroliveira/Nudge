@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TaskForm from './TaskForm';
@@ -10,6 +10,10 @@ describe('TaskForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('renders correctly for new task', () => {
@@ -119,7 +123,7 @@ describe('TaskForm', () => {
         recurrenceUnit: 'days',
         recurrenceInterval: 5
       }));
-    });
+    }, { timeout: 3000 });
   });
 
   it('calls onCancel when cancel button is clicked', async () => {

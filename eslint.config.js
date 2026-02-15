@@ -26,7 +26,7 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/no-unescaped-entities': 'off',
-      'react-hooks/exhaustive-deps': 'off',
+      'react-hooks/exhaustive-deps': 'warn',
       'react-hooks/set-state-in-effect': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
