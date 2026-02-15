@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { SUPPORTED_LANGUAGES } from '../constants';
@@ -19,7 +20,7 @@ const SettingsPage: React.FC = () => {
           onClick={() => navigate(-1)}
           className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
         >
-          <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="underline underline-offset-4">{t('settings.back')}</span>
         </button>
       </div>

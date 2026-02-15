@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
@@ -40,7 +41,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
           transition={{ type: "spring", bounce: 0.5 }}
           className="text-success text-6xl mb-4"
         >
-          ✓
+          <Check className="w-16 h-16" />
         </motion.div>
         <h3 className="text-2xl font-bold text-text">
           {initialValues ? t('form.successUpdate') : t('form.successSave')}

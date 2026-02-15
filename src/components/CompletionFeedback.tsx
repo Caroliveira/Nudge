@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -27,21 +28,13 @@ const CompletionFeedback: React.FC<CompletionFeedbackProps> = ({ onComplete }) =
         className="flex flex-col items-center justify-center space-y-4"
       >
         <div className="w-24 h-24 bg-success rounded-full flex items-center justify-center shadow-lg">
-          <motion.svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
           >
-            <polyline points="20 6 9 17 4 12" />
-          </motion.svg>
+            <Check className="w-12 h-12 text-white" strokeWidth={3} />
+          </motion.div>
         </div>
         <motion.h2
           initial={{ opacity: 0, y: 10 }}

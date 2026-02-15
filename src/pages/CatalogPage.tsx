@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
@@ -44,7 +45,7 @@ const CatalogPage: React.FC = () => {
           onClick={backToSelection}
           className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
         >
-          <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="underline underline-offset-4">{t('catalog.back')}</span>
         </button>
       </div>

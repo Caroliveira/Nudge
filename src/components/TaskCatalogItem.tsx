@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check, ChevronLeft } from 'lucide-react';
 import { MotionValue } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Task } from '../types';
@@ -69,7 +70,7 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
             }`}
           aria-label={task.isCompleted ? t('task.markAsIncomplete') : t('task.markAsComplete')}
         >
-          {task.isCompleted && '✓'}
+          {task.isCompleted && <Check className="w-4 h-4 text-warm" />}
         </button>
 
         <div className={`flex-1 min-w-0 pointer-events-none ${task.isCompleted ? 'opacity-50' : ''}`}>
@@ -87,7 +88,7 @@ const TaskCatalogItem: React.FC<TaskCatalogItemProps> = ({ task, onToggle, onDel
         </div>
 
         {/* Slide hint (optional) */}
-        <div className="text-soft opacity-20 text-lg">‹</div>
+        <div className="text-soft opacity-20"><ChevronLeft className="w-6 h-6" /></div>
       </div>
     </SwipeableItem>
   );
