@@ -14,7 +14,7 @@ describe('TaskForm', () => {
 
   it('renders correctly for new task', () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
-    
+
     expect(screen.getByLabelText('Add new task')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('What needs doing?')).toHaveValue('');
     expect(screen.getByText('Save Task')).toBeInTheDocument();
@@ -29,10 +29,10 @@ describe('TaskForm', () => {
     };
 
     render(
-      <TaskForm 
-        onSubmit={mockOnSubmit} 
-        onCancel={mockOnCancel} 
-        initialValues={initialValues} 
+      <TaskForm
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+        initialValues={initialValues}
       />
     );
 
@@ -60,7 +60,7 @@ describe('TaskForm', () => {
         recurrenceUnit: 'none',
         recurrenceInterval: undefined
       });
-    }, { timeout: 2000 });
+    });
   });
 
   it('does not submit if title is empty and shows error state', async () => {
@@ -71,7 +71,7 @@ describe('TaskForm', () => {
     await user.click(screen.getByText('Save Task'));
 
     expect(mockOnSubmit).not.toHaveBeenCalled();
-    
+
     // Check for error state
     await waitFor(() => {
       expect(titleInput).toHaveAttribute('aria-invalid', 'true');
@@ -92,7 +92,7 @@ describe('TaskForm', () => {
 
     await user.type(screen.getByPlaceholderText('What needs doing?'), 'Recurring Task');
     await user.selectOptions(screen.getByLabelText('Recurrence'), 'days');
-    
+
     // Clear interval (it defaults to 1)
     const intervalInput = screen.getByLabelText('Recurrence interval');
     await user.clear(intervalInput);
@@ -100,7 +100,7 @@ describe('TaskForm', () => {
     await user.click(screen.getByText('Save Task'));
 
     expect(mockOnSubmit).not.toHaveBeenCalled();
-    
+
     await waitFor(() => {
       expect(intervalInput).toHaveAttribute('aria-invalid', 'true');
       expect(intervalInput).toHaveClass('ring-red-700');
@@ -113,13 +113,13 @@ describe('TaskForm', () => {
     });
 
     await user.click(screen.getByText('Save Task'));
-    
+
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(expect.objectContaining({
         recurrenceUnit: 'days',
         recurrenceInterval: 5
       }));
-    }, { timeout: 2000 });
+    });
   });
 
   it('calls onCancel when cancel button is clicked', async () => {

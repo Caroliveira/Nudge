@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTaskActions } from './useTaskActions';
 import { useStore } from '../store/useStore';
@@ -39,6 +39,11 @@ describe('useTaskActions', () => {
       currentTask: null,
       selectedLevel: null,
     });
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('selectLevel picks a random task and navigates', () => {
@@ -70,46 +75,8 @@ describe('useTaskActions', () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-/*
-  // TODO: Move these tests to useTaskSession.test.tsx as refreshTask is now part of useTaskSession
-  it('refreshTask picks a different task if available', () => {
-    useStore.setState({ 
-      tasks: mockTasks,
-      selectedLevel: EffortLevel.LOW,
-      currentTask: mockTasks[0] // Task 1
-    });
-
-    const { result } = renderHook(() => useTaskActions());
-
-    act(() => {
-      result.current.refreshTask();
-    });
-
-    const state = useStore.getState();
-    expect(state.currentTask?.id).toBe('2'); // Should be Task 2 since it's the only other LOW task
-  });
-
-  it('refreshTask keeps same task if it is the only one', () => {
-    const singleTask = [mockTasks[0]];
-    useStore.setState({ 
-      tasks: singleTask,
-      selectedLevel: EffortLevel.LOW,
-      currentTask: mockTasks[0]
-    });
-
-    const { result } = renderHook(() => useTaskActions());
-
-    act(() => {
-      result.current.refreshTask();
-    });
-
-    const state = useStore.getState();
-    expect(state.currentTask?.id).toBe('1');
-  });
-  */
-
   it('backToSelection clears state and navigates home', () => {
-    useStore.setState({ 
+    useStore.setState({
       selectedLevel: EffortLevel.LOW,
       currentTask: mockTasks[0]
     });
@@ -139,8 +106,8 @@ describe('useTaskActions', () => {
     expect(task?.isCompleted).toBe(true);
   });
 
-    it('markTaskDone completes current task and checks for level completion', () => {
-    useStore.setState({ 
+  it('markTaskDone completes current task and checks for level completion', () => {
+    useStore.setState({
       tasks: mockTasks,
       selectedLevel: EffortLevel.LOW,
       currentTask: mockTasks[0]
@@ -155,7 +122,6 @@ describe('useTaskActions', () => {
 
     const state = useStore.getState();
     const task = state.tasks.find(t => t.id === '1');
-    
     expect(task?.isCompleted).toBe(true);
 
     expect(response).toEqual({ levelCleared: false });
@@ -167,7 +133,7 @@ describe('useTaskActions', () => {
       { ...mockTasks[1], isCompleted: true },
     ];
 
-    useStore.setState({ 
+    useStore.setState({
       tasks: tasks,
       selectedLevel: EffortLevel.LOW,
       currentTask: tasks[0]
@@ -181,5 +147,22 @@ describe('useTaskActions', () => {
     });
 
     expect(response).toEqual({ levelCleared: true });
+  });
+
+  it('markTaskDone does nothing if no current task', () => {
+    useStore.setState({
+      tasks: mockTasks,
+      selectedLevel: EffortLevel.LOW,
+      currentTask: null
+    });
+
+    const { result } = renderHook(() => useTaskActions());
+
+    let response;
+    act(() => {
+      response = result.current.markTaskDone();
+    });
+
+    expect(response).toEqual({ levelCleared: false });
   });
 });

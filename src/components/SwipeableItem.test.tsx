@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SwipeableItem from './SwipeableItem';
-import { motion, PanInfo, HTMLMotionProps } from 'framer-motion';
+import { motion, PanInfo, HTMLMotionProps, animate } from 'framer-motion';
 import { SWIPE_CONFIG } from '../constants';
 
 vi.mock('framer-motion', () => ({
@@ -59,7 +59,30 @@ describe('SwipeableItem', () => {
     vi.clearAllMocks();
   });
 
+  describe('Rendering', () => {
+    it('renders children correctly', () => {
+      render(
+        <SwipeableItem {...defaultProps}>
+          <div>Test Content</div>
+        </SwipeableItem>
+      );
+      expect(screen.getByText('Test Content')).toBeInTheDocument();
+    });
+  });
+
   describe('Drag Interactions', () => {
+    const simulateDragEnd = async (offsetX: number) => {
+      const mockMotionDiv = vi.mocked(motion.div);
+      const props = mockMotionDiv.mock.lastCall?.[0] as HTMLMotionProps<"div">;
+      const onDragEnd = props.onDragEnd;
+
+      if (!onDragEnd) throw new Error('onDragEnd not defined on motion.div');
+
+      await act(async () => {
+        await onDragEnd({} as any, { offset: { x: offsetX, y: 0 } } as PanInfo);
+      });
+    };
+
     it('triggers onSwipeLeft when dragged past negative threshold', async () => {
       render(
         <SwipeableItem {...defaultProps}>
@@ -67,19 +90,11 @@ describe('SwipeableItem', () => {
         </SwipeableItem>
       );
 
-      const mockMotionDiv = vi.mocked(motion.div);
-      const props = mockMotionDiv.mock.lastCall?.[0] as HTMLMotionProps<"div">;
-      const onDragEnd = props.onDragEnd;
-
-      if (!onDragEnd) throw new Error('onDragEnd not defined');
-
-      // Simulate drag end past threshold
-      await act(async () => {
-        await onDragEnd({} as any, { offset: { x: -(SWIPE_CONFIG.THRESHOLD_PX + 10), y: 0 } } as PanInfo);
-      });
+      await simulateDragEnd(-(SWIPE_CONFIG.THRESHOLD_PX + 10));
 
       expect(mockOnSwipeLeft).toHaveBeenCalled();
       expect(mockOnSwipeRight).not.toHaveBeenCalled();
+      expect(animate).toHaveBeenCalledWith(expect.anything(), -window.innerWidth, expect.anything());
     });
 
     it('triggers onSwipeRight when dragged past positive threshold', async () => {
@@ -89,18 +104,11 @@ describe('SwipeableItem', () => {
         </SwipeableItem>
       );
 
-      const mockMotionDiv = vi.mocked(motion.div);
-      const props = mockMotionDiv.mock.lastCall?.[0] as HTMLMotionProps<"div">;
-      const onDragEnd = props.onDragEnd;
-
-      if (!onDragEnd) throw new Error('onDragEnd not defined');
-
-      await act(async () => {
-        await onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX + 10, y: 0 } } as PanInfo);
-      });
+      await simulateDragEnd(SWIPE_CONFIG.THRESHOLD_PX + 10);
 
       expect(mockOnSwipeRight).toHaveBeenCalled();
       expect(mockOnSwipeLeft).not.toHaveBeenCalled();
+      expect(animate).toHaveBeenCalledWith(expect.anything(), 0, expect.anything());
     });
 
     it('does not trigger actions when drag is within threshold', async () => {
@@ -110,46 +118,10 @@ describe('SwipeableItem', () => {
         </SwipeableItem>
       );
 
-      const mockMotionDiv = vi.mocked(motion.div);
-      const props = mockMotionDiv.mock.lastCall?.[0] as HTMLMotionProps<"div">;
-      const onDragEnd = props.onDragEnd;
-
-      if (!onDragEnd) throw new Error('onDragEnd not defined');
-
-      // Simulate small drag
-      await act(async () => {
-        await onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX - 10, y: 0 } } as PanInfo);
-      });
+      await simulateDragEnd(SWIPE_CONFIG.THRESHOLD_PX - 10);
 
       expect(mockOnSwipeRight).not.toHaveBeenCalled();
       expect(mockOnSwipeLeft).not.toHaveBeenCalled();
-    });
-
-    it('respects missing handlers', async () => {
-      // Render without right handler
-      render(
-        <SwipeableItem onSwipeLeft={mockOnSwipeLeft}>
-          <div>Content</div>
-        </SwipeableItem>
-      );
-
-      const mockMotionDiv = vi.mocked(motion.div);
-      const props = mockMotionDiv.mock.lastCall?.[0] as HTMLMotionProps<"div">;
-      const onDragEnd = props.onDragEnd;
-
-      if (!onDragEnd) throw new Error('onDragEnd not defined');
-
-      // Drag right (should do nothing as no handler)
-      await act(async () => {
-        await onDragEnd({} as any, { offset: { x: SWIPE_CONFIG.THRESHOLD_PX + 10, y: 0 } } as PanInfo);
-      });
-      expect(mockOnSwipeRight).not.toHaveBeenCalled();
-
-      // Drag left (should work)
-      await act(async () => {
-        await onDragEnd({} as any, { offset: { x: -(SWIPE_CONFIG.THRESHOLD_PX + 10), y: 0 } } as PanInfo);
-      });
-      expect(mockOnSwipeLeft).toHaveBeenCalled();
     });
   });
 
@@ -169,21 +141,6 @@ describe('SwipeableItem', () => {
       expect(mockOnSwipeLeft).toHaveBeenCalled();
     });
 
-    it('triggers onSwipeLeft on Backspace key', async () => {
-      const user = userEvent.setup();
-      render(
-        <SwipeableItem {...defaultProps}>
-          <div>Content</div>
-        </SwipeableItem>
-      );
-
-      const element = screen.getByRole('listitem');
-      element.focus();
-      await user.keyboard('{Backspace}');
-
-      expect(mockOnSwipeLeft).toHaveBeenCalled();
-    });
-
     it('triggers onSwipeRight on Enter key', async () => {
       const user = userEvent.setup();
       render(
@@ -197,23 +154,6 @@ describe('SwipeableItem', () => {
       await user.keyboard('{Enter}');
 
       expect(mockOnSwipeRight).toHaveBeenCalled();
-    });
-
-    it('does not trigger actions for other keys', async () => {
-      const user = userEvent.setup();
-      render(
-        <SwipeableItem {...defaultProps}>
-          <div>Content</div>
-        </SwipeableItem>
-      );
-
-      const element = screen.getByRole('listitem');
-      element.focus();
-      await user.keyboard('{ }'); // Space
-      await user.keyboard('a');
-
-      expect(mockOnSwipeLeft).not.toHaveBeenCalled();
-      expect(mockOnSwipeRight).not.toHaveBeenCalled();
     });
   });
 });

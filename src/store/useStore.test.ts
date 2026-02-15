@@ -16,6 +16,23 @@ describe('useStore', () => {
     vi.unstubAllGlobals();
   });
 
+  it('sets tasks correctly', () => {
+    const tasks = [{ id: '1', title: 'Task', level: EffortLevel.LOW } as Task];
+    useStore.getState().setTasks(tasks);
+    expect(useStore.getState().tasks).toEqual(tasks);
+  });
+
+  it('sets current task correctly', () => {
+    const task = { id: '1', title: 'Task', level: EffortLevel.LOW } as Task;
+    useStore.getState().setCurrentTask(task);
+    expect(useStore.getState().currentTask).toEqual(task);
+  });
+
+  it('sets selected level correctly', () => {
+    useStore.getState().setSelectedLevel(EffortLevel.HIGH);
+    expect(useStore.getState().selectedLevel).toBe(EffortLevel.HIGH);
+  });
+
   it('adds a task correctly', () => {
     const taskData = {
       id: 'test-uuid',
@@ -106,5 +123,26 @@ describe('useStore', () => {
     const { tasks } = useStore.getState();
     expect(tasks[0].isCompleted).toBe(false);
     expect(tasks[0].nextAvailableAt).toBeUndefined();
+  });
+
+  it('does not refresh recurring tasks that are not yet due', () => {
+    const futureDate = Date.now() + 100000;
+    const task: Task = {
+      id: 'recurring-task',
+      title: 'Recurring',
+      level: EffortLevel.LOW,
+      isCompleted: true,
+      recurrenceUnit: 'days',
+      recurrenceInterval: 1,
+      lastCompletedAt: Date.now(),
+      nextAvailableAt: futureDate
+    };
+
+    useStore.setState({ tasks: [task] });
+
+    useStore.getState().refreshRecurringTasks();
+
+    const { tasks } = useStore.getState();
+    expect(tasks[0].isCompleted).toBe(true);
   });
 });

@@ -113,4 +113,59 @@ describe('SwipeAction', () => {
     });
     expect(screen.getByText('Delete')).toBeInTheDocument();
   });
+
+  it('shows success text when confirmed', () => {
+    mockX.get.mockReturnValue(0);
+
+    render(
+      <SwipeAction
+        threshold={100}
+        baseText="Delete"
+        activeText="Confirm"
+        successText="Deleted!"
+        baseColor="red"
+        activeColor="darkred"
+        alignment="end"
+        x={mockX}
+        onClick={mockOnClick}
+        isConfirmed={true}
+      />
+    );
+
+    expect(screen.getByText('Deleted!')).toBeInTheDocument();
+  });
+
+  it('applies correct alignment classes', () => {
+    mockX.get.mockReturnValue(0);
+
+    const { rerender } = render(
+      <SwipeAction
+        threshold={100}
+        baseText="Delete"
+        activeText="Confirm"
+        baseColor="red"
+        activeColor="darkred"
+        alignment="end"
+        x={mockX}
+        onClick={mockOnClick}
+      />
+    );
+
+    expect(screen.getByTestId('motion-div')).toHaveClass('justify-end');
+
+    rerender(
+      <SwipeAction
+        threshold={100}
+        baseText="Edit"
+        activeText="Confirm"
+        baseColor="blue"
+        activeColor="darkblue"
+        alignment="start"
+        x={mockX}
+        onClick={mockOnClick}
+      />
+    );
+
+    expect(screen.getByTestId('motion-div')).toHaveClass('justify-start');
+  });
 });

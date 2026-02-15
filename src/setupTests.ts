@@ -1,8 +1,12 @@
 import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import { vi } from 'vitest';
 
-// Runs a cleanup after each test case (e.g. clearing jsdom)
-afterEach(() => {
-  cleanup();
-});
+if (!global.crypto) {
+  Object.defineProperty(global, 'crypto', {
+    value: { randomUUID: () => 'test-global-cripto-random-uuid' },
+  });
+} else if (!global.crypto.randomUUID) {
+  global.crypto.randomUUID = () => 'test-global-cripto-random-uuid';
+}
+
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
