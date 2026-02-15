@@ -8,23 +8,18 @@ export interface ProcessedImport {
 
 export const validateHeaders = (headers: string[]): boolean => {
   const requiredHeaders = ['title', 'effort', 'interval', 'unit'];
-  return requiredHeaders.every(h => headers.includes(h));
+  return requiredHeaders.every((h) => headers.includes(h));
 };
 
 export const processImportedTasks = (
-  data: CsvTaskRow[], 
-  existingTasks: Task[]
+  data: CsvTaskRow[],
+  existingTasks: Task[],
 ): ProcessedImport => {
   const tasksToAdd: ProcessedImport['tasksToAdd'] = [];
   let skippedCount = 0;
 
   data.forEach((taskData) => {
-    if (
-      !taskData.title?.trim() ||
-      !taskData.effort || 
-      !taskData.interval || 
-      !taskData.unit
-    ) {
+    if (!taskData.title?.trim() || !taskData.effort || !taskData.interval || !taskData.unit) {
       return;
     }
 
@@ -43,7 +38,9 @@ export const processImportedTasks = (
 
     const interval = parseInt(taskData.interval, 10);
     const unitRaw = taskData.unit.toLowerCase();
-    const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw) ? (unitRaw as RecurrenceUnit) : 'none';
+    const unit: RecurrenceUnit = ['days', 'weeks', 'months', 'years'].includes(unitRaw)
+      ? (unitRaw as RecurrenceUnit)
+      : 'none';
 
     if (unit !== 'none' && (isNaN(interval) || interval <= 0)) return;
 
@@ -58,6 +55,6 @@ export const processImportedTasks = (
   return {
     tasksToAdd,
     skippedCount,
-    count: tasksToAdd.length
+    count: tasksToAdd.length,
   };
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
-import { EFFORT_LABELS } from '../constants';
 import { useTaskForm } from '../hooks/useTaskForm';
 
 interface TaskFormProps {
@@ -16,6 +16,7 @@ const shakeAnimation = {
 };
 
 const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }) => {
+  const { t } = useTranslation();
   const {
     title,
     updateTitle,
@@ -42,7 +43,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
           ✓
         </motion.div>
         <h3 className="text-2xl font-bold text-text">
-          {initialValues ? 'Task Updated!' : 'Task Saved!'}
+          {initialValues ? t('form.successUpdate') : t('form.successSave')}
         </h3>
       </div>
     );
@@ -52,27 +53,26 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
     <form
       onSubmit={handleSubmit}
       className="bg-surface p-6 rounded-2xl space-y-6 fade-in border border-soft/20 shadow-sm"
-      aria-label={initialValues ? 'Edit task' : 'Add new task'}
+      aria-label={initialValues ? t('form.update') : t('catalog.addPersonalTask')}
     >
       <div>
-        <label htmlFor="task-title" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Title</label>
+        <label htmlFor="task-title" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">{t('form.title')}</label>
         <motion.input
           id="task-title"
           autoFocus
           animate={errors.title ? shakeAnimation : {}}
-          className={`w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 outline-none text-lg ${
-            errors.title ? 'ring-2 ring-red-700' : 'focus:ring-accent'
-          }`}
+          className={`w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 outline-none text-lg ${errors.title ? 'ring-2 ring-red-700' : 'focus:ring-accent'
+            }`}
           value={title}
           onChange={(e) => updateTitle(e.target.value)}
-          placeholder="What needs doing?"
+          placeholder={t('form.placeholder')}
           aria-invalid={!!errors.title}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="task-effort" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Effort Level</label>
+          <label htmlFor="task-effort" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">{t('form.effort')}</label>
           <select
             id="task-effort"
             className="w-full bg-warm border-none rounded-lg p-3 text-text focus:ring-2 focus:ring-accent outline-none appearance-none"
@@ -81,13 +81,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
           >
             {Object.values(EffortLevel).map((l) => (
               <option key={l} value={l}>
-                {EFFORT_LABELS[l]}
+                {t(`effort.${l.toLowerCase()}`)}
               </option>
             ))}
           </select>
         </div>
         <div>
-          <label htmlFor="task-recurrence-unit" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">Recurrence</label>
+          <label htmlFor="task-recurrence-unit" className="block text-xs uppercase tracking-widest text-soft mb-2 font-bold">{t('form.recurrence')}</label>
           <div className="flex gap-2">
             {recurrenceUnit !== 'none' && (
               <motion.input
@@ -95,9 +95,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
                 type="number"
                 min={1}
                 animate={errors.recurrenceInterval ? shakeAnimation : {}}
-                className={`w-20 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 outline-none ${
-                  errors.recurrenceInterval ? 'ring-2 ring-red-700' : 'focus:ring-accent'
-                }`}
+                className={`w-20 bg-warm border-none rounded-lg p-3 text-text focus:ring-2 outline-none ${errors.recurrenceInterval ? 'ring-2 ring-red-700' : 'focus:ring-accent'
+                  }`}
                 value={recurrenceInterval}
                 onChange={(e) => {
                   const val = e.target.value;
@@ -120,11 +119,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
               value={recurrenceUnit}
               onChange={(e) => updateRecurrenceUnit(e.target.value as RecurrenceUnit)}
             >
-              <option value="none">One-time</option>
-              <option value="days">Days</option>
-              <option value="weeks">Weeks</option>
-              <option value="months">Months</option>
-              <option value="years">Years</option>
+              <option value="none">{t('form.units.none')}</option>
+              <option value="days">{t('form.units.days')}</option>
+              <option value="weeks">{t('form.units.weeks')}</option>
+              <option value="months">{t('form.units.months')}</option>
+              <option value="years">{t('form.units.years')}</option>
             </select>
           </div>
         </div>
@@ -135,14 +134,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, initialValues }
           type="submit"
           className="flex-2 bg-success text-warm py-4 rounded-xl hover:bg-success-dark transition-all font-bold text-lg shadow-md active:scale-95"
         >
-          {initialValues ? 'Update Task' : 'Save Task'}
+          {initialValues ? t('form.update') : t('form.save')}
         </button>
         <button
           type="button"
           onClick={onCancel}
           className="flex-1 bg-soft/10 text-soft py-4 rounded-xl hover:bg-soft/20 transition-all font-medium active:scale-95"
         >
-          Cancel
+          {t('form.cancel')}
         </button>
       </div>
     </form>

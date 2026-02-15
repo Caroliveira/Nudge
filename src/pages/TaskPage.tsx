@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useTaskSession } from '../hooks/useTaskSession';
@@ -8,10 +9,11 @@ import { useTaskAvailability } from '../hooks/useTaskAvailability';
 import Celebration from '../components/Celebration';
 import CompletionFeedback from '../components/CompletionFeedback';
 import TaskExhausted from '../components/TaskExhausted';
-import { ENCOURAGEMENTS, APP_ROUTES } from '../constants';
+import { APP_ROUTES } from '../constants';
 
 
 const TaskPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { currentTask, selectedLevel } = useStore();
   const { markTaskDone, backToSelection } = useTaskActions();
@@ -27,10 +29,11 @@ const TaskPage: React.FC = () => {
 
   useEffect(() => {
     if (currentTask?.id) {
+      const encouragements = t('encouragements', { returnObjects: true }) as string[];
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setEncouragement(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
+      setEncouragement(encouragements[Math.floor(Math.random() * encouragements.length)]);
     }
-  }, [currentTask?.id]);
+  }, [currentTask?.id, t]);
 
   const handleMarkDone = () => {
     const result = markTaskDone();
@@ -80,14 +83,14 @@ const TaskPage: React.FC = () => {
             onClick={handleMarkDone}
             className="w-full py-4 px-8 bg-success text-warm rounded-full text-lg font-medium hover:bg-success-dark transition-colors shadow-sm active:scale-95"
           >
-            Mark as complete
+            {t('task.markComplete')}
           </button>
           {hasAlternatives && (
             <button
               onClick={refreshTask}
               className="w-full py-4 px-8 bg-transparent border-2 border-surface text-soft rounded-full text-lg font-medium hover:bg-surface hover:text-text transition-all active:scale-95"
             >
-              Something else
+              {t('task.somethingElse')}
             </button>
           )}
         </div>
@@ -96,7 +99,7 @@ const TaskPage: React.FC = () => {
           onClick={backToSelection}
           className="text-soft hover:text-accent transition-colors text-sm underline underline-offset-4"
         >
-          Go back to selection
+          {t('task.backToSelection')}
         </button>
       </div>
     </>

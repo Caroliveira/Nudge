@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import TaskForm from './TaskForm';
 import CsvImport from './CsvImport';
 import CatalogReport from './CatalogReport';
@@ -35,6 +36,8 @@ const CatalogContent: React.FC<CatalogContentProps> = ({
   onStartAdd,
   onStartEdit,
 }) => {
+  const { t } = useTranslation();
+
   if (isAdding) {
     return (
       <TaskForm
@@ -71,7 +74,7 @@ const CatalogContent: React.FC<CatalogContentProps> = ({
               className="w-full py-4 border-2 border-dashed border-surface rounded-2xl text-soft hover:border-accent hover:text-accent transition-all flex items-center justify-center gap-2 group"
             >
               <span className="text-2xl group-hover:scale-110 transition-transform">+</span>
-              Add a personal task
+              {t('catalog.addPersonalTask')}
             </button>
             <CsvImport />
           </>

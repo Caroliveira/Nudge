@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useCatalogFilter, CatalogView } from '../hooks/useCatalogFilter';
@@ -8,6 +9,7 @@ import CatalogTabs from '../components/CatalogTabs';
 import CatalogContent from '../components/CatalogContent';
 
 const CatalogPage: React.FC = () => {
+  const { t } = useTranslation();
   const { tasks, addTask, updateTask, deleteTask } = useStore();
   const { backToSelection, toggleTask } = useTaskActions();
   const { view, setView, filteredTasks } = useCatalogFilter(tasks);
@@ -36,21 +38,21 @@ const CatalogPage: React.FC = () => {
   return (
     <div className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[85dvh]">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl serif text-text">Task Catalog</h2>
+        <h2 className="text-3xl serif text-text">{t('catalog.title')}</h2>
         <button
           type="button"
           onClick={backToSelection}
           className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
         >
           <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
-          <span className="underline underline-offset-4">Back</span>
+          <span className="underline underline-offset-4">{t('catalog.back')}</span>
         </button>
       </div>
 
-      <CatalogTabs 
-        view={view} 
-        onViewChange={handleTabChange} 
-        hasArchivedTasks={hasArchivedTasks} 
+      <CatalogTabs
+        view={view}
+        onViewChange={handleTabChange}
+        hasArchivedTasks={hasArchivedTasks}
       />
 
       <div

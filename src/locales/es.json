@@ -1,0 +1,181 @@
+{
+  "welcome": "Bienvenido a Nudge",
+  "description": "Tu asistente personal de productividad",
+  "taskCatalog": "Catálogo de Tareas y Planificación Personal",
+  "footerQuote": "Sé intencional con tu energía.",
+  "home": {
+    "whatCanYouHandle": "¿Qué puedes manejar?",
+    "addTasks": "Añade algunas tareas a tu catálogo para empezar.",
+    "selectLevel": "Selecciona un nivel de energía para encontrar tu siguiente paso."
+  },
+  "catalog": {
+    "title": "Catálogo de Tareas",
+    "back": "Volver",
+    "tabs": {
+      "tasks": "Tareas",
+      "archive": "Archivo",
+      "report": "Informe"
+    },
+    "empty": {
+      "quiet": "Tu catálogo está tranquilo.",
+      "quietSubtitle": "Añade tareas que quieras abordar más tarde cuando tengas energía.",
+      "archive": "No hay tareas archivadas."
+    },
+    "addPersonalTask": "Añadir una tarea personal"
+  },
+  "task": {
+    "markComplete": "Marcar como completada",
+    "somethingElse": "Otra cosa",
+    "backToSelection": "Volver a la selección",
+    "markAsIncomplete": "Marcar como incompleta",
+    "markAsComplete": "Marcar como completada"
+  },
+  "victory": {
+    "title": "¡Has completado tu misión!",
+    "subtitle": "Disfruta de tu descanso.",
+    "description": "Has despejado tu camino. No hay más tareas esperando tu atención.",
+    "nextTasks": "Tu próximo conjunto de tareas estará listo en {{count}} día.",
+    "nextTasks_other": "Tu próximo conjunto de tareas estará listo en {{count}} días.",
+    "comeBack": "¡Vuelve entonces para nuevos desafíos!",
+    "addNew": "Añadir Nuevas Tareas"
+  },
+  "effort": {
+    "low": "Esfuerzo Bajo",
+    "medium": "Esfuerzo Medio",
+    "high": "Esfuerzo Alto",
+    "short": {
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto"
+    }
+  },
+  "recurrence": {
+    "days": "Diaria",
+    "weeks": "Semanal",
+    "months": "Mensual",
+    "years": "Anual",
+    "none": "Única",
+    "every": {
+      "days": "Cada {{count}} día",
+      "days_other": "Cada {{count}} días",
+      "weeks": "Cada {{count}} semana",
+      "weeks_other": "Cada {{count}} semanas",
+      "months": "Cada {{count}} mes",
+      "months_other": "Cada {{count}} meses",
+      "years": "Cada {{count}} año",
+      "years_other": "Cada {{count}} años"
+    }
+  },
+  "swipe": {
+    "delete": "Eliminar",
+    "releaseDelete": "Soltar para Eliminar",
+    "deleted": "¡Eliminado!",
+    "edit": "Editar",
+    "releaseEdit": "Soltar para Editar",
+    "editing": "Editando...",
+    "a11yRemove": "Presiona Eliminar o Retroceso para quitar. ",
+    "a11yEdit": "Presiona Enter para editar. "
+  },
+  "exhausted": {
+    "title": "Has visto todas las tareas de este nivel.",
+    "subtitle": "¿Qué te gustaría hacer?",
+    "runAgain": "Ejecutar la misma lista de nuevo",
+    "selectOther": "Seleccionar otro esfuerzo"
+  },
+  "form": {
+    "title": "Título",
+    "placeholder": "¿Qué hay que hacer?",
+    "effort": "Nivel de Esfuerzo",
+    "recurrence": "Recurrencia",
+    "update": "Actualizar Tarea",
+    "save": "Guardar Tarea",
+    "cancel": "Cancelar",
+    "successUpdate": "¡Tarea Actualizada!",
+    "successSave": "¡Tarea Guardada!",
+    "units": {
+      "none": "Una vez",
+      "days": "Días",
+      "weeks": "Semanas",
+      "months": "Meses",
+      "years": "Años"
+    }
+  },
+  "celebration": {
+    "low": {
+      "title": "Nivel Superado",
+      "message": "Una onda constante lleva a un mar en calma. Estás encontrando tu ritmo."
+    },
+    "medium": {
+      "title": "Progreso Increíble",
+      "message": "Has abordado el núcleo de tu día con gracia. Realmente estás fluyendo ahora."
+    },
+    "high": {
+      "title": "Potencia Absoluta",
+      "message": "Has conquistado el trabajo pesado. La montaña está detrás de ti. Hora de un merecido descanso."
+    },
+    "backToStart": "Volver al Inicio"
+  },
+  "feedback": {
+    "nice": "¡Bien!"
+  },
+  "aria": {
+    "noTasks": "{{label}}, no hay tareas disponibles",
+    "tasksAvailable": "{{label}}, {{count}} tarea disponible",
+    "tasksAvailable_other": "{{label}}, {{count}} tareas disponibles"
+  },
+  "encouragements": [
+    "Respira profundo. Tú puedes con esto.",
+    "Un paso a la vez es todo lo que se necesita.",
+    "El progreso es progreso, no importa cuán pequeño sea.",
+    "Concéntrate en el ahora. El resto puede esperar.",
+    "Eres capaz de más de lo que piensas.",
+    "Lento pero seguro se gana la carrera.",
+    "Sé amable contigo mismo mientras avanzas.",
+    "Tu esfuerzo de hoy es suficiente.",
+    "La montaña se escala una piedra a la vez.",
+    "Empieza donde estás. Usa lo que tienes.",
+    "Aquieta tu mente y concéntrate en la tarea actual.",
+    "Cada pequeña acción construye un mañana mejor."
+  ],
+  "report": {
+    "noData": "No hay datos para informar.",
+    "addTasks": "Añade algunas tareas para ver tu desglose de energía.",
+    "activity": "Actividad de Hoy",
+    "activitySubtitle": "Tareas completadas en esta sesión",
+    "viewMode": "Modo de Vista",
+    "effort": "Esfuerzo",
+    "recurrence": "Recurrencia",
+    "noActivity": "No hay tareas completadas hoy.",
+    "checkOff": "¡Marca algunas tareas para ver tu progreso!",
+    "health": "Salud del Catálogo",
+    "healthSubtitle": "Estado de finalización por nivel de esfuerzo",
+    "done": "{{count}} hechas",
+    "left": "{{count}} restantes"
+  },
+  "import": {
+    "example1": "Leer un libro",
+    "example2": "Sesión de trabajo profundo",
+    "tooLarge": "Archivo demasiado grande. El tamaño máximo es 1MB.",
+    "parseError": "Error de análisis CSV: {{message}}",
+    "invalidFormat": "Formato CSV inválido. Encabezados requeridos: title, effort, interval, unit",
+    "success": "Importadas exitosamente {{count}} tareas{{skippedMsg}}.",
+    "duplicatesSkipped": " ({{count}} duplicados omitidos)",
+    "failed": "Importación fallida. Ocurrió un error inesperado al procesar.",
+    "failedMessage": "Importación fallida: {{message}}",
+    "button": "Importar CSV",
+    "template": "Obtener Plantilla CSV",
+    "ariaLabel": "Importar archivo CSV"
+  },
+  "settings": {
+    "title": "Configuración",
+    "back": "Volver",
+    "language": {
+      "title": "Idioma",
+      "current": "Actual"
+    },
+    "appearance": {
+      "title": "Apariencia"
+    },
+    "comingSoon": "Próximamente..."
+  }
+}

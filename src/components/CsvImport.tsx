@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Papa from 'papaparse';
+import { useTranslation } from 'react-i18next';
 import { CsvTaskRow } from '../types';
 import { useStore } from '../store/useStore';
 import { IMPORT_CONFIG } from '../constants';
@@ -7,6 +8,7 @@ import { validateHeaders, processImportedTasks } from '../utils/csvUtils';
 
 
 const CsvImport: React.FC = () => {
+  const { t } = useTranslation();
   const { tasks, addTask } = useStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importStatus, setImportStatus] = useState<string | null>(null);
@@ -24,7 +26,7 @@ const CsvImport: React.FC = () => {
     if (!file) return;
 
     if (file.size > IMPORT_CONFIG.MAX_FILE_SIZE_BYTES) {
-      setImportStatus('File too large. Maximum size is 1MB.');
+      setImportStatus(t('import.tooLarge'));
       return;
     }
 
@@ -37,13 +39,13 @@ const CsvImport: React.FC = () => {
           const { data, meta } = results;
 
           if (results.errors && results.errors.length > 0) {
-            setImportStatus(`CSV Parse Error: ${results.errors[0].message}`);
+            setImportStatus(t('import.parseError', { message: results.errors[0].message }));
             return;
           }
 
           const headers = meta.fields || [];
           if (!validateHeaders(headers)) {
-            setImportStatus(`Invalid CSV format. Required headers: title, effort, interval, unit`);
+            setImportStatus(t('import.invalidFormat'));
             return;
           }
 
@@ -51,14 +53,14 @@ const CsvImport: React.FC = () => {
 
           tasksToAdd.forEach(task => addTask({ ...task, id: crypto.randomUUID() }));
 
-          const skippedMsg = skippedCount > 0 ? ` (${skippedCount} duplicates skipped)` : '';
-          setImportStatus(`Successfully imported ${count} tasks${skippedMsg}.`);
+          const skippedMsg = skippedCount > 0 ? t('import.duplicatesSkipped', { count: skippedCount }) : '';
+          setImportStatus(t('import.success', { count, skippedMsg }));
         } catch {
-          setImportStatus('Import failed. An unexpected error occurred while processing.');
+          setImportStatus(t('import.failed'));
         }
       },
       error: (error) => {
-        setImportStatus(`Import failed: ${error.message}`);
+        setImportStatus(t('import.failedMessage', { message: error.message }));
       }
     });
 
@@ -67,7 +69,8 @@ const CsvImport: React.FC = () => {
 
   const downloadTemplate = () => {
     const csvContent =
-      'data:text/csv;charset=utf-8,title,effort,interval,unit\nRead a book,Low,1,days\nDeep Work Session,High,1,weeks';
+      `data:text/csv;charset=utf-8,title,effort,interval,unit\n${t('import.example1')},low,1,days\n${t('import.example2')},high,1,weeks`;
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -88,14 +91,14 @@ const CsvImport: React.FC = () => {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
           </svg>
-          Import CSV
+          {t('import.button')}
         </button>
         <button
           type="button"
           onClick={downloadTemplate}
           className="py-3 px-4 text-soft hover:text-accent transition-all text-xs underline underline-offset-4"
         >
-          Get CSV Template
+          {t('import.template')}
         </button>
         <input
           type="file"
@@ -103,7 +106,7 @@ const CsvImport: React.FC = () => {
           onChange={handleImportCSV}
           accept=".csv"
           className="hidden"
-          aria-label="Import CSV file"
+          aria-label={t('import.ariaLabel')}
         />
       </div>
       {importStatus && (

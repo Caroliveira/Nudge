@@ -1,0 +1,181 @@
+{
+  "welcome": "Welcome to Nudge",
+  "description": "Your personal productivity assistant",
+  "taskCatalog": "Task Catalog & Personal Planning",
+  "footerQuote": "Be intentional with your energy.",
+  "home": {
+    "whatCanYouHandle": "What can you handle?",
+    "addTasks": "Add some tasks to your catalog to get started.",
+    "selectLevel": "Select an energy level to find your next step."
+  },
+  "catalog": {
+    "title": "Task Catalog",
+    "back": "Back",
+    "tabs": {
+      "tasks": "Tasks",
+      "archive": "Archive",
+      "report": "Report"
+    },
+    "empty": {
+      "quiet": "Your catalog is quiet.",
+      "quietSubtitle": "Add tasks you want to tackle later when you have the energy.",
+      "archive": "No archived tasks."
+    },
+    "addPersonalTask": "Add a personal task"
+  },
+  "task": {
+    "markComplete": "Mark as complete",
+    "somethingElse": "Something else",
+    "backToSelection": "Go back to selection",
+    "markAsIncomplete": "Mark as incomplete",
+    "markAsComplete": "Mark as complete"
+  },
+  "victory": {
+    "title": "You've completed your quest!",
+    "subtitle": "Enjoy your rest.",
+    "description": "You've cleared your path. There are no more tasks waiting for your attention.",
+    "nextTasks": "Your next set of tasks will be ready in {{count}} day.",
+    "nextTasks_other": "Your next set of tasks will be ready in {{count}} days.",
+    "comeBack": "Come back then for new challenges!",
+    "addNew": "Add New Tasks"
+  },
+  "effort": {
+    "low": "Low Effort",
+    "medium": "Medium Effort",
+    "high": "High Effort",
+    "short": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "recurrence": {
+    "days": "Daily",
+    "weeks": "Weekly",
+    "months": "Monthly",
+    "years": "Yearly",
+    "none": "One-off",
+    "every": {
+      "days": "Every {{count}} day",
+      "days_other": "Every {{count}} days",
+      "weeks": "Every {{count}} week",
+      "weeks_other": "Every {{count}} weeks",
+      "months": "Every {{count}} month",
+      "months_other": "Every {{count}} months",
+      "years": "Every {{count}} year",
+      "years_other": "Every {{count}} years"
+    }
+  },
+  "swipe": {
+    "delete": "Delete",
+    "releaseDelete": "Release to Delete",
+    "deleted": "Deleted!",
+    "edit": "Edit",
+    "releaseEdit": "Release to Edit",
+    "editing": "Editing...",
+    "a11yRemove": "Press Delete or Backspace to remove. ",
+    "a11yEdit": "Press Enter to edit. "
+  },
+  "exhausted": {
+    "title": "You've seen all tasks for this level.",
+    "subtitle": "What would you like to do?",
+    "runAgain": "Run same list again",
+    "selectOther": "Select other effort"
+  },
+  "form": {
+    "title": "Title",
+    "placeholder": "What needs doing?",
+    "effort": "Effort Level",
+    "recurrence": "Recurrence",
+    "update": "Update Task",
+    "save": "Save Task",
+    "cancel": "Cancel",
+    "successUpdate": "Task Updated!",
+    "successSave": "Task Saved!",
+    "units": {
+      "none": "One-time",
+      "days": "Days",
+      "weeks": "Weeks",
+      "months": "Months",
+      "years": "Years"
+    }
+  },
+  "celebration": {
+    "low": {
+      "title": "Level Cleared",
+      "message": "A steady ripple leads to a calm sea. You're finding your rhythm."
+    },
+    "medium": {
+      "title": "Incredible Progress",
+      "message": "You tackled the core of your day with grace. You're truly in the flow now."
+    },
+    "high": {
+      "title": "Absolute Powerhouse",
+      "message": "You've conquered the heavy lifting. The mountain is behind you. Time for a well-deserved rest."
+    },
+    "backToStart": "Back to Start"
+  },
+  "feedback": {
+    "nice": "Nice!"
+  },
+  "aria": {
+    "noTasks": "{{label}}, no tasks available",
+    "tasksAvailable": "{{label}}, {{count}} task available",
+    "tasksAvailable_other": "{{label}}, {{count}} tasks available"
+  },
+  "encouragements": [
+    "Take a deep breath. You've got this.",
+    "One step at a time is all it takes.",
+    "Progress is progress, no matter how small.",
+    "Focus on the now. The rest can wait.",
+    "You are capable of more than you think.",
+    "Slow and steady wins the race.",
+    "Be kind to yourself as you move forward.",
+    "Your effort today is enough.",
+    "The mountain is climbed one pebble at a time.",
+    "Start where you are. Use what you have.",
+    "Quiet your mind and focus on the task at hand.",
+    "Each small action builds a better tomorrow."
+  ],
+  "report": {
+    "noData": "No data to report.",
+    "addTasks": "Add some tasks to see your energy breakdown.",
+    "activity": "Today's Activity",
+    "activitySubtitle": "Tasks completed in this session",
+    "viewMode": "View Mode",
+    "effort": "Effort",
+    "recurrence": "Recurrence",
+    "noActivity": "No tasks completed yet today.",
+    "checkOff": "Check off some tasks to see your progress!",
+    "health": "Catalog Health",
+    "healthSubtitle": "Completion status by effort level",
+    "done": "{{count}} done",
+    "left": "{{count}} left"
+  },
+  "import": {
+    "example1": "Read a book",
+    "example2": "Deep Work Session",
+    "tooLarge": "File too large. Maximum size is 1MB.",
+    "parseError": "CSV Parse Error: {{message}}",
+    "invalidFormat": "Invalid CSV format. Required headers: title, effort, interval, unit",
+    "success": "Successfully imported {{count}} tasks{{skippedMsg}}.",
+    "duplicatesSkipped": " ({{count}} duplicates skipped)",
+    "failed": "Import failed. An unexpected error occurred while processing.",
+    "failedMessage": "Import failed: {{message}}",
+    "button": "Import CSV",
+    "template": "Get CSV Template",
+    "ariaLabel": "Import CSV file"
+  },
+  "settings": {
+    "title": "Settings",
+    "back": "Back",
+    "language": {
+      "title": "Language",
+      "current": "Current"
+    },
+    "appearance": {
+      "title": "Appearance"
+    },
+    "comingSoon": "Coming soon..."
+  }
+}

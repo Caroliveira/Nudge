@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo, MotionValue, animate } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { SWIPE_CONFIG } from '../constants';
 
 interface SwipeableItemProps {
@@ -19,6 +20,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   renderRightBackground,
   className = '',
 }) => {
+  const { t } = useTranslation();
   const x = useMotionValue(0);
   const isDragging = useRef(false);
   const dragTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -83,8 +85,8 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
       aria-describedby={descriptionId}
     >
       <span id={descriptionId} className="sr-only">
-        {onSwipeLeft ? 'Press Delete or Backspace to remove. ' : ''}
-        {onSwipeRight ? 'Press Enter to edit. ' : ''}
+        {onSwipeLeft ? t('swipe.a11yRemove') : ''}
+        {onSwipeRight ? t('swipe.a11yEdit') : ''}
       </span>
 
 

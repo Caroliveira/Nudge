@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { CatalogView } from '../hooks/useCatalogFilter';
 
 interface CatalogTabsProps {
@@ -9,6 +10,8 @@ interface CatalogTabsProps {
 }
 
 const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchivedTasks }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-surface/30 p-1.5 rounded-2xl flex items-center mb-8 relative" role="tablist" aria-label="Catalog views">
       <button
@@ -17,9 +20,8 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
         aria-selected={view === 'tasks'}
         aria-controls="catalog-panel"
         id="tab-tasks"
-        className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${
-          view === 'tasks' ? 'text-text' : 'text-soft hover:text-text/80'
-        }`}
+        className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${view === 'tasks' ? 'text-text' : 'text-soft hover:text-text/80'
+          }`}
       >
         {view === 'tasks' && (
           <motion.div
@@ -29,7 +31,7 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
             style={{ zIndex: -1 }}
           />
         )}
-        Tasks
+        {t('catalog.tabs.tasks')}
       </button>
 
       {hasArchivedTasks && (
@@ -39,9 +41,8 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
           aria-selected={view === 'archive'}
           aria-controls="catalog-panel"
           id="tab-archive"
-          className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${
-            view === 'archive' ? 'text-text' : 'text-soft hover:text-text/80'
-          }`}
+          className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${view === 'archive' ? 'text-text' : 'text-soft hover:text-text/80'
+            }`}
         >
           {view === 'archive' && (
             <motion.div
@@ -51,7 +52,7 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
               style={{ zIndex: -1 }}
             />
           )}
-          Archive
+          {t('catalog.tabs.archive')}
         </button>
       )}
 
@@ -61,9 +62,8 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
         aria-selected={view === 'report'}
         aria-controls="catalog-panel"
         id="tab-report"
-        className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${
-          view === 'report' ? 'text-text' : 'text-soft hover:text-text/80'
-        }`}
+        className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${view === 'report' ? 'text-text' : 'text-soft hover:text-text/80'
+          }`}
       >
         {view === 'report' && (
           <motion.div
@@ -73,7 +73,7 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
             style={{ zIndex: -1 }}
           />
         )}
-        Report
+        {t('catalog.tabs.report')}
       </button>
     </div>
   );

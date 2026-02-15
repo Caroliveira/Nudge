@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface CompletionFeedbackProps {
   onComplete: () => void;
 }
 
 const CompletionFeedback: React.FC<CompletionFeedbackProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
@@ -40,13 +43,13 @@ const CompletionFeedback: React.FC<CompletionFeedbackProps> = ({ onComplete }) =
             <polyline points="20 6 9 17 4 12" />
           </motion.svg>
         </div>
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="text-3xl font-serif italic text-success"
         >
-          Nice!
+          {t('feedback.nice')}
         </motion.h2>
       </motion.div>
     </div>
