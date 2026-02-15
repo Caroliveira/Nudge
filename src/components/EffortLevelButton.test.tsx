@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import EffortLevelButton from './EffortLevelButton';
 import { EffortLevel } from '../types';
-import { EFFORT_LABELS } from '../constants';
 
 describe('EffortLevelButton', () => {
   const mockOnSelect = vi.fn();
@@ -23,8 +22,8 @@ describe('EffortLevelButton', () => {
 
     const button = screen.getByRole('button');
     expect(button).not.toBeDisabled();
-    expect(screen.getByText(EFFORT_LABELS[EffortLevel.LOW])).toBeInTheDocument();
-    expect(button).toHaveAttribute('aria-label', `${EFFORT_LABELS[EffortLevel.LOW]}, 5 tasks available`);
+    expect(screen.getByText('Low Effort')).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-label', 'Low Effort, 5 tasks available');
   });
 
   it('renders correctly when disabled (no tasks)', () => {
@@ -38,7 +37,7 @@ describe('EffortLevelButton', () => {
 
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
-    expect(button).toHaveAttribute('aria-label', `${EFFORT_LABELS[EffortLevel.HIGH]}, no tasks available`);
+    expect(button).toHaveAttribute('aria-label', 'High Effort, no tasks available');
   });
 
   it('calls onSelect when clicked', async () => {

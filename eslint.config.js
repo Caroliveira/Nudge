@@ -22,10 +22,7 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       ...react.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/no-unescaped-entities': 'off',
@@ -38,7 +35,7 @@ export default tseslint.config(
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
         },
-      ]
+      ],
     },
     settings: {
       react: {
@@ -47,10 +44,10 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.test.{ts,tsx}'],
+    files: ['**/*.test.{ts,tsx}', '**/setupTests.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
-  eslintConfigPrettier
+  eslintConfigPrettier,
 );

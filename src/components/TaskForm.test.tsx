@@ -15,7 +15,7 @@ describe('TaskForm', () => {
   it('renders correctly for new task', () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
-    expect(screen.getByLabelText('Add new task')).toBeInTheDocument();
+    expect(screen.getByLabelText('Add a personal task')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('What needs doing?')).toHaveValue('');
     expect(screen.getByText('Save Task')).toBeInTheDocument();
   });
@@ -36,7 +36,7 @@ describe('TaskForm', () => {
       />
     );
 
-    expect(screen.getByLabelText('Edit task')).toBeInTheDocument();
+    expect(screen.getByLabelText('Update Task')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Existing Task')).toBeInTheDocument();
     expect(screen.getByDisplayValue('High Effort')).toBeInTheDocument();
     expect(screen.getByDisplayValue('2')).toBeInTheDocument();
