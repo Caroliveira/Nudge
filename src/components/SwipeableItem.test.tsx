@@ -7,7 +7,19 @@ import { SWIPE_CONFIG } from '../constants';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: vi.fn(({ children, onKeyDown, drag, dragConstraints, dragElastic, dragSnapToOrigin, onDragEnd, onDrag, onDragStart, onAnimationStart, style, ...props
+    div: vi.fn(({
+      children,
+      onKeyDown,
+      drag: _drag,
+      dragConstraints: _dragConstraints,
+      dragElastic: _dragElastic,
+      dragSnapToOrigin: _dragSnapToOrigin,
+      onDragEnd: _onDragEnd,
+      onDrag: _onDrag,
+      onDragStart: _onDragStart,
+      onAnimationStart: _onAnimationStart,
+      style: _style,
+      ...props
     }: HTMLMotionProps<"div">) => (
       <div
         data-testid="motion-div"

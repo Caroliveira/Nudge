@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useMotionValue, useMotionValueEvent, useTransform, PanInfo, MotionValue, animate } from 'framer-motion';
+import { motion, useMotionValue, useTransform, PanInfo, MotionValue, animate } from 'framer-motion';
 import { SWIPE_CONFIG } from '../constants';
 
 interface SwipeableItemProps {
@@ -41,7 +41,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   const handleDragEnd = async (_: unknown, info: PanInfo) => {
     // Small timeout to prevent click immediately after drag release
     dragTimeoutRef.current = setTimeout(() => {
-        isDragging.current = false;
+      isDragging.current = false;
     }, SWIPE_CONFIG.DRAG_END_TIMEOUT_MS);
 
     const currentX = info.offset.x;
@@ -65,7 +65,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
     if ((e.key === 'Delete' || e.key === 'Backspace') && onSwipeLeft) {
       onSwipeLeft();
       e.preventDefault();
-    } 
+    }
     else if (e.key === 'Enter' && onSwipeRight) {
       onSwipeRight();
       e.preventDefault();
@@ -75,7 +75,7 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
   const descriptionId = React.useId();
 
   return (
-    <div 
+    <div
       className={`relative overflow-hidden rounded-xl touch-pan-y select-none focus:outline-none focus:ring-2 focus:ring-accent ${className}`}
       tabIndex={0}
       onKeyDown={handleKeyDown}
@@ -89,9 +89,9 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
 
 
       {renderRightBackground && (
-        <motion.div 
+        <motion.div
           className="absolute inset-y-0 right-0 w-full"
-          style={{ 
+          style={{
             opacity: rightOpacity,
           }}
         >
@@ -100,13 +100,13 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
       )}
 
       {renderLeftBackground && (
-        <motion.div 
-            className="absolute inset-y-0 left-0 w-full"
-            style={{ 
-                opacity: leftOpacity,
-            }}
+        <motion.div
+          className="absolute inset-y-0 left-0 w-full"
+          style={{
+            opacity: leftOpacity,
+          }}
         >
-            {renderLeftBackground(x, isRightConfirmed)}
+          {renderLeftBackground(x, isRightConfirmed)}
         </motion.div>
       )}
 
@@ -114,19 +114,19 @@ const SwipeableItem: React.FC<SwipeableItemProps> = ({
         className="relative z-10"
         style={{ x }}
         drag="x"
-        dragConstraints={{ 
-            left: onSwipeLeft ? -SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0, 
-            right: onSwipeRight ? SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0 
+        dragConstraints={{
+          left: onSwipeLeft ? -SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0,
+          right: onSwipeRight ? SWIPE_CONFIG.DRAG_CONSTRAINT_PX : 0
         }}
         dragElastic={0}
         dragSnapToOrigin={false}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onClickCapture={(e) => {
-            if (isDragging.current) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
+          if (isDragging.current) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
         }}
       >
         {children}

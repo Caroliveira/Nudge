@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
@@ -23,8 +23,13 @@ const TaskPage: React.FC = () => {
 
   const hasAlternatives = selectedLevel ? availableCounts[selectedLevel] > 1 : false;
 
-  const encouragement = useMemo(() => {
-    return ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+  const [encouragement, setEncouragement] = useState('');
+
+  useEffect(() => {
+    if (currentTask?.id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setEncouragement(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
+    }
   }, [currentTask?.id]);
 
   const handleMarkDone = () => {

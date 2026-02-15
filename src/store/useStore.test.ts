@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useStore } from './useStore';
 import { EffortLevel, Task } from '../types';
-import { STORAGE_KEY } from '../constants';
 
 describe('useStore', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, useTransform, useMotionValueEvent, MotionValue } from 'framer-motion';
 
 interface SwipeActionProps {
@@ -26,7 +26,9 @@ export const SwipeAction: React.FC<SwipeActionProps> = ({
   alignment,
   isConfirmed = false,
 }) => {
-  const [text, setText] = useState(baseText);
+  const [dynamicText, setDynamicText] = useState(baseText);
+  
+  const text = (isConfirmed && successText) ? successText : dynamicText;
   
   const isTriggered = (val: number) => 
     threshold < 0 ? val < threshold : val > threshold;
@@ -40,17 +42,11 @@ export const SwipeAction: React.FC<SwipeActionProps> = ({
   );
 
   useMotionValueEvent(x, "change", (latest) => {
-    if (isConfirmed && successText) {
-        if (text !== successText) setText(successText);
-        return;
-    }
-    if (isTriggered(latest) && text !== activeText) setText(activeText);
-    if (!isTriggered(latest) && text !== baseText) setText(baseText);
+    if (isConfirmed && successText) return;
+    
+    if (isTriggered(latest) && dynamicText !== activeText) setDynamicText(activeText);
+    if (!isTriggered(latest) && dynamicText !== baseText) setDynamicText(baseText);
   });
-
-  useEffect(() => {
-    if (isConfirmed && successText) setText(successText);
-  }, [isConfirmed, successText]);
 
   const alignmentClass = alignment === 'end' ? 'justify-end pr-6' : 'justify-start pl-6';
 
