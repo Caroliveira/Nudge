@@ -70,15 +70,15 @@ const TaskPage: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-12 fade-in">
-        <div className="space-y-6">
-          <h2 className="text-4xl md:text-5xl text-accent serif italic">{currentTask.title}</h2>
+      <section className="flex flex-col items-center justify-center max-w-xl mx-auto px-6 text-center space-y-12 fade-in" aria-labelledby="task-title">
+        <header className="space-y-6">
+          <h1 id="task-title" className="text-4xl md:text-5xl text-accent serif italic">{currentTask.title}</h1>
           <p className="text-md text-soft max-w-md mx-auto italic">
             "{encouragement}"
           </p>
-        </div>
+        </header>
 
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+        <nav aria-label="Task Actions" className="flex flex-col sm:flex-row items-center gap-4 w-full">
           <button
             onClick={handleMarkDone}
             className="w-full py-4 px-8 bg-success text-warm rounded-full text-lg font-medium hover:bg-success-dark transition-colors shadow-sm active:scale-95"
@@ -93,7 +93,7 @@ const TaskPage: React.FC = () => {
               {t('task.somethingElse')}
             </button>
           )}
-        </div>
+        </nav>
 
         <button
           onClick={backToSelection}
@@ -101,7 +101,7 @@ const TaskPage: React.FC = () => {
         >
           {t('task.backToSelection')}
         </button>
-      </div>
+      </section>
     </>
   );
 };

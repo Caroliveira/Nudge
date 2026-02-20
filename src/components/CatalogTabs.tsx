@@ -13,7 +13,7 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
   const { t } = useTranslation();
 
   return (
-    <div className="bg-surface/30 p-1.5 rounded-2xl flex items-center mb-8 relative" role="tablist" aria-label="Catalog views">
+    <nav className="bg-surface/30 p-1.5 rounded-2xl flex items-center mb-8 relative" role="tablist" aria-label="Catalog views">
       <button
         onClick={() => onViewChange('tasks')}
         role="tab"
@@ -75,7 +75,7 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
         )}
         {t('catalog.tabs.report')}
       </button>
-    </div>
+    </nav>
   );
 };
 

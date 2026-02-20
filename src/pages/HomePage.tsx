@@ -15,23 +15,25 @@ const HomePage: React.FC = () => {
   if (totalIncomplete === 0 && tasks.length > 0) return <TotalVictory />;
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <section className="w-full flex flex-col items-center">
       <EffortSelector />
-      <Link
-        to={APP_ROUTES.CATALOG}
-        className="mt-12 text-soft hover:text-accent transition-colors flex items-center gap-2 group"
-      >
-        <span className="w-8 h-px bg-soft group-hover:bg-accent transition-colors" />
-        {t('taskCatalog')}
-        <span className="w-8 h-px bg-soft group-hover:bg-accent transition-colors" />
-      </Link>
+      <nav aria-label="Catalog Navigation">
+        <Link
+          to={APP_ROUTES.CATALOG}
+          className="mt-12 text-soft hover:text-accent transition-colors flex items-center gap-2 group"
+        >
+          <span className="w-8 h-px bg-soft group-hover:bg-accent transition-colors" />
+          {t('taskCatalog')}
+          <span className="w-8 h-px bg-soft group-hover:bg-accent transition-colors" />
+        </Link>
+      </nav>
 
       <footer className="fixed bottom-8 text-center w-full z-10">
         <p className="text-xs text-soft opacity-50 uppercase tracking-widest font-medium">
           {t('footerQuote')}
         </p>
       </footer>
-    </div>
+    </section>
   );
 };
 

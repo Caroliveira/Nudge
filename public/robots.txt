@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://nudge.lina-oliveira.com/sitemap.xml

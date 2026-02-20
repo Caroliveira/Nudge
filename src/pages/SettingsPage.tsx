@@ -13,21 +13,23 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[85dvh]">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl serif text-text">{t('settings.title')}</h2>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
-        >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="underline underline-offset-4">{t('settings.back')}</span>
-        </button>
-      </div>
+    <section className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[85dvh]">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl serif text-text">{t('settings.title')}</h1>
+        <nav aria-label="Settings Back Navigation">
+          <button
+            onClick={() => navigate(-1)}
+            className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="underline underline-offset-4">{t('settings.back')}</span>
+          </button>
+        </nav>
+      </header>
 
       <div className="bg-surface/30 p-6 rounded-3xl border border-surface space-y-8">
         <section>
-          <h3 className="text-lg font-bold text-text mb-4">{t('settings.language.title')}</h3>
+          <h2 className="text-lg font-bold text-text mb-4">{t('settings.language.title')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {SUPPORTED_LANGUAGES.map((lang) => (
               <button
@@ -47,7 +49,7 @@ const SettingsPage: React.FC = () => {
           </div>
         </section>
       </div>
-    </div>
+    </section>
   );
 };
 

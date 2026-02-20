@@ -37,18 +37,20 @@ const CatalogPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[85dvh]">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl serif text-text">{t('catalog.title')}</h2>
-        <button
-          type="button"
-          onClick={backToSelection}
-          className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
-        >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="underline underline-offset-4">{t('catalog.back')}</span>
-        </button>
-      </div>
+    <section className="w-full max-w-2xl mx-auto p-6 fade-in flex flex-col h-[85dvh]">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl serif text-text">{t('catalog.title')}</h1>
+        <nav aria-label="Catalog Back Navigation">
+          <button
+            type="button"
+            onClick={backToSelection}
+            className="text-soft hover:text-accent transition-colors flex items-center gap-2 group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="underline underline-offset-4">{t('catalog.back')}</span>
+          </button>
+        </nav>
+      </header>
 
       <CatalogTabs
         view={view}
@@ -80,7 +82,7 @@ const CatalogPage: React.FC = () => {
           onStartEdit={setEditingTask}
         />
       </div>
-    </div>
+    </section>
   );
 };
 
