@@ -42,6 +42,7 @@ manifest-checksum.txt
 *.apk
 *.aab
 *.idsig
+twa-manifest.json
 
 # Coverage
 coverage/

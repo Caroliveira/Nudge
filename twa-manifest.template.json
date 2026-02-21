@@ -17,8 +17,8 @@
   "maskableIconUrl": "https://nudge.lina-oliveira.com/pwa-512x512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "/Users/lina/Documents/projects/Nudge/android.keystore",
-    "alias": "android"
+    "path": "${KEYSTORE_PATH}",
+    "alias": "${KEY_ALIAS}"
   },
   "appVersionName": "1",
   "appVersionCode": 1,
