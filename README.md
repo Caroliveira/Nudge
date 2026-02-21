@@ -1,19 +1,132 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Nudge
 
-# Run and deploy your AI Studio app
+**Nudge** é um aplicativo focado em transformar pequenas ações
+recorrentes em hábitos sustentáveis.
 
-This contains everything you need to run your app locally.
+A proposta é ajudar o usuário a manter consistência em tarefas
+obrigatórias do dia a dia --- desde cuidados pessoais até
+micro-compromissos de longo prazo --- através de uma experiência
+simples, fluida e mobile-first.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1O1ES_5LDUQvAeMq46Z2awlfqS4gOzygO
+O projeto é construído como **Progressive Web App (PWA)** e pode ser
+distribuído como aplicativo Android via **Trusted Web Activity (TWA)**.
 
-## Run Locally
+------------------------------------------------------------------------
 
-**Prerequisites:**  Node.js
+## ✨ Funcionalidades
 
+-   Organização de micro-hábitos recorrentes
+-   Sistema leve de acompanhamento diário
+-   Experiência mobile-first
+-   Instalação como aplicativo no Android
+-   Suporte offline (PWA)
+-   Internacionalização (i18n)
 
-1. Install dependencies:
-   `npm install`
-2. Run the app:
-   `npm run dev`
+------------------------------------------------------------------------
+
+## 🛠 Stack Técnica
+
+-   **React 19 + Vite**
+-   **TypeScript (strict mode)**
+-   **Zustand** (state management)
+-   **React Router v7**
+-   **Tailwind CSS**
+-   **Framer Motion**
+-   **i18next** (internacionalização)
+-   **Vitest + Testing Library**
+-   **vite-plugin-pwa**
+-   **Bubblewrap (TWA Android)**
+
+------------------------------------------------------------------------
+
+## 🚀 Como Rodar Localmente
+
+### Pré-requisitos
+
+-   Node.js 18+
+
+### Instalar dependências
+
+``` bash
+npm install
+```
+
+### Rodar em modo desenvolvimento
+
+``` bash
+npm run dev
+```
+
+### Rodar testes
+
+``` bash
+npm run test
+```
+
+Para cobertura de testes:
+
+``` bash
+npm run test:coverage
+```
+
+### Gerar build de produção
+
+``` bash
+npm run build
+```
+
+Visualizar build local:
+
+``` bash
+npm run preview
+```
+
+------------------------------------------------------------------------
+
+## 📱 Distribuição Android (TWA)
+
+O projeto pode ser empacotado como aplicativo Android utilizando
+**Trusted Web Activity (TWA)** via Bubblewrap.
+
+### Configuração
+
+As configurações do aplicativo Android (nome, packageId, tema, ícones,
+etc.) estão no:
+
+`twa-manifest.template.json`
+
+O arquivo real `twa-manifest.json` (que contém dados sensíveis como
+`signingKey`) **não é versionado**, por segurança.
+
+Em ambientes locais ou CI/CD, o `twa-manifest.json` deve ser gerado a
+partir do template com as credenciais apropriadas.
+
+### Gerar APK / AAB
+
+Instale o CLI:
+
+``` bash
+npm install -g @google/bubblewrap
+```
+
+Depois, utilize o Bubblewrap para inicializar ou atualizar o projeto
+Android com base no `twa-manifest.json`.
+
+------------------------------------------------------------------------
+
+## 🌐 PWA
+
+O Nudge é um Progressive Web App com:
+
+-   Cache de assets
+-   Atualização automática
+-   Suporte offline
+-   Instalação nativa em dispositivos compatíveis
+
+------------------------------------------------------------------------
+
+## 📄 Licença
+
+© 2026 Carolina Oliveira. Todos os direitos reservados.
+
+O código está disponível para visualização, mas não é permitido uso ou redistribuição sem autorização.
