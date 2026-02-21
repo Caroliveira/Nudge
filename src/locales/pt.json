@@ -166,6 +166,12 @@
     "template": "Obter Modelo CSV",
     "ariaLabel": "Importar arquivo CSV"
   },
+  "export": {
+    "success": "Exportadas {{count}} tarefas.",
+    "failed": "Falha na exportação. Ocorreu um erro inesperado.",
+    "button": "Exportar Tarefas",
+    "ariaLabel": "Exportar tarefas para CSV"
+  },
   "settings": {
     "title": "Configurações",
     "back": "Voltar",

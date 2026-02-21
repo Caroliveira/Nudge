@@ -166,6 +166,12 @@
     "template": "Obtener Plantilla CSV",
     "ariaLabel": "Importar archivo CSV"
   },
+  "export": {
+    "success": "Exportadas {{count}} tareas.",
+    "failed": "Exportación fallida. Ocurrió un error inesperado.",
+    "button": "Exportar Tareas",
+    "ariaLabel": "Exportar tareas a CSV"
+  },
   "settings": {
     "title": "Configuración",
     "back": "Volver",

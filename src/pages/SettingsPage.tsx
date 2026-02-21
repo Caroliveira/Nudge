@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { SUPPORTED_LANGUAGES } from '../constants';
+import CsvExport from '@/components/CsvExport';
 
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -28,6 +29,9 @@ const SettingsPage: React.FC = () => {
       </header>
 
       <div className="bg-surface/30 p-6 rounded-3xl border border-surface space-y-8">
+        <section>
+          <CsvExport />
+        </section>
         <section>
           <h2 className="text-lg font-bold text-text mb-4">{t('settings.language.title')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

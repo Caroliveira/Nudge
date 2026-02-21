@@ -166,6 +166,12 @@
     "template": "Get CSV Template",
     "ariaLabel": "Import CSV file"
   },
+  "export": {
+    "success": "Exported {{count}} tasks.",
+    "failed": "Export failed. An unexpected error occurred.",
+    "button": "Export Tasks",
+    "ariaLabel": "Export tasks to CSV"
+  },
   "settings": {
     "title": "Settings",
     "back": "Back",
