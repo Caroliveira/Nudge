@@ -21,6 +21,10 @@
       "quietSubtitle": "Añade tareas que quieras abordar más tarde cuando tengas energía.",
       "archive": "No hay tareas archivadas."
     },
+    "filterAll": "Todos",
+    "filterToday": "Hechas Hoy",
+    "search": "Buscar tareas...",
+    "emptySearch": "No se encontraron tareas con estos filtros.",
     "addPersonalTask": "Añadir una tarea personal"
   },
   "task": {

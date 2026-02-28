@@ -21,6 +21,10 @@
       "quietSubtitle": "Add tasks you want to tackle later when you have the energy.",
       "archive": "No archived tasks."
     },
+    "filterAll": "All",
+    "filterToday": "Made Today",
+    "search": "Search tasks...",
+    "emptySearch": "No tasks found matching your filters.",
     "addPersonalTask": "Add a personal task"
   },
   "task": {
