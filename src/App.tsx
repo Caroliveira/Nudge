@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AppLayout from './components/AppLayout';
-import HomePage from './pages/HomePage';
-import TaskPage from './pages/TaskPage';
-import CatalogPage from './pages/CatalogPage';
-import SettingsPage from './pages/SettingsPage';
+const HomePage = lazy(() => import('./pages/HomePage'));
+const TaskPage = lazy(() => import('./pages/TaskPage'));
+const CatalogPage = lazy(() => import('./pages/CatalogPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 import { APP_ROUTES } from './constants';
 import { useStore } from './store/useStore';
 
@@ -17,12 +17,14 @@ const App: React.FC = () => {
 
   return (
     <AppLayout>
-      <Routes>
-        <Route path={APP_ROUTES.HOME} element={<HomePage />} />
-        <Route path={APP_ROUTES.TASK} element={<TaskPage />} />
-        <Route path={APP_ROUTES.CATALOG} element={<CatalogPage />} />
-        <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
-      </Routes>
+      <Suspense fallback={<div className="flex h-full items-center justify-center p-4">Loading...</div>}>
+        <Routes>
+          <Route path={APP_ROUTES.HOME} element={<HomePage />} />
+          <Route path={APP_ROUTES.TASK} element={<TaskPage />} />
+          <Route path={APP_ROUTES.CATALOG} element={<CatalogPage />} />
+          <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
+        </Routes>
+      </Suspense>
     </AppLayout>
   );
 };
