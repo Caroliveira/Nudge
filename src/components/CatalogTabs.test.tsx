@@ -19,31 +19,20 @@ describe('CatalogTabs', () => {
   const mockProps = {
     view: 'tasks' as const,
     onViewChange: vi.fn(),
-    hasArchivedTasks: false,
   };
 
-  it('renders tasks and report tabs by default', () => {
+  it('renders tasks and report tabs', () => {
     render(<CatalogTabs {...mockProps} />);
 
     expect(screen.getByRole('tab', { name: /tasks/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /report/i })).toBeInTheDocument();
-    expect(screen.queryByRole('tab', { name: /archive/i })).not.toBeInTheDocument();
-  });
-
-  it('renders archive tab when hasArchivedTasks is true', () => {
-    render(<CatalogTabs {...mockProps} hasArchivedTasks={true} />);
-
-    expect(screen.getByRole('tab', { name: /archive/i })).toBeInTheDocument();
   });
 
   it('calls onViewChange when tab is clicked', () => {
-    render(<CatalogTabs {...mockProps} hasArchivedTasks={true} />);
+    render(<CatalogTabs {...mockProps} />);
 
     fireEvent.click(screen.getByRole('tab', { name: /report/i }));
     expect(mockProps.onViewChange).toHaveBeenCalledWith('report');
-
-    fireEvent.click(screen.getByRole('tab', { name: /archive/i }));
-    expect(mockProps.onViewChange).toHaveBeenCalledWith('archive');
 
     fireEvent.click(screen.getByRole('tab', { name: /tasks/i }));
     expect(mockProps.onViewChange).toHaveBeenCalledWith('tasks');

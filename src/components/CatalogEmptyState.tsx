@@ -11,11 +11,7 @@ const CatalogEmptyState: React.FC<CatalogEmptyStateProps> = ({ view }) => {
 
   return (
     <div className="text-center py-12 px-6">
-      <p className="text-soft italic text-lg mb-2">
-        {view === 'tasks'
-          ? t('catalog.empty.quiet')
-          : t('catalog.empty.archive')}
-      </p>
+      <p className="text-soft italic text-lg mb-2">{t('catalog.empty.quiet')}</p>
       {view === 'tasks' && (
         <p className="text-soft text-sm opacity-60">
           {t('catalog.empty.quietSubtitle')}

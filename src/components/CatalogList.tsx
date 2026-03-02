@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Search, Filter } from 'lucide-react';
-import { Task, EffortLevel } from '../types';
+import { Task, EffortLevel, RecurrenceUnit } from '../types';
 import { CatalogView } from '../hooks/useCatalogFilter';
 import TaskCatalogItem from './TaskCatalogItem';
 import CatalogEmptyState from './CatalogEmptyState';
@@ -16,6 +16,11 @@ interface CatalogListProps {
   onEdit: (task: Task) => void;
 }
 
+const recurrenceOptions: RecurrenceUnit[] = ['none', 'days', 'weeks', 'months', 'years'];
+type StatusFilterValue = 'ALL' | 'AVAILABLE' | 'DONE' | 'TODAY';
+type EffortFilterValue = 'ALL' | EffortLevel;
+type RecurrenceFilterValue = 'ALL' | RecurrenceUnit;
+
 const CatalogList: React.FC<CatalogListProps> = ({
   tasks,
   view,
@@ -25,26 +30,57 @@ const CatalogList: React.FC<CatalogListProps> = ({
 }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [levelFilter, setLevelFilter] = useState<EffortLevel | 'ALL' | 'TODAY'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('ALL');
+  const [effortFilter, setEffortFilter] = useState<EffortFilterValue>('ALL');
+  const [recurrenceFilter, setRecurrenceFilter] = useState<RecurrenceFilterValue>('ALL');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterContainerRef = useRef<HTMLDivElement | null>(null);
+  const selectedFilterCount =
+    Number(statusFilter !== 'ALL') +
+    Number(effortFilter !== 'ALL') +
+    Number(recurrenceFilter !== 'ALL');
+  const clearAllFilters = () => {
+    setStatusFilter('ALL');
+    setEffortFilter('ALL');
+    setRecurrenceFilter('ALL');
+  };
+
+  useEffect(() => {
+    if (!isFilterOpen) return;
+
+    const handleDocumentMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (!filterContainerRef.current?.contains(target)) {
+        setIsFilterOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleDocumentMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentMouseDown);
+    };
+  }, [isFilterOpen]);
 
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const taskRecurrence = task.recurrenceUnit ?? 'none';
 
-      let matchesLevel = true;
-      if (levelFilter === 'TODAY') {
-        matchesLevel = !!(task.isCompleted && task.lastCompletedAt && isToday(task.lastCompletedAt));
-      } else if (levelFilter !== 'ALL') {
-        matchesLevel = task.level === levelFilter;
+      let matchesStatus = true;
+      if (statusFilter === 'TODAY') {
+        matchesStatus = !!(task.isCompleted && task.lastCompletedAt && isToday(task.lastCompletedAt));
+      } else if (statusFilter === 'AVAILABLE') {
+        matchesStatus = !task.isCompleted;
+      } else if (statusFilter === 'DONE') {
+        matchesStatus = !!task.isCompleted;
       }
 
-      return matchesSearch && matchesLevel;
-    });
-  }, [tasks, searchQuery, levelFilter]);
+      const matchesEffort = effortFilter === 'ALL' || task.level === effortFilter;
+      const matchesRecurrence = recurrenceFilter === 'ALL' || taskRecurrence === recurrenceFilter;
 
-  useEffect(() => {
-    if (filteredTasks.length === 0 && levelFilter !== 'ALL') setLevelFilter('ALL');
-  }, [filteredTasks.length, levelFilter]);
+      return matchesSearch && matchesStatus && matchesEffort && matchesRecurrence;
+    });
+  }, [tasks, searchQuery, statusFilter, effortFilter, recurrenceFilter]);
 
   if (tasks.length === 0) {
     return <CatalogEmptyState view={view} />;
@@ -52,8 +88,8 @@ const CatalogList: React.FC<CatalogListProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-2 mt-4">
-      <div className="flex flex-col sm:flex-row gap-2 items-center mb-4">
-        <div className="relative flex-1 w-full sm:w-auto">
+      <div className="flex flex-row gap-2 items-center mb-2">
+        <div className="relative flex-1 min-w-0">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
             <Search className="w-4 h-4 text-soft opacity-50" />
           </div>
@@ -65,25 +101,73 @@ const CatalogList: React.FC<CatalogListProps> = ({
             className="w-full pl-9 pr-4 py-2 bg-surface text-text placeholder:text-soft rounded-lg border border-soft/30 focus:outline-none focus:border-accent transition-colors shadow-sm"
           />
         </div>
-        <div className="relative shrink-0 w-full sm:w-auto">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Filter className="w-4 h-4 text-soft opacity-50" />
-          </div>
-          <select
-            value={levelFilter}
-            onChange={(e) => setLevelFilter(e.target.value as EffortLevel | 'ALL' | 'TODAY')}
-            className="w-full sm:w-[140px] pl-9 pr-8 py-2 bg-surface text-text rounded-lg border border-soft/30 focus:outline-none focus:border-accent appearance-none cursor-pointer transition-colors shadow-sm text-sm"
+        <div ref={filterContainerRef} className="relative shrink-0">
+          <button
+            type="button"
+            aria-label={t('catalog.openFilters', 'Open filters')}
+            onClick={() => setIsFilterOpen((open) => !open)}
+            className="relative w-10 h-10 bg-surface border border-soft/30 rounded-lg flex items-center justify-center hover:border-accent transition-colors shadow-sm"
           >
-            <option value="ALL">{t('catalog.filterAll', 'All')}</option>
-            {tasks.some(task => !!(task.isCompleted && task.lastCompletedAt && isToday(task.lastCompletedAt))) && (
-              <option value="TODAY">{t('catalog.filterToday', 'Made Today')}</option>
+            <Filter className="w-4 h-4 text-soft" />
+            {selectedFilterCount > 0 && (
+              <span
+                data-testid="selected-filter-count"
+                className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-accent text-white text-[10px] leading-4 font-semibold"
+              >
+                {selectedFilterCount}
+              </span>
             )}
-            {Object.values(EffortLevel).map((level) => (
-              <option key={level} value={level}>
-                {t(`effort.short.${level.toLowerCase()}`, level)}
-              </option>
-            ))}
-          </select>
+          </button>
+          {isFilterOpen && (
+            <div className="absolute right-0 top-12 z-20 w-56 p-3 rounded-lg border border-soft/30 bg-surface shadow-lg flex flex-col gap-2">
+              <select
+                aria-label={t('catalog.filterStatus')}
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as StatusFilterValue)}
+                className="w-full px-3 py-2 bg-warm text-text rounded-md border border-soft/30 focus:outline-none focus:border-accent appearance-none cursor-pointer text-sm"
+              >
+                <option value="ALL">{t('catalog.filterAllStatus', 'All status')}</option>
+                <option value="AVAILABLE">{t('catalog.filterAvailable', 'Available')}</option>
+                <option value="DONE">{t('catalog.filterDone', 'Done')}</option>
+                <option value="TODAY">{t('catalog.filterToday', 'Made Today')}</option>
+              </select>
+              <select
+                aria-label={t('catalog.filterEffort')}
+                value={effortFilter}
+                onChange={(e) => setEffortFilter(e.target.value as EffortFilterValue)}
+                className="w-full px-3 py-2 bg-warm text-text rounded-md border border-soft/30 focus:outline-none focus:border-accent appearance-none cursor-pointer text-sm"
+              >
+                <option value="ALL">{t('catalog.filterAllEffort', 'All effort')}</option>
+                {Object.values(EffortLevel).map((level) => (
+                  <option key={level} value={level}>
+                    {t(`effort.short.${level.toLowerCase()}`, level)}
+                  </option>
+                ))}
+              </select>
+              <select
+                aria-label={t('catalog.filterRecurrence')}
+                value={recurrenceFilter}
+                onChange={(e) => setRecurrenceFilter(e.target.value as RecurrenceFilterValue)}
+                className="w-full px-3 py-2 bg-warm text-text rounded-md border border-soft/30 focus:outline-none focus:border-accent appearance-none cursor-pointer text-sm"
+              >
+                <option value="ALL">{t('catalog.filterAllRecurrence', 'All recurrence')}</option>
+                {recurrenceOptions.map((unit) => (
+                  <option key={unit} value={unit}>
+                    {t(`recurrence.${unit}`, unit)}
+                  </option>
+                ))}
+              </select>
+              {selectedFilterCount > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllFilters}
+                  className="w-full px-3 py-2 text-sm text-soft hover:text-accent border border-soft/30 rounded-md hover:border-accent transition-colors"
+                >
+                  {t('catalog.clearAllFilters', 'Clear all filters')}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

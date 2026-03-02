@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useCatalogFilter, CatalogView } from '../hooks/useCatalogFilter';
-import { isOneTimeTask } from '../utils/taskUtils';
 import { Task } from '../types';
 import CatalogTabs from '../components/CatalogTabs';
 import CatalogContent from '../components/CatalogContent';
@@ -14,8 +13,6 @@ const CatalogPage: React.FC = () => {
   const { tasks, addTask, updateTask, deleteTask } = useStore();
   const { backToSelection, toggleTask } = useTaskActions();
   const { view, setView, filteredTasks } = useCatalogFilter(tasks);
-
-  const hasArchivedTasks = tasks.some(t => isOneTimeTask(t) && t.isCompleted);
 
   const [isAdding, setIsAdding] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -52,11 +49,7 @@ const CatalogPage: React.FC = () => {
         </nav>
       </header>
 
-      <CatalogTabs
-        view={view}
-        onViewChange={handleTabChange}
-        hasArchivedTasks={hasArchivedTasks}
-      />
+      <CatalogTabs view={view} onViewChange={handleTabChange} />
 
       <div
         id="catalog-panel"

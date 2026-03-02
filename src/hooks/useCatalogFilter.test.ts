@@ -54,44 +54,29 @@ describe('useCatalogFilter', () => {
     
     // Should show:
     // - One-time Incomplete (id: 1)
+    // - One-time Completed (id: 2)
     // - Recurring Incomplete (id: 3)
     // - Recurring Completed (id: 4)
     // - A Task (id: 5)
-    // Should NOT show:
-    // - One-time Completed (id: 2)
 
     const filteredIds = result.current.filteredTasks.map(t => t.id);
     expect(filteredIds).toContain('1');
+    expect(filteredIds).toContain('2');
     expect(filteredIds).toContain('3');
     expect(filteredIds).toContain('4');
     expect(filteredIds).toContain('5');
-    expect(filteredIds).not.toContain('2');
-    expect(filteredIds.length).toBe(4);
+    expect(filteredIds.length).toBe(5);
   });
 
-  it('filters correctly for "archive" view', () => {
-    const { result } = renderHook(() => useCatalogFilter(mockTasks));
-
-    act(() => {
-      result.current.setView('archive');
-    });
-
-    // Should show ONLY:
-    // - One-time Completed (id: 2)
-
-    const filteredIds = result.current.filteredTasks.map(t => t.id);
-    expect(filteredIds).toContain('2');
-    expect(filteredIds.length).toBe(1);
-  });
-
-  it('returns empty list for "report" view', () => {
+  it('keeps sorted tasks available for "report" view', () => {
     const { result } = renderHook(() => useCatalogFilter(mockTasks));
 
     act(() => {
       result.current.setView('report');
     });
 
-    expect(result.current.filteredTasks).toEqual([]);
+    const filteredIds = result.current.filteredTasks.map(t => t.id);
+    expect(filteredIds).toEqual(['5', '1', '3', '2', '4']);
   });
 
   it('sorts tasks by completion status then title', () => {
@@ -103,9 +88,10 @@ describe('useCatalogFilter', () => {
     //    - One-time Incomplete (id: 1)
     //    - Recurring Incomplete (id: 3)
     // 2. Completed tasks
+    //    - One-time Completed (id: 2)
     //    - Recurring Completed (id: 4)
 
     const filteredIds = result.current.filteredTasks.map(t => t.id);
-    expect(filteredIds).toEqual(['5', '1', '3', '4']);
+    expect(filteredIds).toEqual(['5', '1', '3', '2', '4']);
   });
 });

@@ -6,10 +6,9 @@ import { CatalogView } from '../hooks/useCatalogFilter';
 interface CatalogTabsProps {
   view: CatalogView;
   onViewChange: (view: CatalogView) => void;
-  hasArchivedTasks: boolean;
 }
 
-const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchivedTasks }) => {
+const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange }) => {
   const { t } = useTranslation();
 
   return (
@@ -33,28 +32,6 @@ const CatalogTabs: React.FC<CatalogTabsProps> = ({ view, onViewChange, hasArchiv
         )}
         {t('catalog.tabs.tasks')}
       </button>
-
-      {hasArchivedTasks && (
-        <button
-          onClick={() => onViewChange('archive')}
-          role="tab"
-          aria-selected={view === 'archive'}
-          aria-controls="catalog-panel"
-          id="tab-archive"
-          className={`flex-1 relative py-3 text-sm font-bold rounded-xl transition-colors z-10 ${view === 'archive' ? 'text-text' : 'text-soft hover:text-text/80'
-            }`}
-        >
-          {view === 'archive' && (
-            <motion.div
-              layoutId="activeCatalogTab"
-              className="absolute inset-0 bg-white/70 shadow-sm rounded-xl"
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              style={{ zIndex: -1 }}
-            />
-          )}
-          {t('catalog.tabs.archive')}
-        </button>
-      )}
 
       <button
         onClick={() => onViewChange('report')}

@@ -27,7 +27,17 @@
       "archive": "No archived tasks."
     },
     "filterAll": "All",
+    "filterAllStatus": "All status",
+    "filterAllEffort": "All effort",
+    "filterAllRecurrence": "All recurrence",
+    "filterAvailable": "Available",
+    "filterDone": "Done",
     "filterToday": "Made Today",
+    "filterStatus": "Filter status",
+    "filterEffort": "Filter effort",
+    "filterRecurrence": "Filter recurrence",
+    "openFilters": "Open filters",
+    "clearAllFilters": "Clear all filters",
     "search": "Search tasks...",
     "emptySearch": "No tasks found matching your filters.",
     "addPersonalTask": "Add a personal task"

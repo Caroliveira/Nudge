@@ -10,10 +10,10 @@ describe('CatalogEmptyState', () => {
     expect(screen.getByText(/Add tasks you want to tackle later/)).toBeInTheDocument();
   });
 
-  it('renders correct message for "archive" view', () => {
-    render(<CatalogEmptyState view="archive" />);
+  it('renders quiet message without subtitle for "report" view', () => {
+    render(<CatalogEmptyState view="report" />);
     
-    expect(screen.getByText('No archived tasks.')).toBeInTheDocument();
+    expect(screen.getByText('Your catalog is quiet.')).toBeInTheDocument();
     expect(screen.queryByText(/Add tasks you want to tackle later/)).not.toBeInTheDocument();
   });
 });

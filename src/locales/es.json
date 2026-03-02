@@ -27,7 +27,17 @@
       "archive": "No hay tareas archivadas."
     },
     "filterAll": "Todos",
+    "filterAllStatus": "Todos estados",
+    "filterAllEffort": "Todos esfuerzos",
+    "filterAllRecurrence": "Todas recurrencias",
+    "filterAvailable": "Disponibles",
+    "filterDone": "Hechas",
     "filterToday": "Hechas Hoy",
+    "filterStatus": "Filtrar estado",
+    "filterEffort": "Filtrar esfuerzo",
+    "filterRecurrence": "Filtrar recurrencia",
+    "openFilters": "Abrir filtros",
+    "clearAllFilters": "Borrar todos los filtros",
     "search": "Buscar tareas...",
     "emptySearch": "No se encontraron tareas con estos filtros.",
     "addPersonalTask": "Añadir una tarea personal"
