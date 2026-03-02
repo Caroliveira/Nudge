@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, X } from 'lucide-react';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
 import { CatalogView, useCatalogFilter } from '../hooks/useCatalogFilter';
 import TaskCatalogItem from './TaskCatalogItem';
@@ -20,6 +20,11 @@ const recurrenceOptions: RecurrenceUnit[] = ['none', 'days', 'weeks', 'months', 
 type StatusFilterValue = 'ALL' | 'AVAILABLE' | 'DONE' | 'TODAY';
 type EffortFilterValue = 'ALL' | EffortLevel;
 type RecurrenceFilterValue = 'ALL' | RecurrenceUnit;
+const removeAccents = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 const CatalogList: React.FC<CatalogListProps> = ({
   tasks,
@@ -63,8 +68,10 @@ const CatalogList: React.FC<CatalogListProps> = ({
   }, [isFilterOpen]);
 
   const filteredTasks = useMemo(() => {
+    const normalizedQuery = removeAccents(searchQuery);
+
     return sortedTasks.filter(task => {
-      const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = removeAccents(task.title).includes(normalizedQuery);
       const taskRecurrence = task.recurrenceUnit ?? 'none';
 
       let matchesStatus = true;
@@ -99,8 +106,18 @@ const CatalogList: React.FC<CatalogListProps> = ({
             placeholder={t('catalog.search', 'Search tasks...')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-surface text-text placeholder:text-soft rounded-lg border border-soft/30 focus:outline-none focus:border-accent transition-colors shadow-sm"
+            className="w-full pl-9 pr-10 py-2 bg-surface text-text placeholder:text-soft rounded-lg border border-soft/30 focus:outline-none focus:border-accent transition-colors shadow-sm"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              aria-label={t('catalog.clearSearch', 'Clear search')}
+              onClick={() => setSearchQuery('')}
+              className="absolute inset-y-0 right-2 my-auto h-7 w-7 rounded-md text-soft hover:text-accent transition-colors flex items-center justify-center"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
         <div ref={filterContainerRef} className="relative shrink-0">
           <button

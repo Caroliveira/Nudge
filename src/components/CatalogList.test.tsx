@@ -82,6 +82,46 @@ describe('CatalogList', () => {
     });
   });
 
+  it('matches search regardless of accents', async () => {
+    const tasks: Task[] = [
+      { id: '1', title: 'Ação diária', level: EffortLevel.LOW, isCompleted: false, recurrenceUnit: 'days' },
+      { id: '2', title: 'Revisar backlog', level: EffortLevel.MEDIUM, isCompleted: false, recurrenceUnit: 'weeks' },
+    ];
+
+    render(<CatalogList {...mockProps} tasks={tasks} />);
+    fireEvent.change(screen.getByPlaceholderText(/Search tasks|Buscar tarefas|catalog\.search/), {
+      target: { value: 'acao' },
+    });
+
+    expect(screen.getByText('Ação diária')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Revisar backlog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('clears search when clicking the x button', async () => {
+    const tasks: Task[] = [
+      { id: '1', title: 'Ação diária', level: EffortLevel.LOW, isCompleted: false, recurrenceUnit: 'days' },
+      { id: '2', title: 'Revisar backlog', level: EffortLevel.MEDIUM, isCompleted: false, recurrenceUnit: 'weeks' },
+    ];
+
+    render(<CatalogList {...mockProps} tasks={tasks} />);
+    const searchInput = screen.getByPlaceholderText(/Search tasks|Buscar tarefas|catalog\.search/);
+    fireEvent.change(searchInput, { target: { value: 'acao' } });
+
+    await waitFor(() => {
+      expect(screen.queryByText('Revisar backlog')).not.toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByLabelText(/Clear search|catalog\.clearSearch/));
+
+    expect(searchInput).toHaveValue('');
+    await waitFor(() => {
+      expect(screen.getByText('Ação diária')).toBeInTheDocument();
+      expect(screen.getByText('Revisar backlog')).toBeInTheDocument();
+    });
+  });
+
   it('always shows made today option', () => {
     const tasks: Task[] = [
       { id: '1', title: 'Task 1', level: EffortLevel.LOW, isCompleted: false, recurrenceUnit: 'none' },
