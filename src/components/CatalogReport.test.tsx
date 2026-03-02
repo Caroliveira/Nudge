@@ -5,10 +5,17 @@ import { useCatalogStats } from '../hooks/useCatalogStats';
 import { EffortLevel } from '../types';
 
 vi.mock('../hooks/useCatalogStats');
+const storeState = { tasks: [] as any[] };
+vi.mock('../store/useStore', () => ({
+  useStore: () => ({
+    tasks: storeState.tasks,
+  }),
+}));
 
 
 describe('CatalogReport', () => {
   it('renders empty state when no tasks', () => {
+    storeState.tasks = [];
     (useCatalogStats as any).mockReturnValue({
       hasActivityToday: false,
       effortDist: {},
@@ -18,12 +25,13 @@ describe('CatalogReport', () => {
       registeredUnits: new Set()
     });
 
-    render(<CatalogReport tasks={[]} />);
+    render(<CatalogReport />);
 
     expect(screen.getByText('No data to report.')).toBeInTheDocument();
   });
 
   it('renders report components with correct data when tasks exist', () => {
+    storeState.tasks = [{ id: '1' } as any];
     const mockStats = {
       hasActivityToday: true,
       effortDist: { [EffortLevel.LOW]: 5 },
@@ -35,7 +43,7 @@ describe('CatalogReport', () => {
 
     (useCatalogStats as any).mockReturnValue(mockStats);
 
-    render(<CatalogReport tasks={[{ id: '1' } as any]} />);
+    render(<CatalogReport />);
 
 
     expect(screen.getByText("Today's Activity")).toBeInTheDocument();

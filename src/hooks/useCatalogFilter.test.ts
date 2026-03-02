@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useCatalogFilter } from './useCatalogFilter';
 import { Task, EffortLevel } from '../types';
 
@@ -44,14 +44,9 @@ describe('useCatalogFilter', () => {
     }
   ];
 
-  it('defaults to "tasks" view', () => {
+  it('returns all tasks for catalog consumption', () => {
     const { result } = renderHook(() => useCatalogFilter(mockTasks));
-    expect(result.current.view).toBe('tasks');
-  });
 
-  it('filters correctly for "tasks" view', () => {
-    const { result } = renderHook(() => useCatalogFilter(mockTasks));
-    
     // Should show:
     // - One-time Incomplete (id: 1)
     // - One-time Completed (id: 2)
@@ -59,7 +54,7 @@ describe('useCatalogFilter', () => {
     // - Recurring Completed (id: 4)
     // - A Task (id: 5)
 
-    const filteredIds = result.current.filteredTasks.map(t => t.id);
+    const filteredIds = result.current.sortedTasks.map(t => t.id);
     expect(filteredIds).toContain('1');
     expect(filteredIds).toContain('2');
     expect(filteredIds).toContain('3');
@@ -68,20 +63,9 @@ describe('useCatalogFilter', () => {
     expect(filteredIds.length).toBe(5);
   });
 
-  it('keeps sorted tasks available for "report" view', () => {
-    const { result } = renderHook(() => useCatalogFilter(mockTasks));
-
-    act(() => {
-      result.current.setView('report');
-    });
-
-    const filteredIds = result.current.filteredTasks.map(t => t.id);
-    expect(filteredIds).toEqual(['5', '1', '3', '2', '4']);
-  });
-
   it('sorts tasks by completion status then title', () => {
     const { result } = renderHook(() => useCatalogFilter(mockTasks));
-    
+
     // Expected order:
     // 1. Incomplete tasks (sorted by title)
     //    - A Task (id: 5)
@@ -91,7 +75,7 @@ describe('useCatalogFilter', () => {
     //    - One-time Completed (id: 2)
     //    - Recurring Completed (id: 4)
 
-    const filteredIds = result.current.filteredTasks.map(t => t.id);
+    const filteredIds = result.current.sortedTasks.map(t => t.id);
     expect(filteredIds).toEqual(['5', '1', '3', '2', '4']);
   });
 });

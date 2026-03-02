@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { EffortLevel } from '../types';
 import EffortLevelButton from './EffortLevelButton';
-import { useStore } from '../store/useStore';
 import { useTaskActions } from '../hooks/useTaskActions';
 import { useTaskAvailability } from '../hooks/useTaskAvailability';
 

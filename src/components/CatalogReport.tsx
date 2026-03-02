@@ -1,16 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Task } from '../types';
 import { useCatalogStats } from '../hooks/useCatalogStats';
 import TodaysActivity from './CatalogReportActivity';
 import CatalogHealth from './CatalogReportHealth';
+import { useStore } from '../store/useStore';
 
-interface CatalogReportProps {
-  tasks: Task[];
-}
-
-const CatalogReport: React.FC<CatalogReportProps> = ({ tasks }) => {
+const CatalogReport: React.FC = () => {
   const { t } = useTranslation();
+  const { tasks } = useStore();
   const stats = useCatalogStats(tasks);
 
   if (tasks.length === 0) {

@@ -24,7 +24,8 @@
     "empty": {
       "quiet": "Seu catálogo está quieto.",
       "quietSubtitle": "Adicione tarefas que você deseja realizar mais tarde, quando tiver energia.",
-      "archive": "Nenhuma tarefa arquivada."
+      "archive": "Nenhuma tarefa arquivada.",
+      "quickImportCta": "Ou <settings>vá para Configurações</settings> e importe um arquivo CSV para facilitar sua vida."
     },
     "filterAll": "Todas",
     "filterAllStatus": "Todos status",
@@ -201,6 +202,9 @@
     "appearance": {
       "title": "Aparência"
     },
-    "comingSoon": "Em breve..."
+    "comingSoon": "Em breve...",
+    "csv": {
+      "title": "CSV"
+    }
   }
 }

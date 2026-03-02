@@ -24,7 +24,8 @@
     "empty": {
       "quiet": "Your catalog is quiet.",
       "quietSubtitle": "Add tasks you want to tackle later when you have the energy.",
-      "archive": "No archived tasks."
+      "archive": "No archived tasks.",
+      "quickImportCta": "Or <settings>go to settings</settings> and import a CSV file to make your life easier."
     },
     "filterAll": "All",
     "filterAllStatus": "All status",
@@ -194,6 +195,9 @@
   "settings": {
     "title": "Settings",
     "back": "Back",
+    "csv": {
+      "title": "CSV"
+    },
     "language": {
       "title": "Language",
       "current": "Current"

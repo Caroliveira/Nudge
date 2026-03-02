@@ -4,7 +4,7 @@ import { isToday } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Search, Filter } from 'lucide-react';
 import { Task, EffortLevel, RecurrenceUnit } from '../types';
-import { CatalogView } from '../hooks/useCatalogFilter';
+import { CatalogView, useCatalogFilter } from '../hooks/useCatalogFilter';
 import TaskCatalogItem from './TaskCatalogItem';
 import CatalogEmptyState from './CatalogEmptyState';
 
@@ -29,6 +29,7 @@ const CatalogList: React.FC<CatalogListProps> = ({
   onEdit,
 }) => {
   const { t } = useTranslation();
+  const { sortedTasks } = useCatalogFilter(tasks);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('ALL');
   const [effortFilter, setEffortFilter] = useState<EffortFilterValue>('ALL');
@@ -62,7 +63,7 @@ const CatalogList: React.FC<CatalogListProps> = ({
   }, [isFilterOpen]);
 
   const filteredTasks = useMemo(() => {
-    return tasks.filter(task => {
+    return sortedTasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
       const taskRecurrence = task.recurrenceUnit ?? 'none';
 
@@ -80,7 +81,7 @@ const CatalogList: React.FC<CatalogListProps> = ({
 
       return matchesSearch && matchesStatus && matchesEffort && matchesRecurrence;
     });
-  }, [tasks, searchQuery, statusFilter, effortFilter, recurrenceFilter]);
+  }, [sortedTasks, searchQuery, statusFilter, effortFilter, recurrenceFilter]);
 
   if (tasks.length === 0) {
     return <CatalogEmptyState view={view} />;

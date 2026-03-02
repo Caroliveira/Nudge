@@ -1,9 +1,10 @@
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FileSpreadsheet, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { SUPPORTED_LANGUAGES } from '../constants';
 import CsvExport from '@/components/CsvExport';
+import CsvImport from '@/components/CsvImport';
 
 const SettingsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -28,30 +29,55 @@ const SettingsPage: React.FC = () => {
         </nav>
       </header>
 
-      <div className="bg-surface/30 p-6 rounded-3xl border border-surface space-y-8">
-        <section>
-          <CsvExport />
-        </section>
-        <section>
-          <h2 className="text-lg font-bold text-text mb-4">{t('settings.language.title')}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {SUPPORTED_LANGUAGES.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => handleLanguageChange(lang.code)}
-                className={`p-4 rounded-xl border transition-all text-left ${i18n.resolvedLanguage === lang.code
-                  ? 'bg-accent text-warm border-accent shadow-md'
-                  : 'bg-surface hover:bg-surface/80 border-transparent text-text hover:shadow-sm'
-                  }`}
-              >
-                <div className="font-bold">{lang.label}</div>
-                {i18n.resolvedLanguage === lang.code && (
-                  <div className="text-xs opacity-80 mt-1">{t('settings.language.current')}</div>
-                )}
-              </button>
-            ))}
-          </div>
-        </section>
+      <div className="space-y-6">
+        <div className="bg-surface/30 p-6 rounded-3xl border border-surface space-y-4">
+          <section>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-accent/15 text-accent flex items-center justify-center border border-accent/30">
+                <FileSpreadsheet className="w-5 h-5" aria-hidden="true" />
+              </div>
+              <h2 className="text-xl font-semibold tracking-tight text-text">
+                {t('settings.csv.title')}
+              </h2>
+            </div>
+          </section>
+          <section>
+            <CsvImport />
+          </section>
+          <section>
+            <CsvExport />
+          </section>
+        </div>
+
+        <div className="bg-surface/30 p-6 rounded-3xl border border-surface">
+          <section>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-xl bg-accent/15 text-accent flex items-center justify-center border border-accent/30">
+                <Languages className="w-5 h-5" aria-hidden="true" />
+              </div>
+              <h2 className="text-xl font-semibold tracking-tight text-text">
+                {t('settings.language.title')}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => handleLanguageChange(lang.code)}
+                  className={`p-4 rounded-xl border transition-all text-left ${i18n.resolvedLanguage === lang.code
+                    ? 'bg-accent text-warm border-accent shadow-md'
+                    : 'bg-surface hover:bg-surface/80 border-transparent text-text hover:shadow-sm'
+                    }`}
+                >
+                  <div className="font-bold">{lang.label}</div>
+                  {i18n.resolvedLanguage === lang.code && (
+                    <div className="text-xs opacity-80 mt-1">{t('settings.language.current')}</div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </section>
   );

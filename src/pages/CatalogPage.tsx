@@ -1,36 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useStore } from '../store/useStore';
+import { useSearchParams } from 'react-router-dom';
 import { useTaskActions } from '../hooks/useTaskActions';
-import { useCatalogFilter, CatalogView } from '../hooks/useCatalogFilter';
-import { Task } from '../types';
+import { CatalogView } from '../hooks/useCatalogFilter';
 import CatalogTabs from '../components/CatalogTabs';
-import CatalogContent from '../components/CatalogContent';
+import CatalogReport from '../components/CatalogReport';
+import CatalogTasks from '../components/CatalogTasks';
 
 const CatalogPage: React.FC = () => {
   const { t } = useTranslation();
-  const { tasks, addTask, updateTask, deleteTask } = useStore();
-  const { backToSelection, toggleTask } = useTaskActions();
-  const { view, setView, filteredTasks } = useCatalogFilter(tasks);
-
-  const [isAdding, setIsAdding] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { backToSelection } = useTaskActions();
+  const view: CatalogView = searchParams.get('view') === 'report' ? 'report' : 'tasks';
 
   const handleTabChange = (newView: CatalogView) => {
-    setView(newView);
-    setIsAdding(false);
-    setEditingTask(null);
-  };
-
-  const handleAddTask = (taskData: Omit<Task, 'id'>) => {
-    addTask({ ...taskData, id: crypto.randomUUID() });
-    setIsAdding(false);
-  };
-
-  const handleUpdateTask = (id: string, updates: Partial<Task>) => {
-    updateTask(id, updates);
-    setEditingTask(null);
+    const nextParams = new URLSearchParams(searchParams);
+    if (newView === 'report') {
+      nextParams.set('view', 'report');
+    } else {
+      nextParams.delete('view');
+    }
+    setSearchParams(nextParams, { replace: true });
   };
 
   return (
@@ -57,23 +48,7 @@ const CatalogPage: React.FC = () => {
         aria-labelledby={`tab-${view}`}
         className="flex-1 overflow-y-auto pr-2 space-y-6 px-1"
       >
-        <CatalogContent
-          view={view}
-          isAdding={isAdding}
-          editingTask={editingTask}
-          tasks={tasks}
-          filteredTasks={filteredTasks}
-          onAddTask={handleAddTask}
-          onUpdateTask={handleUpdateTask}
-          onDeleteTask={deleteTask}
-          onToggleTask={toggleTask}
-          onCancelEdit={() => {
-            setIsAdding(false);
-            setEditingTask(null);
-          }}
-          onStartAdd={() => setIsAdding(true)}
-          onStartEdit={setEditingTask}
-        />
+        {view === 'report' ? <CatalogReport /> : <CatalogTasks />}
       </div>
     </section>
   );
