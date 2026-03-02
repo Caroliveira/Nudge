@@ -168,7 +168,12 @@
     "noActivity": "No tasks completed yet today.",
     "checkOff": "Check off some tasks to see your progress!",
     "health": "Catalog Health",
-    "healthSubtitle": "Completion status by effort level",
+    "healthSubtitle": "Completion and streak overview by effort level",
+    "streak": "Streak",
+    "currentStreak": "Current",
+    "bestStreak": "Best",
+    "streakCount": "{{count}} day",
+    "streakCount_other": "{{count}} days",
     "done": "{{count}} done",
     "left": "{{count}} left"
   },

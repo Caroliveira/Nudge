@@ -76,6 +76,8 @@ describe('useCatalogStats', () => {
 
     // hasActivityToday
     expect(result.current.hasActivityToday).toBe(true);
+    expect(result.current.currentStreak).toBe(2);
+    expect(result.current.bestStreak).toBe(2);
 
     // registeredUnits
     expect(result.current.registeredUnits.has('days')).toBe(true);
@@ -89,5 +91,23 @@ describe('useCatalogStats', () => {
     expect(result.current.hasActivityToday).toBe(false);
     expect(result.current.totalDone[EffortLevel.LOW]).toBe(0);
     expect(result.current.totalLeft[EffortLevel.LOW]).toBe(0);
+    expect(result.current.currentStreak).toBe(0);
+    expect(result.current.bestStreak).toBe(0);
+  });
+
+  it('returns zero current streak when there is a break after yesterday', () => {
+    const olderTasks: Task[] = [
+      {
+        id: '1',
+        title: 'Done two days ago',
+        level: EffortLevel.LOW,
+        isCompleted: true,
+        lastCompletedAt: new Date('2023-12-30T12:00:00Z').getTime(),
+      },
+    ];
+
+    const { result } = renderHook(() => useCatalogStats(olderTasks));
+    expect(result.current.currentStreak).toBe(0);
+    expect(result.current.bestStreak).toBe(1);
   });
 });

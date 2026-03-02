@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import CatalogReport from './CatalogReport';
 import { useCatalogStats } from '../hooks/useCatalogStats';
 import { EffortLevel } from '../types';
@@ -22,7 +22,9 @@ describe('CatalogReport', () => {
       recurrenceDist: {},
       totalDone: {},
       totalLeft: {},
-      registeredUnits: new Set()
+      registeredUnits: new Set(),
+      currentStreak: 0,
+      bestStreak: 0,
     });
 
     render(<CatalogReport />);
@@ -34,11 +36,25 @@ describe('CatalogReport', () => {
     storeState.tasks = [{ id: '1' } as any];
     const mockStats = {
       hasActivityToday: true,
-      effortDist: { [EffortLevel.LOW]: 5 },
+      effortDist: {
+        [EffortLevel.LOW]: 5,
+        [EffortLevel.MEDIUM]: 0,
+        [EffortLevel.HIGH]: 0,
+      },
       recurrenceDist: { days: 2 },
-      totalDone: { [EffortLevel.LOW]: 10 },
-      totalLeft: { [EffortLevel.LOW]: 5 },
-      registeredUnits: new Set(['days'])
+      totalDone: {
+        [EffortLevel.LOW]: 10,
+        [EffortLevel.MEDIUM]: 0,
+        [EffortLevel.HIGH]: 0,
+      },
+      totalLeft: {
+        [EffortLevel.LOW]: 5,
+        [EffortLevel.MEDIUM]: 0,
+        [EffortLevel.HIGH]: 0,
+      },
+      registeredUnits: new Set(['days']),
+      currentStreak: 3,
+      bestStreak: 5,
     };
 
     (useCatalogStats as any).mockReturnValue(mockStats);
@@ -47,7 +63,14 @@ describe('CatalogReport', () => {
 
 
     expect(screen.getByText("Today's Activity")).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument(); // Low effort count
+    const activityHeader = screen.getByText("Today's Activity");
+    const activityCard = activityHeader.closest('div')?.parentElement?.parentElement;
+    expect(activityCard).not.toBeNull();
+    expect(within(activityCard as HTMLElement).getByText('5')).toBeInTheDocument();
+
+    expect(screen.getByText('Streak')).toBeInTheDocument();
+    expect(screen.getByText('Current: 3 days')).toBeInTheDocument();
+    expect(screen.getByText('Best: 5 days')).toBeInTheDocument();
 
     expect(screen.getByText('Catalog Health')).toBeInTheDocument();
     expect(screen.getByText('10 done')).toBeInTheDocument();

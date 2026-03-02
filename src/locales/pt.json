@@ -168,7 +168,12 @@
     "noActivity": "Nenhuma tarefa concluída hoje.",
     "checkOff": "Marque algumas tarefas para ver seu progresso!",
     "health": "Saúde do Catálogo",
-    "healthSubtitle": "Status de conclusão por nível de esforço",
+    "healthSubtitle": "Visão de conclusão e sequência por nível de esforço",
+    "streak": "Sequência",
+    "currentStreak": "Atual",
+    "bestStreak": "Melhor",
+    "streakCount": "{{count}} dia",
+    "streakCount_other": "{{count}} dias",
     "done": "{{count}} feitas",
     "left": "{{count}} restantes"
   },
