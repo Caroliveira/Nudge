@@ -1,7 +1,7 @@
 import { EffortLevel, RecurrenceUnit, CsvTaskRow, Task } from '../types';
 
 export interface ProcessedImport {
-  tasksToAdd: Omit<Task, 'id' | 'isCompleted' | 'lastCompletedAt' | 'nextAvailableAt'>[];
+  tasksToAdd: Task[];
   skippedCount: number;
   count: number;
 }
@@ -9,6 +9,20 @@ export interface ProcessedImport {
 export const validateHeaders = (headers: string[]): boolean => {
   const requiredHeaders = ['title', 'effort', 'interval', 'unit'];
   return requiredHeaders.every((h) => headers.includes(h));
+};
+
+const parseBoolean = (value?: string): boolean | undefined => {
+  if (!value) return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (normalized === 'true') return true;
+  if (normalized === 'false') return false;
+  return undefined;
+};
+
+const parseOptionalTimestamp = (value?: string): number | undefined => {
+  if (!value) return undefined;
+  const timestamp = Number(value);
+  return Number.isFinite(timestamp) ? timestamp : undefined;
 };
 
 export const processImportedTasks = (
@@ -19,7 +33,7 @@ export const processImportedTasks = (
   let skippedCount = 0;
 
   data.forEach((taskData) => {
-    if (!taskData.title?.trim() || !taskData.effort || !taskData.interval || !taskData.unit) {
+    if (!taskData.title.trim() || !taskData.effort || !taskData.interval || !taskData.unit) {
       return;
     }
 
@@ -45,10 +59,14 @@ export const processImportedTasks = (
     if (unit !== 'none' && (isNaN(interval) || interval <= 0)) return;
 
     tasksToAdd.push({
+      id: crypto.randomUUID(),
       title,
       level,
+      isCompleted: parseBoolean(taskData.iscompleted),
       recurrenceInterval: unit !== 'none' ? interval : undefined,
       recurrenceUnit: unit,
+      lastCompletedAt: parseOptionalTimestamp(taskData.lastcompletedat),
+      nextAvailableAt: parseOptionalTimestamp(taskData.nextavailableat),
     });
   });
 

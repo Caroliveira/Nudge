@@ -95,5 +95,33 @@ describe('csvUtils', () => {
       expect(result.tasksToAdd[0].level).toBe(EffortLevel.MEDIUM);
       expect(result.tasksToAdd[1].level).toBe(EffortLevel.HIGH);
     });
+
+    it('keeps optional task state fields when provided', () => {
+      const data = [
+        {
+          title: 'Recovered Task',
+          effort: 'high',
+          interval: '1',
+          unit: 'weeks',
+          iscompleted: 'true',
+          lastcompletedat: '1735689600000',
+          nextavailableat: '1735776000000'
+        }
+      ];
+
+      const result = processImportedTasks(data, existingTasks);
+
+      expect(result.count).toBe(1);
+      expect(result.tasksToAdd[0]).toMatchObject({
+        title: 'Recovered Task',
+        level: EffortLevel.HIGH,
+        recurrenceInterval: 1,
+        recurrenceUnit: 'weeks',
+        isCompleted: true,
+        lastCompletedAt: 1735689600000,
+        nextAvailableAt: 1735776000000
+      });
+      expect(result.tasksToAdd[0].id).toBeDefined();
+    });
   });
 });

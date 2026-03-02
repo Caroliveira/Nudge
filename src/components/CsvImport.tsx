@@ -34,7 +34,7 @@ const CsvImport: React.FC = () => {
     Papa.parse<CsvTaskRow>(file, {
       header: true,
       skipEmptyLines: true,
-      transformHeader: (h) => h.trim().toLowerCase(),
+      transformHeader: (h) => h.replace(/^\uFEFF/, '').trim().toLowerCase(),
       complete: (results) => {
         try {
           const { data, meta } = results;
@@ -52,7 +52,7 @@ const CsvImport: React.FC = () => {
 
           const { tasksToAdd, skippedCount, count } = processImportedTasks(data, tasks);
 
-          tasksToAdd.forEach(task => addTask({ ...task, id: crypto.randomUUID() }));
+          tasksToAdd.forEach((task) => addTask(task));
 
           const skippedMsg = skippedCount > 0 ? t('import.duplicatesSkipped', { count: skippedCount }) : '';
           setImportStatus(t('import.success', { count, skippedMsg }));

@@ -41,4 +41,7 @@ export interface CsvTaskRow {
   effort: string;
   interval: string;
   unit: string;
+  iscompleted?: string;
+  lastcompletedat?: string;
+  nextavailableat?: string;
 }

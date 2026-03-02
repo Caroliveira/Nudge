@@ -25,21 +25,27 @@ const CsvExport: React.FC = () => {
         return;
       }
 
-      const exportData = tasks.map(task => ({
+      const exportData = tasks.map((task) => ({
+        id: task.id,
         title: task.title,
         effort: task.level.toLowerCase(),
         interval: task.recurrenceInterval || 1,
-        unit: task.recurrenceUnit || 'none'
+        unit: task.recurrenceUnit || 'none',
+        isCompleted: task.isCompleted ?? false,
+        lastCompletedAt: task.lastCompletedAt ?? '',
+        nextAvailableAt: task.nextAvailableAt ?? '',
       }));
 
       const csvContent = Papa.unparse(exportData);
-      const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+      const blob = new Blob(['\uFEFF', csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
+      link.setAttribute('href', url);
       link.setAttribute('download', 'nudge_tasks_export.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
       setExportStatus(t('export.success', { count: tasks.length }));
     } catch {
