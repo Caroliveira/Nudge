@@ -6,7 +6,12 @@
   "home": {
     "whatCanYouHandle": "What can you handle?",
     "addTasks": "Add some tasks to your catalog to get started.",
-    "selectLevel": "Select an energy level to find your next step."
+    "selectLevel": "Select an energy level to find your next step.",
+    "firstTask": {
+      "title": "Your journey begins here.",
+      "subtitle": "Nudge works best when you have a few tasks ready for different energy levels.",
+      "cta": "Add your first task"
+    }
   },
   "catalog": {
     "title": "Task Catalog",

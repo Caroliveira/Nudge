@@ -6,13 +6,16 @@ import { useTaskAvailability } from '../hooks/useTaskAvailability';
 import EffortSelector from '../components/EffortSelector';
 import TotalVictory from '../components/TotalVictory';
 import { APP_ROUTES } from '../constants';
+import AddFirstTask from '@/components/AddFirstTask';
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
   const { tasks } = useStore();
   const { totalIncomplete } = useTaskAvailability();
 
-  if (totalIncomplete === 0 && tasks.length > 0) return <TotalVictory />;
+  if (tasks.length === 0) return <AddFirstTask />;
+
+  if (totalIncomplete === 0) return <TotalVictory />;
 
   return (
     <section className="w-full flex flex-col items-center">

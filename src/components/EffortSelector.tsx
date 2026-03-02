@@ -8,21 +8,17 @@ import { useTaskAvailability } from '../hooks/useTaskAvailability';
 
 const EffortSelector: React.FC = () => {
   const { t } = useTranslation();
-  const tasks = useStore((state) => state.tasks);
   const { selectLevel } = useTaskActions();
   const { availableCounts } = useTaskAvailability();
-  const hasAnyTasks = tasks.length > 0;
 
   return (
     <div className="flex flex-col items-center justify-center space-y-8 fade-in">
       <div className="text-center space-y-2">
         <h1 className="text-4xl md:text-5xl text-text font-light">
-          {!hasAnyTasks ? t('welcome') : t('home.whatCanYouHandle')}
+          {t('home.whatCanYouHandle')}
         </h1>
         <p className="text-lg text-soft italic">
-          {!hasAnyTasks
-            ? t('home.addTasks')
-            : t('home.selectLevel')}
+          {t('home.selectLevel')}
         </p>
       </div>
 

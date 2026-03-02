@@ -6,7 +6,12 @@
   "home": {
     "whatCanYouHandle": "¿Qué puedes manejar?",
     "addTasks": "Añade algunas tareas a tu catálogo para empezar.",
-    "selectLevel": "Selecciona un nivel de energía para encontrar tu siguiente paso."
+    "selectLevel": "Selecciona un nivel de energía para encontrar tu siguiente paso.",
+    "firstTask": {
+      "title": "Tu viaje comienza aquí.",
+      "subtitle": "Nudge funciona mejor cuando tienes algunas tareas listas para diferentes niveles de energía.",
+      "cta": "Añade tu primera tarea"
+    }
   },
   "catalog": {
     "title": "Catálogo de Tareas",

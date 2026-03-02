@@ -28,22 +28,6 @@ describe('EffortSelector', () => {
     });
   });
 
-  it('renders welcome message when no tasks exist', () => {
-    (useStore as any).mockReturnValue([]); // tasks array
-    (useTaskAvailability as any).mockReturnValue({
-      availableCounts: {
-        [EffortLevel.LOW]: 0,
-        [EffortLevel.MEDIUM]: 0,
-        [EffortLevel.HIGH]: 0,
-      },
-    });
-
-    render(<EffortSelector />);
-
-    expect(screen.getByText('Welcome to Nudge')).toBeInTheDocument();
-    expect(screen.getByText('Add some tasks to your catalog to get started.')).toBeInTheDocument();
-  });
-
   it('renders selection prompt when tasks exist', () => {
     (useStore as any).mockReturnValue([{ id: '1' }]);
     (useTaskAvailability as any).mockReturnValue({

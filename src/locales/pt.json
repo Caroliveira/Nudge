@@ -6,7 +6,12 @@
   "home": {
     "whatCanYouHandle": "O que você consegue fazer?",
     "addTasks": "Adicione algumas tarefas ao seu catálogo para começar.",
-    "selectLevel": "Selecione um nível de energia para encontrar seu próximo passo."
+    "selectLevel": "Selecione um nível de energia para encontrar seu próximo passo.",
+    "firstTask": {
+      "title": "Sua jornada começa aqui.",
+      "subtitle": "O Nudge funciona melhor quando você tem algumas tarefas prontas para diferentes níveis de energia.",
+      "cta": "Adicione sua primeira tarefa"
+    }
   },
   "catalog": {
     "title": "Catálogo de Tarefas",
