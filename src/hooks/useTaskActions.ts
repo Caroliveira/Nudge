@@ -6,18 +6,19 @@ import { APP_ROUTES } from '../constants';
 
 export function useTaskActions() {
   const navigate = useNavigate();
-  const { 
-    tasks, 
-    selectedLevel, 
-    currentTask, 
-    setSelectedLevel, 
-    setCurrentTask, 
+  const {
+    tasks,
+    selectedLevel,
+    currentTask,
+    setSelectedLevel,
+    setCurrentTask,
     updateTask,
+    recordTaskCompletion,
   } = useStore();
 
   const selectLevel = (level: EffortLevel) => {
     const candidates = getTasksForLevel(tasks, level);
-    
+
     if (candidates.length > 0) {
       const picked = pickRandomTask(candidates);
       if (picked) {
@@ -29,9 +30,9 @@ export function useTaskActions() {
   };
 
   const backToSelection = () => {
-      setSelectedLevel(null);
-      setCurrentTask(null);
-      navigate(APP_ROUTES.HOME);
+    setSelectedLevel(null);
+    setCurrentTask(null);
+    navigate(APP_ROUTES.HOME);
   };
 
   const toggleTask = (id: string) => {
@@ -39,26 +40,32 @@ export function useTaskActions() {
     if (task) {
       const updated = calculateTaskCompletion(task, !task.isCompleted);
       updateTask(id, updated);
+      if (updated.isCompleted && updated.lastCompletedAt) {
+        recordTaskCompletion(updated.lastCompletedAt);
+      }
     }
   };
 
   const markTaskDone = () => {
     if (currentTask && selectedLevel) {
       const updated = calculateTaskCompletion(currentTask, true);
-      
+
       updateTask(currentTask.id, updated);
-     
+      if (updated.lastCompletedAt) {
+        recordTaskCompletion(updated.lastCompletedAt);
+      }
+
       const freshTasks = useStore.getState().tasks;
       const now = new Date();
-      
-      const remainingInLevel = freshTasks.filter(t => 
+
+      const remainingInLevel = freshTasks.filter(t =>
         t.id !== currentTask.id &&
-        t.level === selectedLevel && 
+        t.level === selectedLevel &&
         isTaskAvailable(t, now)
       ).length;
-      
+
       return { levelCleared: remainingInLevel === 0 };
-    } 
+    }
     return { levelCleared: false };
   };
 

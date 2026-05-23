@@ -38,6 +38,9 @@ describe('useTaskActions', () => {
       tasks: [],
       currentTask: null,
       selectedLevel: null,
+      currentStreak: 0,
+      bestStreak: 0,
+      streakLastUpdatedAt: undefined,
     });
     vi.useFakeTimers();
   });
@@ -110,7 +113,8 @@ describe('useTaskActions', () => {
     useStore.setState({
       tasks: mockTasks,
       selectedLevel: EffortLevel.LOW,
-      currentTask: mockTasks[0]
+      currentTask: mockTasks[0],
+      bestStreak: 0,
     });
 
     const { result } = renderHook(() => useTaskActions());
@@ -125,6 +129,82 @@ describe('useTaskActions', () => {
     expect(task?.isCompleted).toBe(true);
 
     expect(response).toEqual({ levelCleared: false });
+  });
+
+  it('updates bestStreak when completing a task extends the streak', () => {
+    const today = new Date('2024-01-02T12:00:00Z');
+    const yesterday = new Date('2024-01-01T12:00:00Z');
+    vi.setSystemTime(today);
+
+    useStore.setState({
+      tasks: [
+        mockTasks[0],
+        mockTasks[1],
+        mockTasks[2],
+      ],
+      selectedLevel: EffortLevel.LOW,
+      currentTask: mockTasks[0],
+      currentStreak: 1,
+      bestStreak: 1,
+      streakLastUpdatedAt: yesterday.getTime(),
+    });
+
+    const { result } = renderHook(() => useTaskActions());
+
+    act(() => {
+      result.current.markTaskDone();
+    });
+
+    expect(useStore.getState().bestStreak).toBe(2);
+    expect(useStore.getState().currentStreak).toBe(2);
+    expect(useStore.getState().streakLastUpdatedAt).toBe(today.getTime());
+  });
+
+  it('does not increment the streak more than once in the same day', () => {
+    const today = new Date('2024-01-02T12:00:00Z');
+    vi.setSystemTime(today);
+
+    useStore.setState({
+      tasks: mockTasks,
+      selectedLevel: EffortLevel.LOW,
+      currentTask: mockTasks[0],
+      currentStreak: 4,
+      bestStreak: 4,
+      streakLastUpdatedAt: new Date('2024-01-02T08:00:00Z').getTime(),
+    });
+
+    const { result } = renderHook(() => useTaskActions());
+
+    act(() => {
+      result.current.markTaskDone();
+    });
+
+    expect(useStore.getState().currentStreak).toBe(4);
+    expect(useStore.getState().bestStreak).toBe(4);
+  });
+
+  it('starts a new current streak without lowering the historical best', () => {
+    const today = new Date('2024-01-05T12:00:00Z');
+    vi.setSystemTime(today);
+
+    useStore.setState({
+      tasks: mockTasks,
+      selectedLevel: EffortLevel.LOW,
+      currentTask: mockTasks[0],
+      currentStreak: 4,
+      bestStreak: 4,
+      streakLastUpdatedAt: new Date('2024-01-01T12:00:00Z').getTime(),
+    });
+
+    const { result } = renderHook(() => useTaskActions());
+
+    act(() => {
+      result.current.markTaskDone();
+    });
+
+    expect(useStore.getState().currentStreak).toBe(1);
+    expect(useStore.getState().bestStreak).toBe(4);
+    expect(useStore.getState().streakLastUpdatedAt).toBe(today.getTime());
   });
 
   it('markTaskDone returns levelCleared true when last task is finished', () => {

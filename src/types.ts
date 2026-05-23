@@ -1,7 +1,7 @@
 
-export enum EffortLevel { 
-  LOW = 'LOW', 
-  MEDIUM = 'MEDIUM', 
+export enum EffortLevel {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
   HIGH = 'HIGH'
 }
 
@@ -24,12 +24,17 @@ export interface StoreState {
   tasks: Task[];
   currentTask: Task | null;
   selectedLevel: EffortLevel | null;
+  currentStreak: number;
+  bestStreak: number;
+  streakLastUpdatedAt?: number;
 
   // Actions
   setTasks: (tasks: Task[]) => void;
   setCurrentTask: (task: Task | null) => void;
   setSelectedLevel: (level: EffortLevel | null) => void;
-  
+  setBestStreak: (bestStreak: number) => void;
+  recordTaskCompletion: (completedAt?: number) => void;
+
   addTask: (task: Task) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   deleteTask: (id: string) => void;

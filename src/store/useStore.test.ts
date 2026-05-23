@@ -7,7 +7,10 @@ describe('useStore', () => {
     useStore.setState({
       tasks: [],
       currentTask: null,
-      selectedLevel: null
+      selectedLevel: null,
+      currentStreak: 0,
+      bestStreak: 0,
+      streakLastUpdatedAt: undefined,
     });
     vi.clearAllMocks();
   });
@@ -31,6 +34,28 @@ describe('useStore', () => {
   it('sets selected level correctly', () => {
     useStore.getState().setSelectedLevel(EffortLevel.HIGH);
     expect(useStore.getState().selectedLevel).toBe(EffortLevel.HIGH);
+  });
+
+  it('sets best streak correctly', () => {
+    useStore.getState().setBestStreak(7);
+    expect(useStore.getState().bestStreak).toBe(7);
+  });
+
+  it('records task completions in the streak state', () => {
+    useStore.getState().recordTaskCompletion(new Date('2024-01-01T12:00:00Z').getTime());
+    useStore.getState().recordTaskCompletion(new Date('2024-01-02T12:00:00Z').getTime());
+
+    expect(useStore.getState().currentStreak).toBe(2);
+    expect(useStore.getState().bestStreak).toBe(2);
+    expect(useStore.getState().streakLastUpdatedAt).toBe(new Date('2024-01-02T12:00:00Z').getTime());
+  });
+
+  it('does not count multiple completions on the same day as a new streak day', () => {
+    useStore.getState().recordTaskCompletion(new Date('2024-01-01T08:00:00Z').getTime());
+    useStore.getState().recordTaskCompletion(new Date('2024-01-01T12:00:00Z').getTime());
+
+    expect(useStore.getState().currentStreak).toBe(1);
+    expect(useStore.getState().bestStreak).toBe(1);
   });
 
   it('adds a task correctly', () => {
@@ -60,7 +85,7 @@ describe('useStore', () => {
       createdAt: Date.now()
     };
     useStore.getState().addTask(taskData);
-    
+
     useStore.getState().updateTask('test-uuid', { title: 'Updated Task' });
 
     const { tasks } = useStore.getState();
@@ -77,7 +102,7 @@ describe('useStore', () => {
       createdAt: Date.now()
     };
     useStore.getState().addTask(taskData);
-    
+
     useStore.getState().deleteTask('test-uuid');
 
     const { tasks } = useStore.getState();

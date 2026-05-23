@@ -7,8 +7,8 @@ import { useStore } from '../store/useStore';
 
 const CatalogReport: React.FC = () => {
   const { t } = useTranslation();
-  const { tasks } = useStore();
-  const stats = useCatalogStats(tasks);
+  const { tasks, currentStreak, bestStreak } = useStore();
+  const stats = useCatalogStats(tasks, { currentStreak, bestStreak });
 
   if (tasks.length === 0) {
     return (
